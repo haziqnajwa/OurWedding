@@ -1,0 +1,433 @@
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --maxW:560px;
+  --cardRadius:22px;
+  --glass:rgba(255,255,255,.62);
+  --glass2:rgba(255,255,255,.72);
+  --shadow:0 18px 48px rgba(0,0,0,.22);
+  --gold1:#caa34d;
+  --gold2:#e7c878;
+}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:url("bg_red.webp") center/cover fixed no-repeat;
+  color:#1c1c1c;
+  overflow-x:hidden;
+}
+
+/* mobile performance: fixed background is expensive */
+@media (max-width:768px){
+  body{ background-attachment:scroll; }
+}
+
+body.locked{
+  height:100vh;
+  overflow:hidden;
+}
+
+.content.lockedContent{
+  display:none;
+}
+
+/* ================= HERO ================= */
+
+.heroSection{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px 14px;
+}
+
+.stage{
+  width:min(94vw,var(--maxW));
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ================= COVER ================= */
+
+.coverWrap{
+  position:relative;
+  width:100%;
+  filter:drop-shadow(0 22px 60px rgba(0,0,0,.26));
+  will-change:transform,opacity;
+}
+.coverWrap img{
+  width:100%;
+  display:block;
+  border-radius:var(--cardRadius);
+}
+.coverWrap.hide{
+  display:none;
+}
+
+/* invisible seal hit area
+   NOTE: adjust left/top/size to match your seal on cover.webp */
+#sealBtn{
+  position:absolute;
+  width:96px;
+  height:96px;
+  border-radius:50%;
+  border:none;
+  background:transparent;
+  left:50%;
+  top:46%;
+  transform:translate(-50%,-50%);
+  cursor:pointer;
+}
+
+/* ================= OPENING VIDEO ================= */
+
+.openingWrap{
+  display:none;
+  width:100%;
+}
+.openingWrap.show{
+  display:block;
+  animation:fadeIn .25s ease both;
+}
+.openingVideo{
+  width:100%;
+  display:block;
+  border-radius:var(--cardRadius);
+  box-shadow:var(--shadow);
+  background:#000;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(6px) scale(.995)}
+  to{opacity:1;transform:none}
+}
+
+/* ================= CARD SCENE ================= */
+
+.cardScene{
+  display:none;
+  position:relative;
+  width:100%;
+}
+.cardScene.show{
+  display:block;
+  animation:fadeIn .25s ease both;
+}
+
+.cardBg{
+  width:100%;
+  display:block;
+  border-radius:var(--cardRadius);
+}
+
+/* ================= CARD LAYER (OVER CARD_BG) ================= */
+
+.cardLayer{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  z-index:5;
+  will-change:transform,opacity;
+  padding:10px;
+}
+
+.cardLayer.show{ opacity:1; }
+.cardLayer.ready{ pointer-events:auto; }
+
+/* ================= FLIP CARD ================= */
+
+.flip-container{
+  width:100%;
+  perspective:1200px;
+  border-radius:var(--cardRadius);
+}
+
+.flipper{
+  display:grid;
+  transform-style:preserve-3d;
+  transition:transform .9s cubic-bezier(.2,.85,.2,1);
+  border-radius:var(--cardRadius);
+  box-shadow:var(--shadow);
+  will-change:transform;
+}
+
+.front,.back{
+  grid-area:1/1;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  border-radius:var(--cardRadius);
+  overflow:hidden;
+}
+
+.front img,.back img{
+  width:100%;
+  height:auto;
+  display:block;
+  border-radius:var(--cardRadius);
+}
+
+.back{ transform:rotateY(180deg); }
+
+.flipper.flip{ transform:rotateY(180deg); }
+
+.flipHint{
+  margin-top:10px;
+  font-weight:700;
+  font-size:14px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(8px);
+}
+
+/* ================= IMAGE SECTIONS (RSVP / COUNTDOWN / GALLERY) ================= */
+
+.imageSection{
+  padding:22px 14px 10px;
+  display:flex;
+  justify-content:center;
+}
+
+.imgBlock{
+  width:min(94vw,680px);
+  position:relative;
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.sectionImg{
+  width:100%;
+  display:block;
+  border-radius:24px;
+}
+
+/* RSVP buttons over the bottom area of rsvp.webp */
+.rsvpBtns{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:14px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  padding:0 14px;
+}
+
+.imgBtn{
+  flex:1 1 0;
+  max-width:260px;
+  text-align:center;
+  padding:12px 14px;
+  border-radius:999px;
+  text-decoration:none;
+  font-weight:900;
+  color:#1a1306;
+  background:linear-gradient(45deg,var(--gold1),var(--gold2));
+  box-shadow:0 12px 36px rgba(0,0,0,.18);
+}
+
+.imgBtnSecondary{
+  background:linear-gradient(45deg,#d8c07a,#f2e2a7);
+}
+
+/* Countdown overlay position
+   NOTE: adjust top/left/transform to sit under the word "COUNTDOWN" on countdown.webp */
+.countdownOverlay{
+  position:absolute;
+  left:50%;
+  top:38%;
+  transform:translate(-50%,-50%);
+  padding:12px 16px;
+  border-radius:18px;
+  background:var(--glass);
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 32px rgba(0,0,0,.16);
+  font-weight:900;
+  font-size:clamp(16px,4vw,22px);
+  white-space:nowrap;
+}
+
+/* ================= GALLERY (swipe track on top of gallery.webp) ================= */
+
+.galleryShell{
+  position:absolute;
+  left:50%;
+  top:56%;
+  transform:translate(-50%,-50%);
+  width:min(90%,640px);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.galleryViewport{
+  width:100%;
+  overflow:hidden;
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  background:rgba(255,255,255,.22);
+  contain:layout paint;
+  touch-action:pan-y;
+}
+
+.galleryTrack{
+  display:flex;
+  width:100%;
+  will-change:transform;
+  transition:transform .35s ease;
+}
+
+.gallerySlide{
+  flex:0 0 100%;
+  width:100%;
+  height:min(50vh,380px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.gallerySlide img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
+.galleryNav{
+  width:44px;
+  height:44px;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  font-size:26px;
+  background:rgba(255,255,255,.7);
+  box-shadow:0 10px 30px rgba(0,0,0,.18);
+}
+
+.galleryDots{
+  margin-top:12px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+.gdot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  border:none;
+  background:rgba(0,0,0,.25);
+}
+
+.gdot.active{ background:#caa34d; }
+
+/* ================= DOA ================= */
+
+.doaSection{
+  padding:22px 14px 60px;
+  display:flex;
+  justify-content:center;
+}
+
+.doaBlock{
+  width:min(94vw,680px);
+  position:relative;
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.doaBg{
+  width:100%;
+  display:block;
+  border-radius:24px;
+}
+
+.doaText{
+  position:absolute;
+  inset:0;
+  padding:clamp(14px,3.5vw,26px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:center;
+}
+
+.doaText .line{
+  width:min(92%,520px);
+  min-height:52px;
+  padding:12px 14px;
+  border-radius:16px;
+  background:var(--glass2);
+  backdrop-filter:blur(10px);
+  font-weight:800;
+  line-height:1.25;
+  text-align:center;
+
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+
+  font-size:clamp(13px,3.2vw,18px);
+
+  opacity:0;
+  transform:translateY(10px);
+  transition:.6s ease;
+}
+
+.doaText .line.show{
+  opacity:1;
+  transform:none;
+}
+
+/* ================= SPARKLES ================= */
+
+#sparkles{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:50;
+}
+
+.spark{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:rgba(255,215,90,.9);
+  box-shadow:0 0 8px rgba(255,215,90,.6);
+  opacity:0;
+  will-change:transform,opacity;
+}
+
+.spark.go{ animation:fall linear forwards; }
+
+@keyframes fall{
+  from{transform:translate3d(0,-10vh,0);opacity:1}
+  to{transform:translate3d(0,110vh,0);opacity:0}
+}
+
+/* ================= MUSIC BUTTON ================= */
+
+.musicBtn{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  font-size:22px;
+  background:linear-gradient(45deg,var(--gold1),var(--gold2));
+  box-shadow:0 16px 48px rgba(0,0,0,.22);
+  z-index:80;
+}
