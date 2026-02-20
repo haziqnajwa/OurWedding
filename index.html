@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Wedding Invitation</title>
+<link rel="stylesheet" href="style.css" />
+
+<!-- preload only first-screen assets -->
+<link rel="preload" as="image" href="bg_red.webp">
+<link rel="preload" as="image" href="cover.webp">
+<link rel="preload" as="video" href="opening.webm" type="video/webm">
+<link rel="preload" as="image" href="card_bg.webp">
+<link rel="preload" as="image" href="card_front.webp">
+</head>
+
+<body class="locked">
+
+<audio id="bgMusic" loop preload="none">
+  <source src="music.mp3" type="audio/mpeg" />
+</audio>
+
+<button id="musicToggle" class="musicBtn" aria-label="Toggle music">🔊</button>
+
+<div id="sparkles"></div>
+
+<section class="heroSection" id="hero">
+  <div class="stage">
+
+    <!-- COVER (first screen) -->
+    <div class="coverWrap" id="coverWrap" aria-label="Invitation cover">
+      <img src="cover.webp" id="coverImg" decoding="async" fetchpriority="high" alt="Invitation Cover">
+
+      <!-- invisible seal hit area (position via CSS) -->
+      <button id="sealBtn" aria-label="Open invitation"></button>
+    </div>
+
+    <!-- OPENING VIDEO (plays after tapping seal) -->
+    <div class="openingWrap" id="openingWrap" aria-hidden="true">
+      <video id="openingVideo" class="openingVideo" playsinline preload="auto">
+        <source src="opening.webm" type="video/webm" />
+      </video>
+    </div>
+
+    <!-- CARD SCENE (shows after video ends) -->
+    <div class="cardScene" id="cardScene" aria-label="Invitation card">
+      <img src="card_bg.webp" class="cardBg" decoding="async" alt="Card Background">
+
+      <div class="cardLayer" id="cardLayer">
+        <div class="flip-container" id="flipContainer">
+          <div class="flipper" id="flipper">
+            <div class="front">
+              <img src="card_front.webp" decoding="async" alt="Card Front">
+            </div>
+            <div class="back">
+              <img src="card_back.webp" decoding="async" alt="Card Back">
+            </div>
+          </div>
+        </div>
+        <p class="flipHint">Tap card to flip</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<main id="mainContent" class="content lockedContent">
+
+  <!-- RSVP IMAGE + LINKS -->
+  <section class="imageSection rsvpSection">
+    <div class="imgBlock">
+      <img src="rsvp.webp" class="sectionImg" loading="lazy" decoding="async" alt="RSVP">
+      <div class="rsvpBtns">
+        <a class="imgBtn" id="mapBtn" href="https://maps.app.goo.gl/dcHFg6xttDfwuXhg6" target="_blank" rel="noopener">Google Map</a>
+        <a class="imgBtn imgBtnSecondary" id="rsvpBtn" href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform" target="_blank" rel="noopener">RSVP</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN IMAGE + OVERLAY -->
+  <section class="imageSection countdownImageSection">
+    <div class="imgBlock">
+      <img src="countdown.webp" class="sectionImg" loading="lazy" decoding="async" alt="Countdown">
+      <div id="countdown" class="countdownOverlay" aria-label="Countdown timer"></div>
+    </div>
+  </section>
+
+  <!-- GALLERY IMAGE + SWIPE -->
+  <section class="imageSection galleryImageSection">
+    <div class="imgBlock">
+      <img src="gallery.webp" class="sectionImg" loading="lazy" decoding="async" alt="Gallery">
+
+      <div class="galleryShell">
+        <button id="galleryPrev" class="galleryNav" aria-label="Previous photo">‹</button>
+
+        <div class="galleryViewport" id="galleryViewport">
+          <div class="galleryTrack" id="galleryTrack">
+            <figure class="gallerySlide"><img src="gallery1.webp" loading="lazy" decoding="async" alt="Gallery 1"></figure>
+            <figure class="gallerySlide"><img src="gallery2.webp" loading="lazy" decoding="async" alt="Gallery 2"></figure>
+            <figure class="gallerySlide"><img src="gallery3.webp" loading="lazy" decoding="async" alt="Gallery 3"></figure>
+            <figure class="gallerySlide"><img src="gallery4.webp" loading="lazy" decoding="async" alt="Gallery 4"></figure>
+          </div>
+        </div>
+
+        <button id="galleryNext" class="galleryNav" aria-label="Next photo">›</button>
+      </div>
+
+      <div id="galleryDots" class="galleryDots" aria-label="Gallery pagination"></div>
+    </div>
+  </section>
+
+  <!-- DOA BACKGROUND + APPEARING TEXT -->
+  <section class="doaSection">
+    <div class="doaBlock">
+      <img src="doa_bg.webp" class="doaBg" loading="lazy" decoding="async" alt="Doa Background">
+
+      <div class="doaText" id="doaText">
+        <p class="line">وَمِنْ ءَايَـٰتِهِۦٓ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًۭا لِّتَسْكُنُوٓا۟ إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةًۭ وَرَحْمَةً ۚ إِنَّ فِى ذَٰلِكَ لَـَٔايَـٰتٍۢ لِّقَوْمٍۢ يَتَفَكَّرُونَ ٢١</p>
+        <p class="line">(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them;</p>
+        <p class="line">and He placed between you affection and mercy. Verily in that are signs for those who reflect</p>
+        <p class="line"> هُوَ ٱلَّذِى خَلَقَكُم مِّن نَّفْسٍۢ وَٰحِدَةٍۢ وَجَعَلَ مِنْهَا زَوْجَهَا لِيَسْكُنَ إِلَيْهَا ۖ فَلَمَّا تَغَشَّىٰهَا حَمَلَتْ حَمْلًا خَفِيفًۭا فَمَرَّتْ بِهِۦ ۖ فَلَمَّآ أَثْقَلَت دَّعَوَا ٱللَّهَ رَبَّهُمَا لَئِنْ ءَاتَيْتَنَا صَـٰلِحًۭا لَّنَكُونَنَّ مِنَ ٱلشَّـٰكِرِينَ ١٨٩</p>
+        <p class="line">(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her.</p>
+        <p class="line">And when he covers her, she carries a light burden and continues therein.</p>
+        <p class="line">And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ========= DOM ========= */
+const body = document.body;
+
+const coverWrap = document.getElementById("coverWrap");
+const sealBtn = document.getElementById("sealBtn");
+
+const openingWrap = document.getElementById("openingWrap");
+const openingVideo = document.getElementById("openingVideo");
+
+const cardScene = document.getElementById("cardScene");
+const cardLayer = document.getElementById("cardLayer");
+const flipContainer = document.getElementById("flipContainer");
+const flipper = document.getElementById("flipper");
+
+const mainContent = document.getElementById("mainContent");
+
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicToggle");
+
+let opened = false;
+
+// Fallback: if seal hitbox misses on some screens, allow tapping anywhere on the cover to open
+coverWrap.addEventListener("click", (e) => {
+  if (opened) return;
+  // avoid double-trigger when clicking the actual button
+  if (e.target === sealBtn) return;
+  sealBtn.click();
+});
+
+/* ========= OPEN FLOW ========= */
+sealBtn.onclick = async () => {
+  if (opened) return;
+  opened = true;
+
+  // Start music after user gesture
+  try { await music.play(); } catch(e) {}
+
+  startSparklesLight();
+
+  // Hide cover, show opening video
+  coverWrap.classList.add("hide");
+  openingWrap.classList.add("show");
+
+  // Play opening animation
+  try { openingVideo.currentTime = 0; } catch(e) {}
+  try { await openingVideo.play(); } catch(e) {}
+
+  // If video fails to autoplay for any reason, fall back quickly
+  const failSafe = setTimeout(() => finishOpening(), 2200);
+
+  openingVideo.onended = () => {
+    clearTimeout(failSafe);
+    finishOpening();
+  };
+
+  // Allow tapping the video to skip
+  openingVideo.onclick = () => {
+    clearTimeout(failSafe);
+    finishOpening();
+  };
+};
+
+function finishOpening(){
+  openingWrap.classList.remove("show");
+  openingVideo.pause?.();
+
+  cardScene.classList.add("show");
+  cardLayer.classList.add("show");
+  setTimeout(() => cardLayer.classList.add("ready"), 250);
+
+  // Unlock scroll + show content
+  body.classList.remove("locked");
+  mainContent.classList.remove("lockedContent");
+
+  initDoaReveal();
+}
+
+/* ========= MUSIC TOGGLE ========= */
+musicBtn.onclick = async () => {
+  if (music.paused) {
+    try { await music.play(); } catch(e) {}
+    musicBtn.textContent = "🔊";
+  } else {
+    music.pause();
+    musicBtn.textContent = "🔇";
+  }
+};
+
+/* ========= FLIP CARD ========= */
+flipContainer.onclick = () => {
+  if (cardLayer.classList.contains("ready")) flipper.classList.toggle("flip");
+};
+
+/* ========= DOA: reveal 1-by-1 while scrolling ========= */
+function initDoaReveal(){
+  const lines = Array.from(document.querySelectorAll("#doaText .line"));
+  lines.forEach(l => l.classList.remove("show"));
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const idx = lines.indexOf(el);
+      setTimeout(() => el.classList.add("show"), Math.min(idx * 90, 450));
+      io.unobserve(el);
+    });
+  }, { threshold: 0.55 });
+
+  lines.forEach(el => io.observe(el));
+}
+
+/* ========= LIGHTWEIGHT SPARKLES (POOL) ========= */
+const sparkWrap = document.getElementById("sparkles");
+let sparkPool = [];
+let sparkTimer = null;
+
+function startSparklesLight(){
+  if (sparkTimer) return;
+
+  if (!sparkPool.length){
+    for (let i = 0; i < 18; i++){
+      const s = document.createElement("div");
+      s.className = "spark";
+      sparkWrap.appendChild(s);
+      sparkPool.push(s);
+    }
+  }
+
+  let i = 0;
+  sparkTimer = setInterval(() => {
+    const s = sparkPool[i % sparkPool.length];
+    i++;
+    s.style.left = (Math.random() * 100) + "vw";
+    s.style.animationDuration = (3 + Math.random() * 2) + "s";
+    s.classList.remove("go");
+    void s.offsetWidth;
+    s.classList.add("go");
+  }, 220);
+}
+
+/* ========= GALLERY: swipe + buttons + dots ========= */
+const galleryViewport = document.getElementById("galleryViewport");
+const galleryTrack = document.getElementById("galleryTrack");
+const btnPrev = document.getElementById("galleryPrev");
+const btnNext = document.getElementById("galleryNext");
+const dotsWrap = document.getElementById("galleryDots");
+
+const slides = galleryTrack ? Array.from(galleryTrack.querySelectorAll(".gallerySlide")) : [];
+let gIndex = 0;
+
+function buildDots(){
+  if (!dotsWrap) return;
+  dotsWrap.innerHTML = "";
+  slides.forEach((_, i) => {
+    const b = document.createElement("button");
+    b.className = "gdot" + (i === 0 ? " active" : "");
+    b.setAttribute("aria-label", "Go to photo " + (i + 1));
+    b.onclick = () => goTo(i);
+    dotsWrap.appendChild(b);
+  });
+}
+
+function updateDots(){
+  if (!dotsWrap) return;
+  const dots = Array.from(dotsWrap.children);
+  dots.forEach((d, i) => d.classList.toggle("active", i === gIndex));
+}
+
+function goTo(i){
+  if (!galleryTrack) return;
+  gIndex = (i + slides.length) % slides.length;
+  galleryTrack.style.transform = `translate3d(${-gIndex * 100}%,0,0)`;
+  updateDots();
+}
+
+if (btnPrev) btnPrev.onclick = () => goTo(gIndex - 1);
+if (btnNext) btnNext.onclick = () => goTo(gIndex + 1);
+
+buildDots();
+goTo(0);
+
+/* swipe handling */
+let startX = 0, startY = 0, dragging = false;
+
+if (galleryViewport){
+  galleryViewport.addEventListener("pointerdown", (e) => {
+    dragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    galleryViewport.setPointerCapture(e.pointerId);
+  }, { passive: true });
+
+  galleryViewport.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 6) {
+      e.preventDefault?.();
+    }
+  }, { passive: false });
+
+  galleryViewport.addEventListener("pointerup", (e) => {
+    if (!dragging) return;
+    dragging = false;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 45) {
+      if (dx < 0) goTo(gIndex + 1);
+      else goTo(gIndex - 1);
+    }
+  }, { passive: true });
+}
+
+/* ========= Countdown ========= */
+const countdownEl = document.getElementById("countdown");
+const eventDate = new Date("2026-05-02T11:30:00+08:00");
+
+function tickCountdown(){
+  if (!countdownEl) return;
+  const now = new Date();
+  const diff = eventDate - now;
+
+  if (diff <= 0){
+    countdownEl.textContent = "It’s today! 🎉";
+    return;
+  }
+
+  const s = Math.floor(diff / 1000);
+  const d = Math.floor(s / 86400);
+  const h = Math.floor((s % 86400) / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const ss = s % 60;
+
+  countdownEl.textContent = `${d}d ${h}h ${m}m ${ss}s`;
+}
+tickCountdown();
+setInterval(tickCountdown, 1000);
+</script>
+
+</body>
+</html>
