@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Our Wedding</title>
+  <link rel="stylesheet" href="style_card_scaled.css" />
+
+  <!-- Preload first-view assets -->
+  <link rel="preload" as="image" href="bg_red.webp">
+  <link rel="preload" as="image" href="cover.webp">
+  <link rel="preload" as="video" href="opening.webm" type="video/webm">
+</head>
+
+<body class="locked">
+  <!-- Music (starts after user taps the seal) -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- HERO (cover -> opening video -> card) -->
+  <section class="heroSection">
+    <div class="stage" id="stage">
+      <!-- COVER -->
+      <div class="coverWrap" id="coverWrap" aria-label="Cover">
+        <img src="cover.webp" alt="Cover" class="frameMedia">
+        <button id="sealBtn" type="button" aria-label="Open invitation"></button>
+      </div>
+
+      <!-- OPENING VIDEO (same frame size as images) -->
+      <div class="openingWrap" id="openingWrap" aria-label="Opening animation">
+        <video id="openingVideo" class="frameMedia" playsinline preload="auto">
+          <source src="opening.webm" type="video/webm">
+        </video>
+      </div>
+
+      <!-- CARD -->
+      <div class="cardScene" id="cardScene" aria-label="Invitation card">
+        <img src="card_bg.webp" alt="Card background" class="frameMedia">
+
+        <div class="cardLayer" id="cardLayer">
+          <div class="flip-container" id="flipContainer" role="button" aria-label="Flip card">
+            <div class="flipper" id="flipper">
+              <div class="front">
+                <img src="card_front.webp" alt="Card front">
+              </div>
+              <div class="back">
+                <img src="card_back.webp" alt="Card back">
+              </div>
+            </div>
+          </div>
+          <div class="flipHint">Tap the card to flip</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCROLL CONTENT (unlocked after open) -->
+  <main class="content" id="content">
+    <!-- RSVP -->
+    <section class="imageSection" aria-label="RSVP and location">
+      <div class="imgBlock">
+        <img src="rsvp.webp" alt="RSVP" class="sectionImg">
+        <div class="rsvpBtns" aria-label="RSVP buttons">
+          <a class="imgBtn" href="https://maps.app.goo.gl/dcHFg6xttDfwuXhg6" target="_blank" rel="noopener">Google Map</a>
+          <a class="imgBtn" href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform" target="_blank" rel="noopener">RSVP Form</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- COUNTDOWN -->
+    <section class="imageSection" aria-label="Countdown">
+      <div class="imgBlock">
+        <img src="countdown.webp" alt="Countdown" class="sectionImg">
+        <div class="countdownOverlay" id="countdown" aria-label="Live countdown"></div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="imageSection" aria-label="Gallery">
+      <div class="imgBlock">
+        <img src="gallery.webp" alt="Gallery" class="sectionImg">
+        <div class="galleryShell" aria-label="Swipe gallery">
+          <button class="galleryNav prev" type="button" aria-label="Previous photo">‹</button>
+
+          <div class="galleryViewport">
+            <div class="galleryTrack" id="galleryTrack">
+              <div class="gallerySlide"><img src="gallery1.webp" alt="Gallery 1"></div>
+              <div class="gallerySlide"><img src="gallery2.webp" alt="Gallery 2"></div>
+              <div class="gallerySlide"><img src="gallery3.webp" alt="Gallery 3"></div>
+              <div class="gallerySlide"><img src="gallery4.webp" alt="Gallery 4"></div>
+            </div>
+          </div>
+
+          <button class="galleryNav next" type="button" aria-label="Next photo">›</button>
+        </div>
+
+        <div class="galleryDots" id="galleryDots" aria-label="Gallery dots"></div>
+      </div>
+    </section>
+
+    <!-- DOA -->
+    <section class="doaSection" aria-label="Doa">
+      <div class="doaBlock">
+        <img src="doa_bg.webp" alt="Doa background" class="doaBg">
+        <div class="doaText" id="doaText" aria-label="Doa text">
+          <div class="line">بَارَكَ اللّٰهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا</div>
+          <div class="line">وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+/* ========= Elements ========= */
+const sealBtn = document.getElementById("sealBtn");
+const coverWrap = document.getElementById("coverWrap");
+const openingWrap = document.getElementById("openingWrap");
+const openingVideo = document.getElementById("openingVideo");
+const cardScene = document.getElementById("cardScene");
+const cardLayer = document.getElementById("cardLayer");
+const flipContainer = document.getElementById("flipContainer");
+const flipper = document.getElementById("flipper");
+const bgMusic = document.getElementById("bgMusic");
+const content = document.getElementById("content");
+const countdownEl = document.getElementById("countdown");
+
+/* ========= State ========= */
+let opened = false;
+let transitioned = false;
+
+/* ========= Helpers ========= */
+function showCardScene(){
+  if (!opened || transitioned) return;
+  transitioned = true;
+
+  openingWrap.classList.remove("show");
+  try{ openingVideo.pause(); }catch(e){}
+  openingVideo.currentTime = 0;
+
+  cardScene.classList.add("show");
+  cardLayer.classList.add("show");
+  content.classList.add("show");
+}
+
+/* ========= Open Flow ========= */
+/* Fallback: allow tapping anywhere on cover if seal hitbox misses on some screens */
+coverWrap.addEventListener("click", (e) => {
+  if (opened) return;
+  if (e.target === sealBtn) return;
+  sealBtn.click();
+});
+
+sealBtn.addEventListener("click", async () => {
+  if (opened) return;
+  opened = true;
+
+  document.body.classList.remove("locked");
+  coverWrap.classList.add("hide");
+
+  openingWrap.classList.add("show");
+
+  // Start music (allowed because this click is a user gesture)
+  try { await bgMusic.play(); } catch(e) {}
+
+  // Start video
+  try { await openingVideo.play(); } catch(e) {}
+
+  // Failsafe: your video ~8s (prevents being stuck if onended doesn't fire after re-export)
+  setTimeout(showCardScene, 8200);
+});
+
+openingVideo.addEventListener("ended", showCardScene);
+/* Optional: tap video to skip */
+openingVideo.addEventListener("click", showCardScene);
+
+/* ========= Flip Card ========= */
+flipContainer.addEventListener("click", () => {
+  flipper.classList.toggle("flip");
+});
+
+/* ========= Countdown ========= */
+/* Edit this date/time if needed (Malaysia time +08:00) */
+const TARGET = new Date("2026-05-02T11:30:00+08:00");
+
+function pad(n){ return String(n).padStart(2,"0"); }
+
+function updateCountdown(){
+  const now = new Date();
+  let diff = TARGET - now;
+
+  if (diff <= 0){
+    countdownEl.textContent = "Today is the day!";
+    return;
+  }
+
+  const sec = Math.floor(diff / 1000);
+  const days = Math.floor(sec / 86400);
+  const hrs = Math.floor((sec % 86400) / 3600);
+  const mins = Math.floor((sec % 3600) / 60);
+  const secs = sec % 60;
+
+  countdownEl.textContent = `${days}d  ${pad(hrs)}h  ${pad(mins)}m  ${pad(secs)}s`;
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* ========= Gallery Swipe ========= */
+const track = document.getElementById("galleryTrack");
+const dotsWrap = document.getElementById("galleryDots");
+const slides = Array.from(track.children);
+const prevBtn = document.querySelector(".galleryNav.prev");
+const nextBtn = document.querySelector(".galleryNav.next");
+
+let idx = 0;
+
+function buildDots(){
+  dotsWrap.innerHTML = "";
+  slides.forEach((_, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "gdot" + (i === 0 ? " active" : "");
+    b.setAttribute("aria-label", `Go to photo ${i+1}`);
+    b.addEventListener("click", () => goTo(i));
+    dotsWrap.appendChild(b);
+  });
+}
+buildDots();
+
+function setActiveDot(i){
+  dotsWrap.querySelectorAll(".gdot").forEach((d, di) => {
+    d.classList.toggle("active", di === i);
+  });
+}
+
+function goTo(i){
+  idx = (i + slides.length) % slides.length;
+  track.style.transform = `translateX(-${idx * 100}%)`;
+  setActiveDot(idx);
+}
+
+prevBtn.addEventListener("click", () => goTo(idx - 1));
+nextBtn.addEventListener("click", () => goTo(idx + 1));
+
+/* Touch swipe */
+let startX = 0;
+let dragging = false;
+
+const viewport = document.querySelector(".galleryViewport");
+viewport.addEventListener("touchstart", (e) => {
+  if (!e.touches || !e.touches[0]) return;
+  dragging = true;
+  startX = e.touches[0].clientX;
+}, {passive:true});
+
+viewport.addEventListener("touchend", (e) => {
+  if (!dragging) return;
+  dragging = false;
+  const endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : startX;
+  const delta = endX - startX;
+  const threshold = 40; // px
+  if (delta > threshold) goTo(idx - 1);
+  else if (delta < -threshold) goTo(idx + 1);
+}, {passive:true});
+
+/* ========= Doa reveal ========= */
+const doaLines = document.querySelectorAll(".doaText .line");
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    // reveal 1 by 1
+    doaLines.forEach((ln, i) => {
+      setTimeout(() => ln.classList.add("show"), i * 450);
+    });
+    observer.disconnect();
+  });
+}, { threshold: 0.35 });
+
+observer.observe(document.getElementById("doaText"));
+
+</script>
+</body>
+</html>
