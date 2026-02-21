@@ -1,0 +1,341 @@
+/* ===== Base ===== */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:#5f0e0e;
+  color:#fff;
+}
+body.locked{overflow:hidden}
+
+/* Background */
+.pageBg{
+  position:fixed; inset:0;
+  background: url("bg_red.webp") center/cover no-repeat;
+  z-index:-2;
+}
+
+/* Sparkles */
+.sparkles{
+  position:fixed; inset:0;
+  pointer-events:none;
+  z-index:50;
+}
+.sparkle{
+  position:absolute;
+  width:6px; height:6px;
+  border-radius:50%;
+  background:rgba(255,255,255,.85);
+  filter: blur(.2px);
+  animation: sparkleFloat 4.5s linear infinite;
+  opacity:.0;
+}
+@keyframes sparkleFloat{
+  0%{transform:translateY(10px);opacity:0}
+  10%{opacity:.9}
+  70%{opacity:.9}
+  100%{transform:translateY(-50px);opacity:0}
+}
+
+/* Music button */
+.musicBtn{
+  position:fixed;
+  right:14px; top:14px;
+  z-index:60;
+  width:44px; height:44px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(0,0,0,.22);
+  color:#fff;
+  display:grid; place-items:center;
+  cursor:pointer;
+  backdrop-filter: blur(6px);
+}
+.musicBtn:active{transform:scale(.98)}
+
+/* Sections */
+.section{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:48px 16px;
+}
+
+.panel{
+  width:min(560px, 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ===== Hero (Cover / Video / Card) ===== */
+.heroSection{padding-top:56px;padding-bottom:56px}
+.stage{
+  position:relative;
+  width:min(540px, 92vw);
+  aspect-ratio: 1452 / 2048; /* matches cover/card_bg */
+  max-height: 92vh;
+  overflow:hidden;
+}
+
+/* Layers */
+.coverWrap,.openingWrap,.cardScene{
+  position:absolute; inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.hidden{display:none !important;}
+
+.coverImg,
+.openingVideo,
+.cardBgImg{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
+/* Cover CTA */
+.tapToOpen{
+  position:absolute;
+  left:50%;
+  bottom:8.5%;
+  transform:translateX(-50%);
+  font-size:16px;
+  letter-spacing:.4px;
+  color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.55);
+  opacity:.95;
+  user-select:none;
+}
+
+/* Video: prevent tap-to-skip */
+.openingVideo{
+  pointer-events:none;
+  background:transparent;
+}
+
+/* ===== Flip card ===== */
+.flipContainer{
+  position:absolute;
+  left:50%;
+  top:32%;
+  transform:translate(-50%,-50%);
+  width:min(430px, 86vw);
+  aspect-ratio: 3 / 4.25;
+  perspective: 1200px;
+  cursor:pointer;
+}
+.flipCard{
+  position:relative;
+  width:100%;
+  height:100%;
+  transform-style:preserve-3d;
+  transition: transform 900ms cubic-bezier(.2,.8,.2,1);
+}
+.flipContainer.flipped .flipCard{transform: rotateY(180deg);}
+
+.flipFace{
+  position:absolute; inset:0;
+  backface-visibility:hidden;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+}
+.flipFace img{
+  width:100%; height:100%;
+  object-fit:cover;
+  display:block;
+}
+.flipBack{transform: rotateY(180deg);}
+
+/* "Tap the card to flip" */
+.flipHint{
+  position:absolute;
+  left:50%;
+  bottom:8%;
+  transform:translateX(-50%);
+  font-size:16px;
+  color:rgba(255,255,255,.9);
+  text-shadow:0 2px 10px rgba(0,0,0,.55);
+  user-select:none;
+}
+
+/* ===== RSVP Section ===== */
+.rsvpSection{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.rsvpImg{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
+.rsvpBtns{
+  position:absolute;
+  left:50%;
+  top:63%; /* moved lower so it doesn't cover the "R" */
+  transform:translateX(-50%);
+  width:min(420px, 82vw);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  z-index:5;
+}
+
+.imgBtn{
+  width:100%;
+  padding:16px 18px;
+  border-radius:999px;
+  border:none;
+  background:#7b0f0f; /* close to bg_red.webp */
+  color:#fff;
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:.2px;
+  cursor:pointer;
+  box-shadow:0 16px 28px rgba(0,0,0,.22);
+}
+.imgBtn:active{transform:scale(.99)}
+
+/* ===== Countdown ===== */
+.countdownStage{
+  position:relative;
+  width:min(560px, 100%);
+}
+.countdownImg{
+  width:100%;
+  height:auto;
+  display:block;
+}
+.countdownOverlay{
+  position:absolute;
+  left:50%;
+  top:34%; /* slightly higher, between COUNTDOWN and cream area */
+  transform:translate(-50%,-50%);
+  font-weight:800;
+  font-size:22px;
+  letter-spacing:.6px;
+  color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.55);
+}
+
+/* ===== Gallery ===== */
+.galleryStage{
+  position:relative;
+  width:min(560px, 100%);
+}
+.galleryBg{
+  width:100%;
+  height:auto;
+  display:block;
+}
+.galleryShell{
+  position:absolute;
+  left:50%;
+  top:54%;
+  transform:translate(-50%,-50%);
+  width:74%;
+  height:62%;
+  border-radius:18px;
+  overflow:hidden;
+}
+.galleryViewport{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  touch-action: pan-y; /* allow vertical scroll, horizontal handled by pointer events */
+}
+.galleryTrack{
+  display:flex;
+  width:100%;
+  height:100%;
+  transition: transform 420ms ease;
+}
+.gallerySlide{
+  flex:0 0 100%;
+  height:100%;
+}
+.gallerySlide img{
+  width:100%;
+  height:100%;
+  object-fit:cover; /* fill frame nicely */
+  object-position:center;
+  display:block;
+}
+
+/* Gallery arrows */
+.galleryNav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:6;
+  width:42px; height:42px;
+  border-radius:999px;
+  border:none;
+  background:rgba(0,0,0,.35);
+  color:#fff;
+  cursor:pointer;
+  display:grid; place-items:center;
+  backdrop-filter: blur(6px);
+}
+.galleryPrev{left:10px}
+.galleryNext{right:10px}
+.galleryNav:active{transform:translateY(-50%) scale(.98)}
+
+/* Gallery dots */
+.galleryDots{
+  position:absolute;
+  left:50%;
+  bottom:8%;
+  transform:translateX(-50%);
+  z-index:6;
+  display:flex;
+  gap:8px;
+}
+.gdot{
+  width:9px; height:9px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.75);
+  background:transparent;
+  opacity:.75;
+}
+.gdot.active{background:#fff; opacity:1}
+
+/* ===== Doa ===== */
+.doaStage{
+  position:relative;
+  width:min(560px, 100%);
+}
+.doaBg{
+  width:100%;
+  height:auto;
+  display:block;
+}
+.doaText{
+  position:absolute;
+  left:50%;
+  top:22%; /* higher than the characters */
+  transform:translateX(-50%);
+  width:78%;
+  text-align:center;
+  color:#000; /* requested black */
+  font-size:14px;
+  line-height:1.5;
+  text-shadow:none;
+}
+.doaText .line{margin:0 0 10px}
+
+/* Responsive tuning */
+@media (min-width: 900px){
+  .section{padding:72px 16px}
+  .stage{width:min(520px, 36vw); max-height:86vh}
+  .flipContainer{width:min(440px, 26vw)}
+}
