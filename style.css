@@ -1,305 +1,98 @@
-:root{
-  --maxW: 520px;
-  --deepRed: #6b0f0f;
-}
-
-*{ box-sizing:border-box; }
-
-html, body{ height:100%; }
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-  margin:0;
-  font-family: Georgia, 'Times New Roman', serif;
-  background: url('bg_red.webp') repeat;
-  color:#fff;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+  font-family:sans-serif;
+  background:url("bg_red.webp") center/cover fixed no-repeat;
+  overflow-x:hidden;
 }
 
-body.locked{
-  overflow:hidden;
-  height:100vh;
-}
+body.locked{overflow:hidden;}
+.lockedContent{display:none;}
 
-/* ===== Top scene ===== */
-.scene{
-  width:min(var(--maxW), 100vw);
-  height:100vh;
+.hidden{display:none;}
+
+.imgSection{
   position:relative;
   display:flex;
-  align-items:center;
   justify-content:center;
-  padding: 18px 0;
-}
-
-#openingWrap,
-#cardScene{
-  width:100%;
-  height:100%;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.hidden{ display:none !important; }
-
-.videoLayer{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.openingVideo{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  /* prevent tap-to-toggle on mobile */
-  pointer-events:none;
-}
-
-/* Invisible clickable seal area (positioned to match the wax seal in your video frame) */
-#sealBtn{
-  position:absolute;
-  left:50%;
-  top:56%;
-  transform:translate(-50%, -50%);
-  width: 92px;
-  height: 92px;
-  border-radius:50%;
-  border:none;
-  background: transparent;
-  cursor:pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-#sealBtn:focus{ outline:2px solid rgba(255,255,255,0.7); outline-offset:6px; }
-#sealBtn.sealDisabled{ cursor:default; opacity:0.65; }
-
-/* Card background after video */
-.bgImage{
-  width:100%;
-  height:auto;
-  display:block;
-}
-
-.cardLayer{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding: 2.5vh 0;
-}
-
-.flipCard{
-  width: 92%;
-  max-width: 500px;
-  aspect-ratio: 3 / 4;
-  perspective: 1200px;
-  cursor:pointer;
-}
-
-.flipInner{
-  width:100%;
-  height:100%;
-  position:relative;
-  transition: transform 0.85s ease;
-  transform-style: preserve-3d;
-}
-
-.flipCard.isFlipped .flipInner{ transform: rotateY(180deg); }
-
-.cardFace{
-  position:absolute;
-  inset:0;
-  backface-visibility:hidden;
-  -webkit-backface-visibility:hidden;
-}
-
-.cardFace img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-
-.cardFace.back{ transform: rotateY(180deg); }
-
-.tapHint{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom: 24px;
-  text-align:center;
-  font-size: 16px;
-  opacity:0.85;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.6);
-  pointer-events:none;
-}
-
-/* ===== Content sections ===== */
-.content{
-  width:min(var(--maxW), 100vw);
-}
-
-/* Hide content completely until unlocked */
-.content.lockedContent{ display:none; }
-
-.imageSection{
-  min-height: 100vh;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding: 40px 0;
-}
-
-.imgBlock{
-  width:100%;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  padding:20px 0;
 }
 
 .sectionImg{
-  width:100%;
-  height:auto;
-  display:block;
+  width:min(95vw,900px);
+  border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.2);
 }
 
-/* RSVP buttons - pushed lower so they don't cover the 'R' */
-.rsvpButtons{
+.overlay{
   position:absolute;
-  left:50%;
-  bottom: 16%;
-  transform: translateX(-50%);
-  width: 78%;
-  display:flex;
-  flex-direction:column;
-  gap: 14px;
+  width:min(95vw,900px);
+  top:20px;
 }
 
-.rsvpButtons a{
-  display:block;
-  text-align:center;
-  text-decoration:none;
-  color:#fff;
-  background: var(--deepRed);
-  padding: 14px 18px;
-  border-radius: 999px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  box-shadow: 0 14px 30px rgba(0,0,0,0.35);
-}
-
-/* Countdown - move slightly higher (between COUNTDOWN and the white area) */
-.countdownOverlay{
-  position:absolute;
-  left:50%;
-  top: 33%;
-  transform: translateX(-50%);
-  font-size: 22px;
-  font-weight: 800;
-  color: #fff;
-  text-shadow: 0 6px 18px rgba(0,0,0,0.65);
-}
-
-/* Gallery overlay inside frame + controls */
-.galleryViewport{
-  position:absolute;
-  /* Tune these to match the opening window of gallery.webp */
-  left: 12%;
-  right: 12%;
-  top: 17%;
-  bottom: 20%;
-  overflow:hidden;
-  border-radius: 18px;
-  touch-action: pan-y;
-}
-
-.galleryTrack{
-  display:flex;
-  width:100%;
-  height:100%;
-  transition: transform 0.35s ease;
-}
-
-.gallerySlide{
-  flex: 0 0 100%;
-  height:100%;
-  display:flex;
-}
-
-.gallerySlide img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.galleryBtn{
-  position:absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  border:none;
-  background: rgba(0,0,0,0.35);
-  color:#fff;
-  font-size: 26px;
+/* OPENING */
+.openingWrap{width:min(95vw,700px);margin:auto;}
+.openingImg,.openingVideo{width:100%;border-radius:20px;}
+.openHit{
+  position:absolute;inset:0;border:none;background:transparent;
   cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.tapText{
+  padding:10px 20px;
+  background:rgba(0,0,0,.4);
+  color:white;border-radius:50px;
 }
 
-.galleryBtn.left{ left: 8%; }
-.galleryBtn.right{ right: 8%; }
-
-.galleryDots{
-  position:absolute;
-  left:50%;
-  bottom: 13%;
-  transform: translateX(-50%);
-  display:flex;
-  gap: 7px;
+/* MUSIC */
+.musicBtn{
+  position:fixed;bottom:20px;right:20px;
+  width:55px;height:55px;border-radius:50%;
+  border:none;background:white;cursor:pointer;
 }
 
-.galleryDots .dot{
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.45);
+/* FLIP */
+.flipWrap{width:60%;margin:30% auto 0;perspective:1000px;}
+.flipper{transition:1s;transform-style:preserve-3d;}
+.flipper.flip{transform:rotateY(180deg);}
+.front,.back{backface-visibility:hidden;}
+.back{transform:rotateY(180deg);}
+
+/* RSVP */
+.rsvpOverlay{
+  top:62%;left:22%;width:56%;
+  display:flex;flex-direction:column;gap:10px;
+}
+.rsvpBtn{
+  background:white;padding:12px;border-radius:30px;
+  text-align:center;text-decoration:none;color:black;
 }
 
-.galleryDots .dot.active{ background: rgba(255,255,255,0.95); }
-
-/* Doa text overlay (black, no box) */
-.doaText{
-  position:absolute;
-  left: 12%;
-  right: 12%;
-  top: 18%;
-  color: #000;
-  font-size: 15px;
-  line-height: 1.6;
-  text-align:center;
-  white-space: pre-wrap;
-  text-shadow: none;
+/* COUNTDOWN */
+.countdownOverlay{
+  top:27%;left:50%;transform:translateX(-50%);
+  text-align:center;color:white;font-weight:bold;
+  font-size:22px;
 }
 
-/* Small devices */
-@media (max-width: 420px){
-  #sealBtn{ width: 80px; height:80px; }
-  .rsvpButtons{ bottom: 14%; width: 82%; }
-  .countdownOverlay{ font-size: 20px; }
-  .doaText{ font-size: 14px; top: 17%; }
+/* GALLERY */
+.galleryOverlay{
+  top:15%;left:14%;width:72%;height:70%;
+}
+.galleryViewport{overflow:hidden;height:100%;}
+.galleryTrack{display:flex;transition:.5s;}
+.galleryTrack img{
+  width:100%;flex:0 0 100%;object-fit:contain;
 }
 
-/* Landscape phones: reduce padding so scene fits */
-@media (max-height: 560px){
-  .scene{ padding: 8px 0; }
-  .tapHint{ bottom: 12px; }
+/* DOA */
+.doaOverlay{
+  top:12%;left:22%;width:56%;
 }
+.line{
+  background:rgba(255,255,255,.8);
+  margin:8px 0;padding:10px;border-radius:15px;
+  opacity:0;transform:translateY(10px);
+  transition:.6s;
+}
+.line.show{opacity:1;transform:none;}
