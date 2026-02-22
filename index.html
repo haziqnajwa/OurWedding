@@ -18,11 +18,10 @@
 
   <button id="musicToggle" class="musicBtn" aria-label="Toggle music">🔊</button>
 
-  <!-- OPENING STAGE (same size/position as the first card slide) -->
+  <!-- OPENING STAGE -->
   <section id="openingSection" class="openingSection">
     <div class="stage">
-
-      <!-- 1) opening.webp -->
+      <!-- opening.webp -->
       <div id="openingCover" class="openingCover">
         <img class="stageMedia" src="opening.webp" alt="Opening cover" />
         <button id="openHit" class="openHit" aria-label="Tap seal to open">
@@ -30,15 +29,14 @@
         </button>
       </div>
 
-      <!-- 2) opening.webm -->
+      <!-- opening.webm -->
       <video id="openingVideo" class="stageMedia hidden" playsinline webkit-playsinline preload="metadata">
         <source src="opening.webm" type="video/webm" />
       </video>
-
     </div>
   </section>
 
-  <!-- MAIN CONTENT (snaps like slides) -->
+  <!-- MAIN CONTENT (snap slides) -->
   <main id="mainContent" class="slides lockedContent">
 
     <!-- SLIDE 1: CARD BG + FLIP CARD -->
@@ -47,14 +45,16 @@
         <img class="stageMedia" src="card_bg.webp" alt="Card background" />
         <div class="overlay">
 
-          <!-- Flip card inside your red-square area -->
-          <div class="flipWrap" id="flipWrap" role="button" tabindex="0" aria-label="Flip card">
-            <div class="flipper" id="flipper">
-              <div class="front">
-                <img src="card_front.webp" alt="Front card">
-              </div>
-              <div class="back">
-                <img src="card_back.webp" alt="Back card">
+          <!-- SLOT MATCHES YOUR RED RECTANGLE EXACTLY -->
+          <div class="cardSlot">
+            <div class="flipWrap" id="flipWrap" role="button" tabindex="0" aria-label="Flip card">
+              <div class="flipper" id="flipper">
+                <div class="face front">
+                  <img src="card_front.webp" alt="Front card">
+                </div>
+                <div class="face back">
+                  <img src="card_back.webp" alt="Back card">
+                </div>
               </div>
             </div>
           </div>
@@ -70,12 +70,12 @@
         <div class="overlay">
           <div class="rsvpOverlay">
             <a class="rsvpBtn"
-              href="https://maps.app.goo.gl/dcHFg6xttDfwuXhg6"
-              target="_blank" rel="noopener">Google Map</a>
+               href="https://maps.app.goo.gl/dcHFg6xttDfwuXhg6"
+               target="_blank" rel="noopener">Google Map</a>
 
             <a class="rsvpBtn"
-              href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform"
-              target="_blank" rel="noopener">RSVP</a>
+               href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform"
+               target="_blank" rel="noopener">RSVP</a>
           </div>
         </div>
       </div>
@@ -103,10 +103,10 @@
 
             <div class="galleryViewport" id="galleryViewport">
               <div class="galleryTrack" id="galleryTrack">
-                <div class="slideImg"><img src="gallery1.webp" alt="Gallery 1"></div>
-                <div class="slideImg"><img src="gallery2.webp" alt="Gallery 2"></div>
-                <div class="slideImg"><img src="gallery3.webp" alt="Gallery 3"></div>
-                <div class="slideImg"><img src="gallery4.webp" alt="Gallery 4"></div>
+                <div class="gSlide"><img src="gallery1.webp" alt="Gallery 1"></div>
+                <div class="gSlide"><img src="gallery2.webp" alt="Gallery 2"></div>
+                <div class="gSlide"><img src="gallery3.webp" alt="Gallery 3"></div>
+                <div class="gSlide"><img src="gallery4.webp" alt="Gallery 4"></div>
               </div>
             </div>
 
@@ -116,17 +116,20 @@
       </div>
     </section>
 
-    <!-- SLIDE 5: DOA -->
+    <!-- SLIDE 5: DOA (typewriter) -->
     <section class="slide">
       <div class="stage">
         <img class="stageMedia" src="doa_bg.webp" alt="Doa" />
         <div class="overlay">
-          <div class="doaOverlay" id="doaText">
-            <p class="line">(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them;</p>
-            <p class="line">and He placed between you affection and mercy. Verily in that are signs for those who reflect</p>
-            <p class="line">(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her.</p>
-            <p class="line">And when he covers her, she carries a light burden and continues therein.</p>
-            <p class="line">And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”</p>
+          <div class="doaOverlay">
+            <div id="doaType" class="doaType"
+                 data-text="(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them;
+and He placed between you affection and mercy. Verily in that are signs for those who reflect.
+
+(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her;
+And when he covers her, she carries a light burden and continues therein;
+And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”">
+            </div>
           </div>
         </div>
       </div>
@@ -138,13 +141,13 @@
     const body = document.body;
 
     const openingSection = document.getElementById("openingSection");
-    const openingCover = document.getElementById("openingCover");
-    const openingVideo = document.getElementById("openingVideo");
-    const openHit = document.getElementById("openHit");
+    const openingCover   = document.getElementById("openingCover");
+    const openingVideo   = document.getElementById("openingVideo");
+    const openHit        = document.getElementById("openHit");
 
     const mainContent = document.getElementById("mainContent");
 
-    const music = document.getElementById("bgMusic");
+    const music    = document.getElementById("bgMusic");
     const musicBtn = document.getElementById("musicToggle");
 
     let opened = false;
@@ -153,13 +156,15 @@
       if (opened) return;
       opened = true;
 
-      try { await music.play(); } catch(e) {}
+      // Start music after user gesture
+      try { await music.play(); } catch (e) {}
 
+      // Cover -> Video
       openingCover.classList.add("hidden");
       openingVideo.classList.remove("hidden");
 
       try { await openingVideo.play(); }
-      catch(e){
+      catch (e) {
         openingVideo.classList.add("hidden");
         openingCover.classList.remove("hidden");
         opened = false;
@@ -167,18 +172,17 @@
     });
 
     openingVideo.addEventListener("ended", () => {
-      // Instantly show the first slide (card_bg.webp) at the SAME stage position
       openingSection.style.display = "none";
-
       body.classList.remove("locked");
       mainContent.classList.remove("lockedContent");
 
-      // Ensure start exactly at the top of slide 1
+      // Start exactly at slide 1
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 
-      initDoaReveal();
+      initDoaTyping();
     });
 
+    // Music toggle button
     musicBtn.addEventListener("click", async () => {
       if (music.paused) {
         try { await music.play(); } catch(e) {}
@@ -192,66 +196,102 @@
     // Flip card
     const flipper = document.getElementById("flipper");
     const flipWrap = document.getElementById("flipWrap");
+
     function toggleFlip(){ flipper.classList.toggle("flip"); }
+
     flipWrap.addEventListener("click", toggleFlip);
     flipWrap.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFlip(); }
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleFlip();
+      }
     });
 
-    // Countdown
+    // Countdown (2 May 2026 11:00 AM GMT+8)
     const countdownEl = document.getElementById("countdown");
     const eventDate = new Date("2026-05-02T11:00:00+08:00");
+
     function tick(){
       const now = new Date();
       const diff = eventDate - now;
       if (diff <= 0) { countdownEl.textContent = "It’s today!"; return; }
-      const s = Math.floor(diff/1000);
-      const d = Math.floor(s/86400);
-      const h = Math.floor((s%86400)/3600);
-      const m = Math.floor((s%3600)/60);
-      const ss = s%60;
+
+      const s = Math.floor(diff / 1000);
+      const d = Math.floor(s / 86400);
+      const h = Math.floor((s % 86400) / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const ss = s % 60;
+
       countdownEl.textContent = `${d}d ${h}h ${m}m ${ss}s`;
     }
-    tick(); setInterval(tick, 1000);
 
-    // Gallery buttons + swipe
+    tick();
+    setInterval(tick, 1000);
+
+    // Gallery swipe + buttons
     const track = document.getElementById("galleryTrack");
     const viewport = document.getElementById("galleryViewport");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
     const total = track.children.length;
+
     let idx = 0;
 
     function go(i){
       idx = (i + total) % total;
       track.style.transform = `translateX(-${idx * 100}%)`;
     }
+
     prevBtn.addEventListener("click", () => go(idx - 1));
     nextBtn.addEventListener("click", () => go(idx + 1));
 
     let startX = 0, dragging = false;
     viewport.addEventListener("pointerdown", (e) => {
-      dragging = true; startX = e.clientX;
+      dragging = true;
+      startX = e.clientX;
       viewport.setPointerCapture(e.pointerId);
     });
+
     viewport.addEventListener("pointerup", (e) => {
       if (!dragging) return;
       dragging = false;
+
       const dx = e.clientX - startX;
       if (Math.abs(dx) > 45) go(dx < 0 ? idx + 1 : idx - 1);
     });
 
-    // Doa appearing
-    function initDoaReveal(){
-      const lines = document.querySelectorAll("#doaText .line");
+    // Doa: typewriter (letters 1-by-1)
+    function initDoaTyping(){
+      const box = document.getElementById("doaType");
+      if (!box) return;
+
+      const fullText = box.dataset.text || "";
+      let started = false;
+
+      function typeWriter(){
+        if (started) return;
+        started = true;
+
+        box.textContent = "";
+        let i = 0;
+        const speed = 18; // ms per character
+
+        const timer = setInterval(() => {
+          box.textContent += fullText[i] ?? "";
+          i++;
+          if (i >= fullText.length) clearInterval(timer);
+        }, speed);
+      }
+
       const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (!entry.isIntersecting) return;
-          entry.target.classList.add("show");
-          io.unobserve(entry.target);
+          typeWriter();
+          io.disconnect();
         });
       }, { threshold: 0.55 });
-      lines.forEach(l => io.observe(l));
+
+      io.observe(box);
     }
   </script>
 </body>
