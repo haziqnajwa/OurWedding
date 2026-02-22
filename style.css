@@ -1,20 +1,23 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  /* Page ratio used by ALL slides (your 1240x1748 images) */
+  /* Slide image ratio (your 1240x1748 pages) */
   --pageW: 1240;
   --pageH: 1748;
 
-  /* Safe padding from viewport edges */
   --vpad: 18px;
-
   --radius: 22px;
   --shadow: 0 20px 60px rgba(0,0,0,.22);
 
-  /* ===== Flip card placement on card_bg.webp (tune if needed) ===== */
-  --card-left: 23%;
-  --card-top: 8%;
-  --card-width: 40%;
+  /* ======================================================
+     CARD SLOT (MATCHES YOUR RED RECTANGLE in card_bg.png)
+     Measured inner edge of red frame:
+     left: 11.50% | top: 7.67% | width: 77.20% | height: 82.67%
+     ====================================================== */
+  --slot-left: 11.50%;
+  --slot-top: 7.67%;
+  --slot-width: 77.20%;
+  --slot-height: 82.67%;
 
   /* RSVP placement */
   --rsvp-left: 22%;
@@ -32,9 +35,9 @@
   --gal-height: 70%;
 
   /* Doa placement */
-  --doa-left: 22%;
+  --doa-left: 18%;
   --doa-top: 12%;
-  --doa-width: 56%;
+  --doa-width: 64%;
 }
 
 body{
@@ -70,7 +73,7 @@ body.locked{
   scroll-snap-stop: always;
 }
 
-/* ===== Shared STAGE size (THIS ensures opening + video + card align) ===== */
+/* ===== Shared STAGE size (keeps opening/video/card same position) ===== */
 .stage{
   width: min(96vw, calc((100vh - (2 * var(--vpad))) * (var(--pageW) / var(--pageH))));
   aspect-ratio: var(--pageW) / var(--pageH);
@@ -90,7 +93,7 @@ body.locked{
   padding: var(--vpad);
 }
 
-/* All “page media” (images and the opening video) */
+/* All “page media” (images and video) */
 .stageMedia{
   width:100%;
   height:100%;
@@ -143,38 +146,54 @@ body.locked{
   z-index:50;
 }
 
-/* ===== Flip card ===== */
-.flipWrap{
-  pointer-events:auto;
+/* ======================================================
+   CARD SLOT + FLIP CARD (guaranteed to stay in red rect)
+   ====================================================== */
+.cardSlot{
   position:absolute;
-  left: var(--card-left);
-  top: var(--card-top);
-  width: var(--card-width);
-  perspective: 1200px;
+  left: var(--slot-left);
+  top: var(--slot-top);
+  width: var(--slot-width);
+  height: var(--slot-height);
+
+  pointer-events:auto;
+  overflow:hidden;         /* ✅ cannot spill outside */
+  border-radius: 10px;     /* optional soft edge */
 }
+
+.flipWrap{
+  width:100%;
+  height:100%;
+  perspective: 1400px;
+}
+
+/* Proper 2-sided flip */
 .flipper{
+  width:100%;
+  height:100%;
   position:relative;
   transform-style:preserve-3d;
-  transition: transform .9s cubic-bezier(.2,.85,.2,1);
-  border-radius: 18px;
+  transition: transform .85s cubic-bezier(.2,.85,.2,1);
+  border-radius: 14px;
   overflow:hidden;
   box-shadow: 0 16px 40px rgba(0,0,0,.25);
 }
 .flipper.flip{ transform: rotateY(180deg); }
 
-.front, .back{
+.face{
+  position:absolute;
+  inset:0;
   backface-visibility:hidden;
   -webkit-backface-visibility:hidden;
 }
-.back{
-  position:absolute;
-  inset:0;
-  transform: rotateY(180deg);
-}
-.front img, .back img{
+.back{ transform: rotateY(180deg); }
+
+.face img{
   width:100%;
-  height:auto;
+  height:100%;
+  object-fit: contain;  /* ✅ fits inside slot perfectly */
   display:block;
+  background: transparent;
 }
 
 /* ===== RSVP ===== */
@@ -248,14 +267,14 @@ body.locked{
   display:flex;
   transition: transform .35s ease;
 }
-.slideImg{
+.gSlide{
   flex:0 0 100%;
   height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
 }
-.slideImg img{
+.gSlide img{
   width:100%;
   height:100%;
   object-fit: contain;
@@ -272,32 +291,39 @@ body.locked{
   box-shadow:0 10px 28px rgba(0,0,0,.18);
 }
 
-/* ===== Doa ===== */
+/* ===== Doa: inside letter, justified, wrapped, typed ===== */
 .doaOverlay{
   position:absolute;
   left: var(--doa-left);
   top: var(--doa-top);
   width: var(--doa-width);
+  height: 58%;               /* stays above figures */
   pointer-events:none;
   display:flex;
-  flex-direction:column;
-  gap:10px;
+  align-items:flex-start;
+  justify-content:center;
 }
-.line{
-  padding:10px 12px;
-  border-radius:14px;
-  background:rgba(255,255,255,.78);
-  box-shadow:0 10px 26px rgba(0,0,0,.12);
-  font-weight:800;
-  line-height:1.25;
-  text-align:center;
-  font-size: clamp(12px, 2.2vw, 15px);
-  opacity:0;
-  transform: translateY(10px);
-  transition: .6s ease;
-  overflow-wrap:anywhere;
-}
-.line.show{
-  opacity:1;
-  transform:none;
+
+.doaType{
+  width:100%;
+  height:100%;
+  padding: 14px 14px;
+  border-radius:16px;
+  background: rgba(255,255,255,.80);
+  box-shadow: 0 10px 26px rgba(0,0,0,.12);
+
+  overflow:hidden;
+
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+
+  text-align: justify;
+  text-justify: inter-word;
+
+  font-weight: 800;
+  line-height: 1.35;
+  font-size: clamp(11px, 1.2vw, 13px); /* ✅ prevents desktop oversize */
+  color: #1f1f1f;
 }
