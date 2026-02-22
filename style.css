@@ -7,34 +7,36 @@
   --vpad:18px;
   --radius:22px;
 
-  /* CARD placement (your red-square calibrated area) */
-  --slot-left:11.5%;
-  --slot-top:7.7%;
-  --slot-width:77.2%;
-  --slot-height:82.7%;
+  /* Card placement (inside red square on card_bg.webp) */
+  --slot-left:10.7%;
+  --slot-top:6.7%;
+  --slot-width:79.0%;
+  --slot-height:84.8%;
 
-  /* RSVP buttons placement (adjust if needed) */
-  --rsvp-btn-left: 22%;
-  --rsvp-btn-top: 54%;
-  --rsvp-btn-width: 56%;
-  --rsvp-btn-gap: 10px;
-
-  /* Countdown placement (red area under COUNTDOWN word) */
-  --cd-left: 12%;
-  --cd-top: 47%;
-  --cd-width: 76%;
-
-  /* Gallery inner white frame area */
-  --gal-left: 12%;
-  --gal-top: 16%;
-  --gal-width: 76%;
-  --gal-height: 66%;
-
-  /* DOA yellow-box area (your latest) */
+  /* DOA text area (yellow box) */
   --doa-left:22%;
   --doa-top:14.5%;
   --doa-width:56%;
   --doa-height:27%;
+
+  /* RSVP buttons (move lower so it doesn't cover "Reception") */
+  --rsvp-left:18%;
+  --rsvp-width:64%;
+  --rsvp-top1:58%;
+  --rsvp-top2:67%;
+  --rsvp-height:8%;
+
+  /* Countdown placement (red area, under "COUNTDOWN") */
+  --cd-left:8%;
+  --cd-top:20%;
+  --cd-width:84%;
+  --cd-height:18%;
+
+  /* Gallery photo viewport inside the white frame */
+  --gal-left:12%;
+  --gal-top:18%;
+  --gal-width:76%;
+  --gal-height:60%;
 }
 
 body{
@@ -51,7 +53,7 @@ body.locked{
 .hidden{display:none!important}
 .lockedContent{display:none}
 
-/* Slides: full-page snap */
+/* Slides */
 .slides{scroll-snap-type:y mandatory}
 .slide{
   min-height:100vh;
@@ -62,7 +64,7 @@ body.locked{
   scroll-snap-align:start;
 }
 
-/* Stage (same for all images/video so they align) */
+/* Stage: fixed aspect, responsive */
 .stage{
   width:min(96vw,calc((100vh - (2*var(--vpad)))*(var(--pageW)/var(--pageH))));
   aspect-ratio:var(--pageW)/var(--pageH);
@@ -82,20 +84,6 @@ body.locked{
 .overlay{
   position:absolute;
   inset:0;
-  pointer-events:none;
-}
-
-.hint{
-  position:absolute;
-  left:50%;
-  bottom:10px;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,.35);
-  color:#fff;
-  font-weight:700;
-  padding:8px 14px;
-  border-radius:999px;
-  font-size:12px;
   pointer-events:none;
 }
 
@@ -128,7 +116,7 @@ body.locked{
   font-weight:900;
 }
 
-/* Music button */
+/* Music */
 .musicBtn{
   position:fixed;
   right:18px;
@@ -139,11 +127,10 @@ body.locked{
   border:none;
   background:#fff;
   cursor:pointer;
-  box-shadow:0 10px 22px rgba(0,0,0,.18);
-  z-index:9999;
+  z-index:50;
 }
 
-/* Flip card */
+/* Card flip */
 .cardSlot{
   position:absolute;
   left:var(--slot-left);
@@ -161,6 +148,7 @@ body.locked{
   border:none;
   background:none;
   cursor:pointer;
+  padding:0;
 }
 
 .flipCard{
@@ -171,9 +159,7 @@ body.locked{
   transition:transform .9s cubic-bezier(.2,.85,.2,1);
 }
 
-.flipCard.isFlipped{
-  transform:rotateY(180deg);
-}
+.flipCard.isFlipped{transform:rotateY(180deg)}
 
 .flipFace{
   position:absolute;
@@ -181,52 +167,63 @@ body.locked{
   backface-visibility:hidden;
 }
 
-.flipBack{ transform:rotateY(180deg); }
+.flipBack{transform:rotateY(180deg)}
 
 .flipFace img{
   width:100%;
   height:100%;
   object-fit:cover;
-  /* slight scale to cover paper edges */
-  transform:scale(1.09);
+  transform:scale(1.10);
 }
 
-/* RSVP buttons */
-.rsvpBtns{
+/* RSVP */
+.rsvpOverlay{
   position:absolute;
-  left:var(--rsvp-btn-left);
-  top:var(--rsvp-btn-top);
-  width:var(--rsvp-btn-width);
-  display:flex;
-  flex-direction:column;
-  gap:var(--rsvp-btn-gap);
+  left:var(--rsvp-left);
+  width:var(--rsvp-width);
+  top:0;
+  height:100%;
   pointer-events:auto;
 }
 
-.btnPill{
+.rsvpBtn{
+  position:absolute;
+  left:0;
+  width:100%;
+  height:var(--rsvp-height);
   display:flex;
   align-items:center;
   justify-content:center;
-  height:44px;
-  border-radius:999px;
   text-decoration:none;
   font-weight:800;
-  font-size:14px;
-  color:#7a1b1b;
+  color:#5b0b0b;
   background:rgba(255,255,255,.92);
-  box-shadow:0 10px 18px rgba(0,0,0,.15);
+  border-radius:999px;
+  box-shadow:0 10px 25px rgba(0,0,0,.18);
 }
 
-/* Countdown overlay */
-.countdownBox{
+#mapLink{top:var(--rsvp-top1)}
+#rsvpLink{top:var(--rsvp-top2)}
+
+/* Countdown */
+.countdownOverlay{
   position:absolute;
   left:var(--cd-left);
   top:var(--cd-top);
   width:var(--cd-width);
+  height:var(--cd-height);
   display:flex;
-  justify-content:space-between;
-  gap:10px;
+  align-items:flex-end;
+  justify-content:center;
   pointer-events:none;
+}
+
+.countdownRow{
+  width:100%;
+  display:flex;
+  gap:clamp(10px,2vw,22px);
+  justify-content:space-between;
+  align-items:flex-end;
 }
 
 .cdItem{
@@ -236,23 +233,28 @@ body.locked{
 
 .cdNum{
   font-weight:900;
-  font-size:clamp(18px, 4vw, 34px);
+  font-size:clamp(26px,4.2vw,56px);
+  line-height:1;
   color:#fff;
-  text-shadow:0 2px 10px rgba(0,0,0,.35);
-  line-height:1.1;
+  text-shadow:0 10px 25px rgba(0,0,0,.35);
 }
 
 .cdLbl{
   margin-top:6px;
-  font-weight:800;
-  font-size:clamp(10px, 2vw, 14px);
-  color:rgba(255,255,255,.9);
-  text-transform:uppercase;
+  font-weight:900;
   letter-spacing:.08em;
+  font-size:clamp(10px,1.2vw,14px);
+  color:rgba(255,255,255,.92);
 }
 
-/* Gallery frame + swipe */
-.galleryFrame{
+/* Gallery */
+.galleryOverlay{
+  position:absolute;
+  left:0; top:0; width:100%; height:100%;
+  pointer-events:auto;
+}
+
+.galleryViewport{
   position:absolute;
   left:var(--gal-left);
   top:var(--gal-top);
@@ -260,59 +262,60 @@ body.locked{
   height:var(--gal-height);
   overflow:hidden;
   border-radius:18px;
-  pointer-events:auto;
 }
 
-.galleryTrack{
-  width:100%;
-  height:100%;
-  display:flex;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-  scroll-behavior:smooth;
-  -webkit-overflow-scrolling:touch;
-  touch-action:pan-x;
-}
-
-.galleryTrack::-webkit-scrollbar{ display:none; }
-
-.gSlide{
-  flex:0 0 100%;
-  height:100%;
-  scroll-snap-align:center;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.gSlide img{
+.galleryViewport img{
   width:100%;
   height:100%;
   object-fit:cover;
+  display:block;
 }
 
-/* Dots */
+.fadeIn{animation:fadeIn .22s ease-out}
+@keyframes fadeIn{from{opacity:.25;transform:scale(.99)}to{opacity:1;transform:scale(1)}}
+
+.galleryArrow{
+  position:absolute;
+  top:calc(var(--gal-top) + (var(--gal-height)/2));
+  transform:translateY(-50%);
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:50%;
+  cursor:pointer;
+  background:rgba(255,255,255,.86);
+  color:#4b0b0b;
+  font-size:30px;
+  line-height:44px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.18);
+}
+
+.galleryArrow.left{left:calc(var(--gal-left) - 18px)}
+.galleryArrow.right{left:calc(var(--gal-left) + var(--gal-width) - 26px)}
+
 .galleryDots{
   position:absolute;
-  left:50%;
-  bottom:14px;
-  transform:translateX(-50%);
+  left:0;
+  right:0;
+  top:calc(var(--gal-top) + var(--gal-height) + 1.5%);
   display:flex;
-  gap:8px;
+  justify-content:center;
+  gap:10px;
   pointer-events:auto;
 }
 
 .dot{
-  width:9px;
-  height:9px;
+  width:10px;
+  height:10px;
   border-radius:50%;
   border:none;
   background:rgba(255,255,255,.55);
   cursor:pointer;
 }
-.dot.on{ background:#fff; }
+.dot.active{background:rgba(255,255,255,.95)}
 
-/* DOA overlay text */
+/* DOA TEXT */
 .doaOverlay{
   position:absolute;
   left:var(--doa-left);
@@ -330,13 +333,20 @@ body.locked{
   width:100%;
   height:100%;
   white-space:pre-wrap;
-  overflow:hidden; /* IMPORTANT: never spill */
   overflow-wrap:anywhere;
   text-align:center;
   font-weight:800;
-  line-height:1.35; /* keeps paragraph spacing */
+  line-height:1.35;
   color:#2b0b0b;
-  font-size:14px; /* will be auto-fitted by JS */
+  font-size:14px;
   text-shadow:0 1px 0 rgba(255,255,255,.6);
-  letter-spacing:.01em;
+}
+
+/* Slightly larger tap targets on small screens */
+@media (max-width:520px){
+  :root{
+    --vpad:12px;
+    --rsvp-height:9%;
+  }
+  .galleryArrow{width:40px;height:40px;line-height:40px;font-size:28px}
 }
