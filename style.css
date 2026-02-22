@@ -7,13 +7,30 @@
   --vpad:18px;
   --radius:22px;
 
-  /* Card placement */
+  /* CARD placement (your red-square calibrated area) */
   --slot-left:11.5%;
   --slot-top:7.7%;
   --slot-width:77.2%;
   --slot-height:82.7%;
 
-  /* Smaller DOA text area (yellow box match) */
+  /* RSVP buttons placement (adjust if needed) */
+  --rsvp-btn-left: 22%;
+  --rsvp-btn-top: 54%;
+  --rsvp-btn-width: 56%;
+  --rsvp-btn-gap: 10px;
+
+  /* Countdown placement (red area under COUNTDOWN word) */
+  --cd-left: 12%;
+  --cd-top: 47%;
+  --cd-width: 76%;
+
+  /* Gallery inner white frame area */
+  --gal-left: 12%;
+  --gal-top: 16%;
+  --gal-width: 76%;
+  --gal-height: 66%;
+
+  /* DOA yellow-box area (your latest) */
   --doa-left:22%;
   --doa-top:14.5%;
   --doa-width:56%;
@@ -34,7 +51,7 @@ body.locked{
 .hidden{display:none!important}
 .lockedContent{display:none}
 
-/* Slides */
+/* Slides: full-page snap */
 .slides{scroll-snap-type:y mandatory}
 .slide{
   min-height:100vh;
@@ -45,7 +62,7 @@ body.locked{
   scroll-snap-align:start;
 }
 
-/* Stage */
+/* Stage (same for all images/video so they align) */
 .stage{
   width:min(96vw,calc((100vh - (2*var(--vpad)))*(var(--pageW)/var(--pageH))));
   aspect-ratio:var(--pageW)/var(--pageH);
@@ -65,6 +82,20 @@ body.locked{
 .overlay{
   position:absolute;
   inset:0;
+  pointer-events:none;
+}
+
+.hint{
+  position:absolute;
+  left:50%;
+  bottom:10px;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,.35);
+  color:#fff;
+  font-weight:700;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:12px;
   pointer-events:none;
 }
 
@@ -97,7 +128,7 @@ body.locked{
   font-weight:900;
 }
 
-/* Music */
+/* Music button */
 .musicBtn{
   position:fixed;
   right:18px;
@@ -108,9 +139,11 @@ body.locked{
   border:none;
   background:#fff;
   cursor:pointer;
+  box-shadow:0 10px 22px rgba(0,0,0,.18);
+  z-index:9999;
 }
 
-/* Card flip */
+/* Flip card */
 .cardSlot{
   position:absolute;
   left:var(--slot-left);
@@ -119,6 +152,7 @@ body.locked{
   height:var(--slot-height);
   perspective:1200px;
   overflow:hidden;
+  pointer-events:auto;
 }
 
 .flipWrap{
@@ -147,18 +181,138 @@ body.locked{
   backface-visibility:hidden;
 }
 
-.flipBack{
-  transform:rotateY(180deg);
-}
+.flipBack{ transform:rotateY(180deg); }
 
 .flipFace img{
   width:100%;
   height:100%;
   object-fit:cover;
+  /* slight scale to cover paper edges */
   transform:scale(1.09);
 }
 
-/* DOA TEXT */
+/* RSVP buttons */
+.rsvpBtns{
+  position:absolute;
+  left:var(--rsvp-btn-left);
+  top:var(--rsvp-btn-top);
+  width:var(--rsvp-btn-width);
+  display:flex;
+  flex-direction:column;
+  gap:var(--rsvp-btn-gap);
+  pointer-events:auto;
+}
+
+.btnPill{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:44px;
+  border-radius:999px;
+  text-decoration:none;
+  font-weight:800;
+  font-size:14px;
+  color:#7a1b1b;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 10px 18px rgba(0,0,0,.15);
+}
+
+/* Countdown overlay */
+.countdownBox{
+  position:absolute;
+  left:var(--cd-left);
+  top:var(--cd-top);
+  width:var(--cd-width);
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  pointer-events:none;
+}
+
+.cdItem{
+  flex:1;
+  text-align:center;
+}
+
+.cdNum{
+  font-weight:900;
+  font-size:clamp(18px, 4vw, 34px);
+  color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.35);
+  line-height:1.1;
+}
+
+.cdLbl{
+  margin-top:6px;
+  font-weight:800;
+  font-size:clamp(10px, 2vw, 14px);
+  color:rgba(255,255,255,.9);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+/* Gallery frame + swipe */
+.galleryFrame{
+  position:absolute;
+  left:var(--gal-left);
+  top:var(--gal-top);
+  width:var(--gal-width);
+  height:var(--gal-height);
+  overflow:hidden;
+  border-radius:18px;
+  pointer-events:auto;
+}
+
+.galleryTrack{
+  width:100%;
+  height:100%;
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-x;
+}
+
+.galleryTrack::-webkit-scrollbar{ display:none; }
+
+.gSlide{
+  flex:0 0 100%;
+  height:100%;
+  scroll-snap-align:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.gSlide img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* Dots */
+.galleryDots{
+  position:absolute;
+  left:50%;
+  bottom:14px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  pointer-events:auto;
+}
+
+.dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  border:none;
+  background:rgba(255,255,255,.55);
+  cursor:pointer;
+}
+.dot.on{ background:#fff; }
+
+/* DOA overlay text */
 .doaOverlay{
   position:absolute;
   left:var(--doa-left);
@@ -169,17 +323,20 @@ body.locked{
   display:flex;
   align-items:flex-start;
   justify-content:center;
+  pointer-events:none;
 }
 
 .doaType{
   width:100%;
   height:100%;
   white-space:pre-wrap;
+  overflow:hidden; /* IMPORTANT: never spill */
   overflow-wrap:anywhere;
   text-align:center;
   font-weight:800;
-  line-height:1.35; /* paragraph spacing */
+  line-height:1.35; /* keeps paragraph spacing */
   color:#2b0b0b;
-  font-size:14px;
+  font-size:14px; /* will be auto-fitted by JS */
   text-shadow:0 1px 0 rgba(255,255,255,.6);
+  letter-spacing:.01em;
 }
