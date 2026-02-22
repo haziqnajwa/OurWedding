@@ -41,12 +41,12 @@
   --gal-height:52%;
 
   /* Cinematic Malay Vintage controls */
-  --vintage-sepia: .12;          /* 0 to 0.25 */
-  --vintage-vignette: .48;       /* 0 to 0.70 */
-  --grain-opacity: .20;          /* 0 to 0.35 */
-  --sparkle-opacity: .30;        /* 0 to 0.45 */
-  --lightleak-opacity: .18;      /* 0 to 0.30 */
-  --scratch-opacity: .08;        /* 0 to 0.18 */
+  --vintage-sepia: .14;
+  --vintage-vignette: .52;
+  --grain-opacity: .18;
+  --sparkle-opacity: .55;   /* stronger sparkle visibility */
+  --lightleak-opacity: .22;
+  --paper-opacity: .18;
 }
 
 body{
@@ -111,7 +111,12 @@ body.locked{
   z-index:4;
 }
 
-/* ---------- Cinematic Malay Vintage Overlay (STRONGER) ---------- */
+/* =========================================================
+   CINEMATIC MALAY VINTAGE OVERLAY (Golden Glow Version)
+   - Sparkles are ALWAYS ON (continuous)
+   - No vertical scratch lines
+   - Uses paper texture + grain + light leaks + vignette
+   ========================================================= */
 
 /* 1) VIGNETTE + WARM VINTAGE TONE */
 .stage::before{
@@ -123,20 +128,20 @@ body.locked{
 
   background:
     radial-gradient(ellipse at center,
-      rgba(255,245,230,0.06) 0%,
-      rgba(255,245,230,0.02) 45%,
+      rgba(255,240,220,0.10) 0%,
+      rgba(255,240,220,0.03) 45%,
       rgba(0,0,0,var(--vintage-vignette)) 100%
     ),
     linear-gradient(180deg,
-      rgba(255,244,225,var(--vintage-sepia)) 0%,
-      rgba(120,50,30,0.06) 100%
+      rgba(255,228,190,var(--vintage-sepia)) 0%,
+      rgba(110,45,20,0.08) 100%
     );
 
   mix-blend-mode:multiply;
   opacity:1;
 }
 
-/* 2) FILM GRAIN + SPARKLES + SCRATCHES + LIGHT LEAKS */
+/* 2) GOLDEN SPARKLES + FILM GRAIN + PAPER TEXTURE */
 .stage::after{
   content:"";
   position:absolute;
@@ -145,74 +150,70 @@ body.locked{
   z-index:3;
 
   background:
-    /* Light leaks (warm glow) */
+
+    /* 🌟 Golden Sparkles (stronger visibility) */
+    radial-gradient(circle at 12% 22%, rgba(255,255,255,var(--sparkle-opacity)) 0 1.4px, transparent 3px),
+    radial-gradient(circle at 24% 68%, rgba(255,245,210,calc(var(--sparkle-opacity)*.85)) 0 1.6px, transparent 3.4px),
+    radial-gradient(circle at 44% 35%, rgba(255,255,255,calc(var(--sparkle-opacity)*.75)) 0 1.2px, transparent 2.8px),
+    radial-gradient(circle at 62% 18%, rgba(255,235,190,calc(var(--sparkle-opacity)*.90)) 0 1.5px, transparent 3.2px),
+    radial-gradient(circle at 78% 52%, rgba(255,255,255,calc(var(--sparkle-opacity)*.70)) 0 1.3px, transparent 2.9px),
+    radial-gradient(circle at 88% 78%, rgba(255,240,200,calc(var(--sparkle-opacity)*.80)) 0 1.6px, transparent 3.3px),
+
+    /* 🌅 Soft golden light leaks */
     radial-gradient(circle at 18% 12%,
-      rgba(255,210,160,var(--lightleak-opacity)) 0%,
-      rgba(255,210,160,0) 45%
+      rgba(255,210,150,var(--lightleak-opacity)) 0%,
+      rgba(255,210,150,0) 55%
     ),
     radial-gradient(circle at 85% 22%,
-      rgba(255,190,140,calc(var(--lightleak-opacity)*0.75)) 0%,
-      rgba(255,190,140,0) 55%
+      rgba(255,190,140,calc(var(--lightleak-opacity)*.8)) 0%,
+      rgba(255,190,140,0) 60%
     ),
 
-    /* Sparkles / dust (white) */
-    radial-gradient(circle at 12% 22%, rgba(255,255,255,var(--sparkle-opacity)) 0 1.2px, transparent 2.8px),
-    radial-gradient(circle at 24% 68%, rgba(255,255,255,calc(var(--sparkle-opacity)*.70)) 0 1.0px, transparent 2.4px),
-    radial-gradient(circle at 44% 35%, rgba(255,255,255,calc(var(--sparkle-opacity)*.85)) 0 1.1px, transparent 2.7px),
-    radial-gradient(circle at 62% 18%, rgba(255,255,255,calc(var(--sparkle-opacity)*.65)) 0 1.0px, transparent 2.3px),
-    radial-gradient(circle at 78% 52%, rgba(255,255,255,calc(var(--sparkle-opacity)*.80)) 0 1.2px, transparent 2.8px),
-    radial-gradient(circle at 88% 78%, rgba(255,255,255,calc(var(--sparkle-opacity)*.60)) 0 0.9px, transparent 2.1px),
-
-    /* Film grain */
+    /* 🎞 Film grain */
     repeating-linear-gradient(0deg,
       rgba(255,255,255,var(--grain-opacity)) 0 1px,
       rgba(0,0,0,calc(var(--grain-opacity)*.55)) 2px 3px
     ),
-    repeating-linear-gradient(90deg,
-      rgba(255,255,255,calc(var(--grain-opacity)*.55)) 0 1px,
-      rgba(0,0,0,calc(var(--grain-opacity)*.40)) 2px 3px
-    ),
 
-    /* Light scratches */
-    repeating-linear-gradient(90deg,
-      rgba(255,255,255,var(--scratch-opacity)) 0 1px,
-      rgba(255,255,255,0) 16px 34px
+    /* 📜 Vintage paper texture (replaces scratches) */
+    radial-gradient(circle at 30% 40%,
+      rgba(120,60,30,var(--paper-opacity)) 0%,
+      transparent 65%
+    ),
+    radial-gradient(circle at 70% 65%,
+      rgba(100,50,25,calc(var(--paper-opacity)*.9)) 0%,
+      transparent 70%
     );
 
   background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
     160% 160%,
     170% 170%,
+    240px 240px,
     100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    260px 260px,
-    320px 320px,
-    520px 520px;
+    100% 100%;
 
   mix-blend-mode:screen;
   opacity:1;
-  filter: blur(.12px);
 
-  animation:
-    vintageDrift 12s ease-in-out infinite,
-    sparkleTwinkle 3.8s ease-in-out infinite;
+  /* Continuous sparkles movement (never stops) */
+  animation: sparkleFloat 18s linear infinite;
+  filter: blur(.12px);
 }
 
-@keyframes vintageDrift{
+/* Continuous floating sparkle movement */
+@keyframes sparkleFloat{
   0%   { transform: translate3d(0,0,0) scale(1.01); }
-  40%  { transform: translate3d(-6px, 8px,0) scale(1.015); }
-  75%  { transform: translate3d(6px, -5px,0) scale(1.01); }
+  50%  { transform: translate3d(-12px,10px,0) scale(1.02); }
   100% { transform: translate3d(0,0,0) scale(1.01); }
 }
 
-@keyframes sparkleTwinkle{
-  0%,100% { opacity: 0.92; }
-  50%     { opacity: 1; }
-}
-
+/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce){
   .stage::after{ animation:none; }
 }
@@ -469,7 +470,6 @@ body.locked{
   font-size:14px;
   text-shadow:0 1px 0 rgba(255,255,255,.6);
 
-  /* start hidden (fade in when slide is reached) */
   opacity:0;
   transform:translateY(10px);
 }
