@@ -18,10 +18,9 @@
 
   <button id="musicToggle" class="musicBtn" aria-label="Toggle music">🔊</button>
 
-  <!-- OPENING STAGE -->
+  <!-- OPENING -->
   <section id="openingSection" class="openingSection">
     <div class="stage">
-      <!-- opening.webp -->
       <div id="openingCover" class="openingCover">
         <img class="stageMedia" src="opening.webp" alt="Opening cover" />
         <button id="openHit" class="openHit" aria-label="Tap seal to open">
@@ -29,23 +28,20 @@
         </button>
       </div>
 
-      <!-- opening.webm -->
       <video id="openingVideo" class="stageMedia hidden" playsinline webkit-playsinline preload="metadata">
         <source src="opening.webm" type="video/webm" />
       </video>
     </div>
   </section>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN -->
   <main id="mainContent" class="slides lockedContent">
 
-    <!-- SLIDE 1: CARD BG + FLIP CARD -->
+    <!-- SLIDE 1 -->
     <section class="slide">
       <div class="stage">
         <img class="stageMedia" src="card_bg.webp" alt="Card background" />
         <div class="overlay">
-
-          <!-- SLOT EXACTLY MATCHES YOUR RED RECTANGLE -->
           <div class="cardSlot">
             <button class="flipWrap" id="flipWrap" type="button" aria-label="Flip invitation card">
               <span class="srOnly">Flip invitation card</span>
@@ -60,12 +56,11 @@
               </div>
             </button>
           </div>
-
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 2: RSVP -->
+    <!-- SLIDE 2 -->
     <section class="slide">
       <div class="stage">
         <img class="stageMedia" src="rsvp.webp" alt="RSVP" />
@@ -83,7 +78,7 @@
       </div>
     </section>
 
-    <!-- SLIDE 3: COUNTDOWN -->
+    <!-- SLIDE 3 -->
     <section class="slide">
       <div class="stage">
         <img class="stageMedia" src="countdown.webp" alt="Countdown" />
@@ -95,7 +90,7 @@
       </div>
     </section>
 
-    <!-- SLIDE 4: GALLERY -->
+    <!-- SLIDE 4 -->
     <section class="slide">
       <div class="stage">
         <img class="stageMedia" src="gallery.webp" alt="Gallery frame" />
@@ -118,7 +113,7 @@
       </div>
     </section>
 
-    <!-- SLIDE 5: DOA (typed letters) -->
+    <!-- SLIDE 5 -->
     <section class="slide">
       <div class="stage">
         <img class="stageMedia" src="doa_bg.webp" alt="Doa" />
@@ -185,7 +180,7 @@
       }
     });
 
-    // ✅ Flip card (front <-> back)
+    // Flip
     const flipWrap = document.getElementById("flipWrap");
     const flipCard = document.getElementById("flipCard");
     flipWrap.addEventListener("click", () => flipCard.classList.toggle("isFlipped"));
@@ -233,7 +228,46 @@
       if (Math.abs(dx) > 45) go(dx < 0 ? idx + 1 : idx - 1);
     });
 
-    // ✅ Doa typewriter: letters 1-by-1, centered, no box
+    // ✅ Auto-fit doa text into its frame (works on desktop + mobile)
+    function fitTextToBox(box, text, minPx, maxPx) {
+      // Create a hidden measuring clone with the same width/height/styles
+      const meas = document.createElement("div");
+      meas.className = box.className;
+      meas.style.position = "absolute";
+      meas.style.visibility = "hidden";
+      meas.style.pointerEvents = "none";
+      meas.style.left = "-99999px";
+      meas.style.top = "0";
+      meas.style.width = box.clientWidth + "px";
+      meas.style.height = box.clientHeight + "px";
+      meas.style.whiteSpace = "pre-wrap";
+      meas.style.overflow = "hidden";
+      meas.textContent = text;
+      document.body.appendChild(meas);
+
+      let lo = minPx, hi = maxPx, best = minPx;
+
+      // Binary search: largest font-size that fits height
+      for (let k = 0; k < 18; k++) {
+        const mid = (lo + hi) / 2;
+        meas.style.fontSize = mid + "px";
+
+        // Force reflow
+        const fits = meas.scrollHeight <= meas.clientHeight;
+
+        if (fits) {
+          best = mid;
+          lo = mid;
+        } else {
+          hi = mid;
+        }
+      }
+
+      document.body.removeChild(meas);
+      box.style.fontSize = best.toFixed(2) + "px";
+    }
+
+    // ✅ Doa typewriter (letters 1-by-1) AFTER fitting size
     function initDoaTyping(){
       const box = document.getElementById("doaType");
       if (!box) return;
@@ -245,10 +279,12 @@
         if (started) return;
         started = true;
 
+        // Fit for BOTH desktop + mobile (choose your limits)
+        fitTextToBox(box, fullText, 10, 18);
+
         box.textContent = "";
         let i = 0;
-
-        const speed = 14; // faster letters (adjust 10–20)
+        const speed = 14;
 
         const timer = setInterval(() => {
           box.textContent += fullText[i] ?? "";
@@ -267,6 +303,12 @@
 
       io.observe(box);
     }
+
+    // If user reloads already at bottom (rare), allow it:
+    window.addEventListener("load", () => {
+      // Only attempt if main already visible
+      if (!mainContent.classList.contains("lockedContent")) initDoaTyping();
+    });
   </script>
 </body>
 </html>
