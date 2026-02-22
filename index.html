@@ -1,310 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Our Wedding</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Wedding</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 
 <body class="locked">
 
-  <!-- Music -->
-  <audio id="bgMusic" loop preload="auto">
-    <source src="music.mp3" type="audio/mpeg" />
-  </audio>
-  <button id="musicToggle" class="musicBtn" aria-label="Toggle music">🔊</button>
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg" />
+</audio>
 
-  <!-- OPENING: opening.webp -> tap -> opening.webm -->
-  <section id="openingSection" class="openingSection">
+<button id="musicToggle" class="musicBtn" aria-label="Toggle music">🔊</button>
+
+<!-- OPENING -->
+<section id="openingSection" class="openingSection">
+  <div class="stage">
+    <div id="openingCover" class="openingCover">
+      <img class="stageMedia" src="opening.webp" alt="Opening cover" />
+      <button id="openHit" class="openHit" aria-label="Open invitation">
+        <span class="tapText">Tap seal to open</span>
+      </button>
+    </div>
+
+    <video id="openingVideo" class="stageMedia hidden" playsinline preload="metadata">
+      <source src="opening.webm" type="video/webm" />
+    </video>
+  </div>
+</section>
+
+<main id="mainContent" class="slides lockedContent">
+
+  <!-- CARD -->
+  <section class="slide" id="slide-card">
     <div class="stage">
-      <div id="openingCover" class="openingCover">
-        <img class="stageMedia" src="opening.webp" alt="Opening cover" />
-        <!-- Click anywhere (illusion: tap seal) -->
-        <button id="openHit" class="openHit" aria-label="Open invitation">
-          <span class="tapText">Tap seal to open</span>
-        </button>
-      </div>
+      <img class="stageMedia" src="card_bg.webp" alt="Card background" />
 
-      <video id="openingVideo" class="stageMedia hidden" playsinline preload="metadata">
-        <source src="opening.webm" type="video/webm" />
-      </video>
+      <div class="overlay">
+        <div class="cardSlot" aria-label="Flip card">
+          <button class="flipWrap" id="flipWrap" type="button" aria-label="Flip invitation card">
+            <div class="flipCard" id="flipCard">
+              <div class="flipFace flipFront">
+                <img src="card_front.webp" alt="Card front">
+              </div>
+              <div class="flipFace flipBack">
+                <img src="card_back.webp" alt="Card back">
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- MAIN SLIDES -->
-  <main id="mainContent" class="slides lockedContent">
-
-    <!-- SLIDE 1: CARD BG + FLIP CARD -->
-    <section class="slide" id="slide-card">
-      <div class="stage">
-        <img class="stageMedia" src="card_bg.webp" alt="Card background" />
-        <div class="overlay">
-          <div class="cardSlot" aria-label="Flip card area">
-            <button class="flipWrap" id="flipWrap" aria-label="Flip invitation card">
-              <div class="flipCard" id="flipCard">
-                <div class="flipFace flipFront">
-                  <img src="card_front.webp" alt="Card front" />
-                </div>
-                <div class="flipFace flipBack">
-                  <img src="card_back.webp" alt="Card back" />
-                </div>
-              </div>
-            </button>
-          </div>
-
-          <!-- Optional hint -->
-          <div class="hint">Tap card to flip • Scroll down</div>
+  <!-- RSVP -->
+  <section class="slide" id="slide-rsvp">
+    <div class="stage">
+      <img class="stageMedia" src="rsvp.webp" alt="Reception RSVP" />
+      <div class="overlay">
+        <div class="rsvpOverlay">
+          <!-- Replace the href values with your real links -->
+          <a class="rsvpBtn" id="mapLink" href="#" target="_blank" rel="noopener">Google Map</a>
+          <a class="rsvpBtn" id="rsvpLink" href="#" target="_blank" rel="noopener">RSVP</a>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 2: RSVP -->
-    <section class="slide" id="slide-rsvp">
-      <div class="stage">
-        <img class="stageMedia" src="rsvp.webp" alt="RSVP" />
-        <div class="overlay">
-          <div class="rsvpBtns">
-            <!-- Replace href with your real links -->
-            <a class="btnPill" href="https://maps.app.goo.gl/RB2jZ9o2HykWYwzU8" target="_blank" rel="noopener">Google Map</a>
-            <a class="btnPill" href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform" target="_blank" rel="noopener">RSVP</a>
+  <!-- COUNTDOWN -->
+  <section class="slide" id="slide-countdown">
+    <div class="stage">
+      <img class="stageMedia" src="countdown.webp" alt="Countdown" />
+      <div class="overlay">
+        <div class="countdownOverlay" aria-label="Countdown timer">
+          <div class="countdownRow">
+            <div class="cdItem"><div class="cdNum" id="cdDays">--</div><div class="cdLbl">DAYS</div></div>
+            <div class="cdItem"><div class="cdNum" id="cdHours">--</div><div class="cdLbl">HOURS</div></div>
+            <div class="cdItem"><div class="cdNum" id="cdMins">--</div><div class="cdLbl">MINS</div></div>
+            <div class="cdItem"><div class="cdNum" id="cdSecs">--</div><div class="cdLbl">SECS</div></div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 3: COUNTDOWN -->
-    <section class="slide" id="slide-countdown">
-      <div class="stage">
-        <img class="stageMedia" src="countdown.webp" alt="Countdown" />
-        <div class="overlay">
-          <div class="countdownBox" aria-label="Countdown timer">
-            <div class="cdItem">
-              <div class="cdNum" id="cdDays">--</div>
-              <div class="cdLbl">Days</div>
-            </div>
-            <div class="cdItem">
-              <div class="cdNum" id="cdHours">--</div>
-              <div class="cdLbl">Hours</div>
-            </div>
-            <div class="cdItem">
-              <div class="cdNum" id="cdMins">--</div>
-              <div class="cdLbl">Mins</div>
-            </div>
-            <div class="cdItem">
-              <div class="cdNum" id="cdSecs">--</div>
-              <div class="cdLbl">Secs</div>
-            </div>
+  <!-- GALLERY -->
+  <section class="slide" id="slide-gallery">
+    <div class="stage">
+      <img class="stageMedia" src="gallery.webp" alt="Gallery frame" />
+      <div class="overlay">
+        <div class="galleryOverlay" aria-label="Photo gallery">
+          <button class="galleryArrow left" id="galleryPrev" type="button" aria-label="Previous photo">‹</button>
+          <div class="galleryViewport" id="galleryViewport">
+            <img id="galleryImg" alt="Gallery photo" />
+          </div>
+          <button class="galleryArrow right" id="galleryNext" type="button" aria-label="Next photo">›</button>
+          <div class="galleryDots" id="galleryDots" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOA -->
+  <section class="slide" id="slide-doa">
+    <div class="stage">
+      <img class="stageMedia" src="doa_bg.webp" alt="Doa" />
+      <div class="overlay">
+        <div class="doaOverlay">
+          <div id="doaType" class="doaType"
+data-text="(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Verily in that are signs for those who reflect.
+
+(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her; And when he covers her, she carries a light burden and continues therein; And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”">
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 4: GALLERY (swipe) -->
-    <section class="slide" id="slide-gallery">
-      <div class="stage">
-        <img class="stageMedia" src="gallery.webp" alt="Gallery frame" />
-        <div class="overlay">
-          <div class="galleryFrame" aria-label="Gallery swipe area">
-            <div class="galleryTrack" id="galleryTrack">
-              <div class="gSlide"><img src="gallery1.webp" alt="Gallery 1" /></div>
-              <div class="gSlide"><img src="gallery2.webp" alt="Gallery 2" /></div>
-              <div class="gSlide"><img src="gallery3.webp" alt="Gallery 3" /></div>
-              <div class="gSlide"><img src="gallery4.webp" alt="Gallery 4" /></div>
-            </div>
-          </div>
+</main>
 
-          <div class="galleryDots" id="galleryDots" aria-label="Gallery indicators"></div>
-        </div>
-      </div>
-    </section>
+<script>
+const body = document.body;
+const openingSection = document.getElementById("openingSection");
+const openingCover   = document.getElementById("openingCover");
+const openingVideo   = document.getElementById("openingVideo");
+const openHit        = document.getElementById("openHit");
+const mainContent    = document.getElementById("mainContent");
+const music          = document.getElementById("bgMusic");
+const musicBtn       = document.getElementById("musicToggle");
 
-    <!-- SLIDE 5: DOA -->
-    <section class="slide" id="slide-doa">
-      <div class="stage">
-        <img class="stageMedia" src="doa_bg.webp" alt="Doa background" />
-        <div class="overlay">
-          <div class="doaOverlay">
-            <div
-              id="doaType"
-              class="doaType"
-              data-text="(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Verily in that are signs for those who reflect.
+let opened = false;
 
-(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her; And when he covers her, she carries a light burden and continues therein; And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”"
-            ></div>
-          </div>
-        </div>
-      </div>
-    </section>
+openHit.addEventListener("click", async () => {
+  if (opened) return;
+  opened = true;
 
-  </main>
+  try { await music.play(); } catch(e){}
 
-  <script>
-    // ===== Opening flow + music =====
-    const body = document.body;
-    const openingSection = document.getElementById("openingSection");
-    const openingCover   = document.getElementById("openingCover");
-    const openingVideo   = document.getElementById("openingVideo");
-    const openHit        = document.getElementById("openHit");
-    const mainContent    = document.getElementById("mainContent");
+  openingCover.classList.add("hidden");
+  openingVideo.classList.remove("hidden");
 
-    const music = document.getElementById("bgMusic");
-    const musicBtn = document.getElementById("musicToggle");
+  try { await openingVideo.play(); }
+  catch(e){
+    openingVideo.classList.add("hidden");
+    openingCover.classList.remove("hidden");
+    opened = false;
+  }
+});
 
-    let opened = false;
+openingVideo.addEventListener("ended", () => {
+  openingSection.style.display = "none";
+  body.classList.remove("locked");
+  mainContent.classList.remove("lockedContent");
+  window.scrollTo({top: 0, left: 0, behavior: "instant"});
+  initCountdown();
+  initGallery();
+  initDoaTyping();
+});
 
-    openHit.addEventListener("click", async () => {
-      if (opened) return;
-      opened = true;
+musicBtn.addEventListener("click", async () => {
+  if (music.paused) {
+    try { await music.play(); } catch(e){}
+    musicBtn.textContent = "🔊";
+  } else {
+    music.pause();
+    musicBtn.textContent = "🔇";
+  }
+});
 
-      // start music after user gesture
-      try { await music.play(); } catch(e){}
+document.getElementById("flipWrap")
+  .addEventListener("click", () =>
+    document.getElementById("flipCard").classList.toggle("isFlipped")
+  );
 
-      openingCover.classList.add("hidden");
-      openingVideo.classList.remove("hidden");
+/* COUNTDOWN (2 May 2026 11:00 AM, local time) */
+let cdTimer = null;
+function initCountdown(){
+  if (cdTimer) return;
 
-      try { await openingVideo.play(); }
-      catch(e){
-        // fallback: if autoplay blocked weirdly
-        openingVideo.classList.add("hidden");
-        openingCover.classList.remove("hidden");
-        opened = false;
-      }
-    });
+  const daysEl = document.getElementById("cdDays");
+  const hrsEl  = document.getElementById("cdHours");
+  const minEl  = document.getElementById("cdMins");
+  const secEl  = document.getElementById("cdSecs");
 
-    openingVideo.addEventListener("ended", () => {
-      openingSection.style.display = "none";
-      body.classList.remove("locked");
-      mainContent.classList.remove("lockedContent");
+  const target = new Date(2026, 4, 2, 11, 0, 0); // Month is 0-based: 4 = May
 
-      initCountdown();
-      initGalleryDots();
-      initDoaTyping();
-    });
+  const pad2 = (n) => String(n).padStart(2, "0");
 
-    musicBtn.addEventListener("click", async () => {
-      if (music.paused) {
-        try { await music.play(); } catch(e){}
-        musicBtn.textContent = "🔊";
-      } else {
-        music.pause();
-        musicBtn.textContent = "🔇";
-      }
-    });
+  const tick = () => {
+    const now = new Date();
+    let diff = target - now;
 
-    // ===== Flip card =====
-    document.getElementById("flipWrap")
-      .addEventListener("click", () =>
-        document.getElementById("flipCard").classList.toggle("isFlipped")
-      );
+    if (diff <= 0) diff = 0;
 
-    // ===== Countdown (2 May 2026, 11:00 AM GMT+8) =====
-    const targetDate = new Date("2026-05-02T11:00:00+08:00");
-    let cdTimer = null;
+    const totalSec = Math.floor(diff / 1000);
+    const days = Math.floor(totalSec / (3600 * 24));
+    const hrs  = Math.floor((totalSec % (3600 * 24)) / 3600);
+    const mins = Math.floor((totalSec % 3600) / 60);
+    const secs = totalSec % 60;
 
-    function pad2(n){ return String(n).padStart(2, "0"); }
+    daysEl.textContent = String(days);
+    hrsEl.textContent  = pad2(hrs);
+    minEl.textContent  = pad2(mins);
+    secEl.textContent  = pad2(secs);
+  };
 
-    function tickCountdown(){
-      const now = new Date();
-      let diff = targetDate - now;
-      if (diff < 0) diff = 0;
+  tick();
+  cdTimer = setInterval(tick, 1000);
+}
 
-      const totalSec = Math.floor(diff / 1000);
-      const days = Math.floor(totalSec / 86400);
-      const hours = Math.floor((totalSec % 86400) / 3600);
-      const mins = Math.floor((totalSec % 3600) / 60);
-      const secs = totalSec % 60;
+/* GALLERY (swipe + arrows) */
+function initGallery(){
+  const images = ["gallery1.webp","gallery2.webp","gallery3.webp","gallery4.webp"];
+  const imgEl = document.getElementById("galleryImg");
+  const prev = document.getElementById("galleryPrev");
+  const next = document.getElementById("galleryNext");
+  const dotsWrap = document.getElementById("galleryDots");
+  const viewport = document.getElementById("galleryViewport");
 
-      document.getElementById("cdDays").textContent = days;
-      document.getElementById("cdHours").textContent = pad2(hours);
-      document.getElementById("cdMins").textContent = pad2(mins);
-      document.getElementById("cdSecs").textContent = pad2(secs);
+  if (!imgEl || !prev || !next || !viewport) return;
+
+  let idx = 0;
+
+  const setIdx = (i) => {
+    idx = (i + images.length) % images.length;
+    imgEl.classList.remove("fadeIn");
+    void imgEl.offsetWidth;
+    imgEl.src = images[idx];
+    imgEl.classList.add("fadeIn");
+    [...dotsWrap.children].forEach((d, di) => d.classList.toggle("active", di === idx));
+  };
+
+  dotsWrap.innerHTML = "";
+  images.forEach((_, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "dot" + (i===0 ? " active" : "");
+    b.addEventListener("click", () => setIdx(i));
+    dotsWrap.appendChild(b);
+  });
+
+  prev.addEventListener("click", () => setIdx(idx - 1));
+  next.addEventListener("click", () => setIdx(idx + 1));
+
+  let startX = null;
+  viewport.addEventListener("pointerdown", (e) => {
+    startX = e.clientX;
+    viewport.setPointerCapture(e.pointerId);
+  });
+  viewport.addEventListener("pointerup", (e) => {
+    if (startX === null) return;
+    const dx = e.clientX - startX;
+    startX = null;
+    if (Math.abs(dx) < 35) return;
+    if (dx > 0) setIdx(idx - 1);
+    else setIdx(idx + 1);
+  });
+
+  setIdx(0);
+}
+
+/* STRICT TEXT FITTER + typewriter */
+function fitTextToBox(box, text, minPx, maxPx) {
+  const meas = document.createElement("div");
+  meas.style.position = "absolute";
+  meas.style.visibility = "hidden";
+  meas.style.width = box.clientWidth + "px";
+  meas.style.height = box.clientHeight + "px";
+  meas.style.whiteSpace = "pre-wrap";
+  meas.style.overflow = "hidden";
+  meas.style.lineHeight = getComputedStyle(box).lineHeight;
+  meas.style.fontWeight = getComputedStyle(box).fontWeight;
+  meas.style.textAlign = "center";
+  meas.textContent = text;
+  document.body.appendChild(meas);
+
+  let lo = minPx, hi = maxPx, best = minPx;
+
+  for (let i=0;i<20;i++){
+    const mid = (lo+hi)/2;
+    meas.style.fontSize = mid+"px";
+    if (meas.scrollHeight <= meas.clientHeight) {
+      best = mid;
+      lo = mid;
+    } else {
+      hi = mid;
     }
+  }
 
-    function initCountdown(){
-      tickCountdown();
-      if (cdTimer) clearInterval(cdTimer);
-      cdTimer = setInterval(tickCountdown, 1000);
-    }
+  document.body.removeChild(meas);
+  box.style.fontSize = best+"px";
+}
 
-    // ===== Gallery swipe (CSS scroll-snap + dots) =====
-    const track = document.getElementById("galleryTrack");
-    const dotsWrap = document.getElementById("galleryDots");
+let doaTimer = null;
+function initDoaTyping(){
+  const box = document.getElementById("doaType");
+  if (!box) return;
 
-    function initGalleryDots(){
-      if (!track || !dotsWrap) return;
+  const text = box.dataset.text;
 
-      const slides = Array.from(track.children);
-      dotsWrap.innerHTML = "";
+  fitTextToBox(box, text, 8, 18);
 
-      slides.forEach((_, i) => {
-        const b = document.createElement("button");
-        b.className = "dot" + (i === 0 ? " on" : "");
-        b.setAttribute("aria-label", "Go to photo " + (i + 1));
-        b.addEventListener("click", () => {
-          track.scrollTo({ left: i * track.clientWidth, behavior: "smooth" });
-        });
-        dotsWrap.appendChild(b);
-      });
+  box.textContent="";
+  let i=0;
+  if (doaTimer) clearInterval(doaTimer);
 
-      track.addEventListener("scroll", () => {
-        const idx = Math.round(track.scrollLeft / track.clientWidth);
-        Array.from(dotsWrap.children).forEach((d, j) => d.classList.toggle("on", j === idx));
-      }, { passive: true });
-    }
+  doaTimer = setInterval(()=>{
+    box.textContent += text[i] ?? "";
+    i++;
+    if(i>=text.length) clearInterval(doaTimer);
+  }, 12);
 
-    // ===== Doa typing + fit-to-box =====
-    function fitTextToBox(box, text, minPx, maxPx) {
-      const meas = document.createElement("div");
-      meas.style.position = "absolute";
-      meas.style.visibility = "hidden";
-      meas.style.width = box.clientWidth + "px";
-      meas.style.height = box.clientHeight + "px";
-      meas.style.whiteSpace = "pre-wrap";
-      meas.style.overflow = "hidden";
-      meas.style.lineHeight = getComputedStyle(box).lineHeight;
-      meas.style.fontWeight = getComputedStyle(box).fontWeight;
-      meas.style.textAlign = "center";
-      meas.style.letterSpacing = getComputedStyle(box).letterSpacing;
-      meas.textContent = text;
-      document.body.appendChild(meas);
+  window.addEventListener("resize",()=>{
+    fitTextToBox(box,text,8,18);
+  }, {passive:true});
+}
+</script>
 
-      let lo = minPx, hi = maxPx, best = minPx;
-      for (let i=0;i<22;i++){
-        const mid = (lo+hi)/2;
-        meas.style.fontSize = mid + "px";
-        if (meas.scrollHeight <= meas.clientHeight) {
-          best = mid;
-          lo = mid;
-        } else {
-          hi = mid;
-        }
-      }
-      document.body.removeChild(meas);
-      box.style.fontSize = best + "px";
-    }
-
-    function initDoaTyping(){
-      const box = document.getElementById("doaType");
-      if (!box) return;
-
-      const text = box.dataset.text || "";
-
-      // IMPORTANT: Fit first, then type
-      fitTextToBox(box, text, 9, 18);
-
-      box.textContent = "";
-      let i = 0;
-      const timer = setInterval(() => {
-        box.textContent += text[i] ?? "";
-        i++;
-        if (i >= text.length) clearInterval(timer);
-      }, 12);
-
-      window.addEventListener("resize", () => {
-        fitTextToBox(box, text, 9, 18);
-      });
-    }
-  </script>
 </body>
 </html>
