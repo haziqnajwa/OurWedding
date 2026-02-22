@@ -41,6 +41,7 @@
     <section class="slide">
       <div class="stage">
         <img class="stageMedia" src="card_bg.webp" alt="Card background" />
+
         <div class="overlay">
           <div class="cardSlot">
             <button class="flipWrap" id="flipWrap" type="button" aria-label="Flip invitation card">
@@ -57,6 +58,7 @@
             </button>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -148,13 +150,16 @@
       if (opened) return;
       opened = true;
 
+      // Start music only after user gesture
       try { await music.play(); } catch (e) {}
 
+      // Swap cover -> video
       openingCover.classList.add("hidden");
       openingVideo.classList.remove("hidden");
 
       try { await openingVideo.play(); }
       catch (e) {
+        // If autoplay blocked for some reason, revert
         openingVideo.classList.add("hidden");
         openingCover.classList.remove("hidden");
         opened = false;
@@ -180,7 +185,7 @@
       }
     });
 
-    // Flip
+    // Flip card
     const flipWrap = document.getElementById("flipWrap");
     const flipCard = document.getElementById("flipCard");
     flipWrap.addEventListener("click", () => flipCard.classList.toggle("isFlipped"));
@@ -201,7 +206,7 @@
     }
     tick(); setInterval(tick, 1000);
 
-    // Gallery
+    // Gallery swipe
     const track = document.getElementById("galleryTrack");
     const viewport = document.getElementById("galleryViewport");
     const prevBtn = document.getElementById("prevBtn");
@@ -228,9 +233,8 @@
       if (Math.abs(dx) > 45) go(dx < 0 ? idx + 1 : idx - 1);
     });
 
-    // ✅ Auto-fit doa text into its frame (works on desktop + mobile)
+    // ✅ Auto-fit doa text into its yellow-box area (desktop + mobile)
     function fitTextToBox(box, text, minPx, maxPx) {
-      // Create a hidden measuring clone with the same width/height/styles
       const meas = document.createElement("div");
       meas.className = box.className;
       meas.style.position = "absolute";
@@ -247,27 +251,20 @@
 
       let lo = minPx, hi = maxPx, best = minPx;
 
-      // Binary search: largest font-size that fits height
-      for (let k = 0; k < 18; k++) {
+      // Find largest font-size that fits height
+      for (let k = 0; k < 20; k++) {
         const mid = (lo + hi) / 2;
         meas.style.fontSize = mid + "px";
-
-        // Force reflow
         const fits = meas.scrollHeight <= meas.clientHeight;
-
-        if (fits) {
-          best = mid;
-          lo = mid;
-        } else {
-          hi = mid;
-        }
+        if (fits) { best = mid; lo = mid; }
+        else { hi = mid; }
       }
 
       document.body.removeChild(meas);
       box.style.fontSize = best.toFixed(2) + "px";
     }
 
-    // ✅ Doa typewriter (letters 1-by-1) AFTER fitting size
+    // ✅ Letter-by-letter typewriter, but fit first so it NEVER spills
     function initDoaTyping(){
       const box = document.getElementById("doaType");
       if (!box) return;
@@ -279,12 +276,13 @@
         if (started) return;
         started = true;
 
-        // Fit for BOTH desktop + mobile (choose your limits)
-        fitTextToBox(box, fullText, 10, 18);
+        // Allow larger max so mobile can fill the box nicely,
+        // but still auto-shrink on desktop to avoid covering the couple.
+        fitTextToBox(box, fullText, 10, 30);
 
         box.textContent = "";
         let i = 0;
-        const speed = 14;
+        const speed = 12;
 
         const timer = setInterval(() => {
           box.textContent += fullText[i] ?? "";
@@ -304,9 +302,7 @@
       io.observe(box);
     }
 
-    // If user reloads already at bottom (rare), allow it:
     window.addEventListener("load", () => {
-      // Only attempt if main already visible
       if (!mainContent.classList.contains("lockedContent")) initDoaTyping();
     });
   </script>
