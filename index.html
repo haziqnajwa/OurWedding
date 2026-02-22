@@ -1,310 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Our Wedding</title>
-  <link rel="stylesheet" href="style.css" />
-
-  <link rel="preload" as="image" href="opening.webp">
-  <link rel="preload" as="video" href="opening.webm" type="video/webm">
-  <link rel="preload" as="image" href="card_bg.webp">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Wedding</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 
 <body class="locked">
-  <audio id="bgMusic" loop>
-    <source src="music.mp3" type="audio/mpeg" />
-  </audio>
 
-  <button id="musicToggle" class="musicBtn" aria-label="Toggle music">🔊</button>
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg" />
+</audio>
 
-  <!-- OPENING -->
-  <section id="openingSection" class="openingSection">
+<button id="musicToggle" class="musicBtn">🔊</button>
+
+<!-- OPENING -->
+<section id="openingSection" class="openingSection">
+  <div class="stage">
+    <div id="openingCover" class="openingCover">
+      <img class="stageMedia" src="opening.webp" />
+      <button id="openHit" class="openHit">
+        <span class="tapText">Tap seal to open</span>
+      </button>
+    </div>
+
+    <video id="openingVideo" class="stageMedia hidden" playsinline preload="metadata">
+      <source src="opening.webm" type="video/webm" />
+    </video>
+  </div>
+</section>
+
+<main id="mainContent" class="slides lockedContent">
+
+  <!-- CARD -->
+  <section class="slide">
     <div class="stage">
-      <div id="openingCover" class="openingCover">
-        <img class="stageMedia" src="opening.webp" alt="Opening cover" />
-        <button id="openHit" class="openHit" aria-label="Tap seal to open">
-          <span class="tapText">Tap seal to open</span>
-        </button>
-      </div>
+      <img class="stageMedia" src="card_bg.webp" />
 
-      <video id="openingVideo" class="stageMedia hidden" playsinline webkit-playsinline preload="metadata">
-        <source src="opening.webm" type="video/webm" />
-      </video>
+      <div class="overlay">
+        <div class="cardSlot">
+          <button class="flipWrap" id="flipWrap">
+            <div class="flipCard" id="flipCard">
+              <div class="flipFace flipFront">
+                <img src="card_front.webp">
+              </div>
+              <div class="flipFace flipBack">
+                <img src="card_back.webp">
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- MAIN -->
-  <main id="mainContent" class="slides lockedContent">
+  <!-- DOA -->
+  <section class="slide">
+    <div class="stage">
+      <img class="stageMedia" src="doa_bg.webp" />
+      <div class="overlay">
+        <div class="doaOverlay">
+          <div id="doaType" class="doaType"
+data-text="(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Verily in that are signs for those who reflect.
 
-    <!-- SLIDE 1 -->
-    <section class="slide">
-      <div class="stage">
-        <img class="stageMedia" src="card_bg.webp" alt="Card background" />
-
-        <div class="overlay">
-          <div class="cardSlot">
-            <button class="flipWrap" id="flipWrap" type="button" aria-label="Flip invitation card">
-              <span class="srOnly">Flip invitation card</span>
-
-              <div class="flipCard" id="flipCard">
-                <div class="flipFace flipFront">
-                  <img src="card_front.webp" alt="Card Front">
-                </div>
-                <div class="flipFace flipBack">
-                  <img src="card_back.webp" alt="Card Back">
-                </div>
-              </div>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SLIDE 2 -->
-    <section class="slide">
-      <div class="stage">
-        <img class="stageMedia" src="rsvp.webp" alt="RSVP" />
-        <div class="overlay">
-          <div class="rsvpOverlay">
-            <a class="rsvpBtn"
-               href="https://maps.app.goo.gl/dcHFg6xttDfwuXhg6"
-               target="_blank" rel="noopener">Google Map</a>
-
-            <a class="rsvpBtn"
-               href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform"
-               target="_blank" rel="noopener">RSVP</a>
+(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her; And when he covers her, she carries a light burden and continues therein; And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”">
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 3 -->
-    <section class="slide">
-      <div class="stage">
-        <img class="stageMedia" src="countdown.webp" alt="Countdown" />
-        <div class="overlay">
-          <div class="countdownOverlay">
-            <div id="countdown" class="countdownText">Loading…</div>
-          </div>
-        </div>
-      </div>
-    </section>
+</main>
 
-    <!-- SLIDE 4 -->
-    <section class="slide">
-      <div class="stage">
-        <img class="stageMedia" src="gallery.webp" alt="Gallery frame" />
-        <div class="overlay">
-          <div class="galleryOverlay">
-            <button class="galleryNav" id="prevBtn" aria-label="Previous">‹</button>
+<script>
 
-            <div class="galleryViewport" id="galleryViewport">
-              <div class="galleryTrack" id="galleryTrack">
-                <div class="gSlide"><img src="gallery1.webp" alt="Gallery 1"></div>
-                <div class="gSlide"><img src="gallery2.webp" alt="Gallery 2"></div>
-                <div class="gSlide"><img src="gallery3.webp" alt="Gallery 3"></div>
-                <div class="gSlide"><img src="gallery4.webp" alt="Gallery 4"></div>
-              </div>
-            </div>
+const body = document.body;
+const openingSection = document.getElementById("openingSection");
+const openingCover   = document.getElementById("openingCover");
+const openingVideo   = document.getElementById("openingVideo");
+const openHit        = document.getElementById("openHit");
+const mainContent    = document.getElementById("mainContent");
+const music          = document.getElementById("bgMusic");
+const musicBtn       = document.getElementById("musicToggle");
 
-            <button class="galleryNav" id="nextBtn" aria-label="Next">›</button>
-          </div>
-        </div>
-      </div>
-    </section>
+let opened = false;
 
-    <!-- SLIDE 5 -->
-    <section class="slide">
-      <div class="stage">
-        <img class="stageMedia" src="doa_bg.webp" alt="Doa" />
-        <div class="overlay">
-          <div class="doaOverlay">
-            <div id="doaType" class="doaType"
-              data-text="(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Verily in that are signs for those who reflect.\n\n(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her; And when he covers her, she carries a light burden and continues therein; And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”">
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+openHit.addEventListener("click", async () => {
+  if (opened) return;
+  opened = true;
 
-  </main>
+  try { await music.play(); } catch(e){}
 
-  <script>
-    const body = document.body;
+  openingCover.classList.add("hidden");
+  openingVideo.classList.remove("hidden");
 
-    const openingSection = document.getElementById("openingSection");
-    const openingCover   = document.getElementById("openingCover");
-    const openingVideo   = document.getElementById("openingVideo");
-    const openHit        = document.getElementById("openHit");
+  try { await openingVideo.play(); }
+  catch(e){
+    openingVideo.classList.add("hidden");
+    openingCover.classList.remove("hidden");
+    opened = false;
+  }
+});
 
-    const mainContent = document.getElementById("mainContent");
+openingVideo.addEventListener("ended", () => {
+  openingSection.style.display = "none";
+  body.classList.remove("locked");
+  mainContent.classList.remove("lockedContent");
+  initDoaTyping();
+});
 
-    const music    = document.getElementById("bgMusic");
-    const musicBtn = document.getElementById("musicToggle");
+musicBtn.addEventListener("click", async () => {
+  if (music.paused) {
+    try { await music.play(); } catch(e){}
+    musicBtn.textContent = "🔊";
+  } else {
+    music.pause();
+    musicBtn.textContent = "🔇";
+  }
+});
 
-    let opened = false;
+document.getElementById("flipWrap")
+.addEventListener("click", () =>
+  document.getElementById("flipCard").classList.toggle("isFlipped")
+);
 
-    openHit.addEventListener("click", async () => {
-      if (opened) return;
-      opened = true;
+/* STRICT TEXT FITTER */
+function fitTextToBox(box, text, minPx, maxPx) {
 
-      // Start music only after user gesture
-      try { await music.play(); } catch (e) {}
+  const meas = document.createElement("div");
+  meas.style.position = "absolute";
+  meas.style.visibility = "hidden";
+  meas.style.width = box.clientWidth + "px";
+  meas.style.height = box.clientHeight + "px";
+  meas.style.whiteSpace = "pre-wrap";
+  meas.style.overflow = "hidden";
+  meas.style.lineHeight = getComputedStyle(box).lineHeight;
+  meas.style.fontWeight = getComputedStyle(box).fontWeight;
+  meas.style.textAlign = "center";
+  meas.textContent = text;
+  document.body.appendChild(meas);
 
-      // Swap cover -> video
-      openingCover.classList.add("hidden");
-      openingVideo.classList.remove("hidden");
+  let lo = minPx, hi = maxPx, best = minPx;
 
-      try { await openingVideo.play(); }
-      catch (e) {
-        // If autoplay blocked for some reason, revert
-        openingVideo.classList.add("hidden");
-        openingCover.classList.remove("hidden");
-        opened = false;
-      }
-    });
-
-    openingVideo.addEventListener("ended", () => {
-      openingSection.style.display = "none";
-      body.classList.remove("locked");
-      mainContent.classList.remove("lockedContent");
-
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      initDoaTyping();
-    });
-
-    musicBtn.addEventListener("click", async () => {
-      if (music.paused) {
-        try { await music.play(); } catch(e) {}
-        musicBtn.textContent = "🔊";
-      } else {
-        music.pause();
-        musicBtn.textContent = "🔇";
-      }
-    });
-
-    // Flip card
-    const flipWrap = document.getElementById("flipWrap");
-    const flipCard = document.getElementById("flipCard");
-    flipWrap.addEventListener("click", () => flipCard.classList.toggle("isFlipped"));
-
-    // Countdown
-    const countdownEl = document.getElementById("countdown");
-    const eventDate = new Date("2026-05-02T11:00:00+08:00");
-    function tick(){
-      const now = new Date();
-      const diff = eventDate - now;
-      if (diff <= 0) { countdownEl.textContent = "It’s today!"; return; }
-      const s = Math.floor(diff/1000);
-      const d = Math.floor(s/86400);
-      const h = Math.floor((s%86400)/3600);
-      const m = Math.floor((s%3600)/60);
-      const ss = s%60;
-      countdownEl.textContent = `${d}d ${h}h ${m}m ${ss}s`;
+  for (let i=0;i<20;i++){
+    let mid = (lo+hi)/2;
+    meas.style.fontSize = mid+"px";
+    if (meas.scrollHeight <= meas.clientHeight) {
+      best = mid;
+      lo = mid;
+    } else {
+      hi = mid;
     }
-    tick(); setInterval(tick, 1000);
+  }
 
-    // Gallery swipe
-    const track = document.getElementById("galleryTrack");
-    const viewport = document.getElementById("galleryViewport");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const total = track.children.length;
-    let idx = 0;
+  document.body.removeChild(meas);
+  box.style.fontSize = best+"px";
+}
 
-    function go(i){
-      idx = (i + total) % total;
-      track.style.transform = `translateX(-${idx * 100}%)`;
-    }
-    prevBtn.addEventListener("click", () => go(idx - 1));
-    nextBtn.addEventListener("click", () => go(idx + 1));
+function initDoaTyping(){
+  const box = document.getElementById("doaType");
+  const text = box.dataset.text;
 
-    let startX = 0, dragging = false;
-    viewport.addEventListener("pointerdown", (e) => {
-      dragging = true; startX = e.clientX;
-      viewport.setPointerCapture(e.pointerId);
-    });
-    viewport.addEventListener("pointerup", (e) => {
-      if (!dragging) return;
-      dragging = false;
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) > 45) go(dx < 0 ? idx + 1 : idx - 1);
-    });
+  fitTextToBox(box, text, 9, 17);
 
-    // ✅ Auto-fit doa text into its yellow-box area (desktop + mobile)
-    function fitTextToBox(box, text, minPx, maxPx) {
-      const meas = document.createElement("div");
-      meas.className = box.className;
-      meas.style.position = "absolute";
-      meas.style.visibility = "hidden";
-      meas.style.pointerEvents = "none";
-      meas.style.left = "-99999px";
-      meas.style.top = "0";
-      meas.style.width = box.clientWidth + "px";
-      meas.style.height = box.clientHeight + "px";
-      meas.style.whiteSpace = "pre-wrap";
-      meas.style.overflow = "hidden";
-      meas.textContent = text;
-      document.body.appendChild(meas);
+  box.textContent="";
+  let i=0;
 
-      let lo = minPx, hi = maxPx, best = minPx;
+  const timer=setInterval(()=>{
+    box.textContent += text[i] ?? "";
+    i++;
+    if(i>=text.length) clearInterval(timer);
+  },12);
 
-      // Find largest font-size that fits height
-      for (let k = 0; k < 20; k++) {
-        const mid = (lo + hi) / 2;
-        meas.style.fontSize = mid + "px";
-        const fits = meas.scrollHeight <= meas.clientHeight;
-        if (fits) { best = mid; lo = mid; }
-        else { hi = mid; }
-      }
+  window.addEventListener("resize",()=>{
+    fitTextToBox(box,text,9,17);
+  });
+}
 
-      document.body.removeChild(meas);
-      box.style.fontSize = best.toFixed(2) + "px";
-    }
+</script>
 
-    // ✅ Letter-by-letter typewriter, but fit first so it NEVER spills
-    function initDoaTyping(){
-      const box = document.getElementById("doaType");
-      if (!box) return;
-
-      const fullText = box.dataset.text || "";
-      let started = false;
-
-      function typeWriter(){
-        if (started) return;
-        started = true;
-
-        // Allow larger max so mobile can fill the box nicely,
-        // but still auto-shrink on desktop to avoid covering the couple.
-        fitTextToBox(box, fullText, 10, 30);
-
-        box.textContent = "";
-        let i = 0;
-        const speed = 12;
-
-        const timer = setInterval(() => {
-          box.textContent += fullText[i] ?? "";
-          i++;
-          if (i >= fullText.length) clearInterval(timer);
-        }, speed);
-      }
-
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          typeWriter();
-          io.disconnect();
-        });
-      }, { threshold: 0.55 });
-
-      io.observe(box);
-    }
-
-    window.addEventListener("load", () => {
-      if (!mainContent.classList.contains("lockedContent")) initDoaTyping();
-    });
-  </script>
 </body>
 </html>
