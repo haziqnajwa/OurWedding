@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Our Wedding</title>
 
-  <!-- Preload CSS + the FIRST thing user sees -->
+  <!-- Preload CSS + first screen -->
   <link rel="preload" href="style.css" as="style">
   <link rel="stylesheet" href="style.css" />
 
@@ -37,7 +38,7 @@
       </button>
     </div>
 
-    <!-- Keep metadata preload only (good for fast start without huge download) -->
+    <!-- Keep metadata preload only (fast start, doesn't download full video immediately) -->
     <video id="openingVideo" class="stageMedia hidden" playsinline preload="metadata">
       <source src="opening.webm" type="video/webm" />
     </video>
@@ -183,7 +184,7 @@
 
   let opened = false;
 
-  // Small helper: preload an image file when browser is idle (won't block UI)
+  // Preload images later during idle time (won't block UI)
   function preloadImagesIdle(list) {
     const run = () => {
       for (const src of list) {
@@ -218,14 +219,14 @@
     body.classList.remove("locked");
     mainContent.classList.remove("lockedContent");
 
-    // Avoid smooth scrolling work here; instant is fine
+    // Instant to avoid extra work
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 
     initCountdown();
     initGallery();
-    initDoaTyping();
+    setupDoaTrigger(); // ✅ DOA will start only when the slide is reached
 
-    // Preload the gallery photos right after opening finishes (idle)
+    // Preload gallery photos after opening finishes (idle)
     preloadImagesIdle(["gallery1.webp","gallery2.webp","gallery3.webp","gallery4.webp"]);
   });
 
@@ -255,7 +256,6 @@
     const secEl  = document.getElementById("cdSecs");
 
     const target = new Date(2026, 4, 2, 11, 0, 0); // 4 = May (0-based)
-
     const pad2 = (n) => String(n).padStart(2, "0");
 
     const tick = () => {
@@ -331,7 +331,27 @@
     setIdx(0);
   }
 
-  /* STRICT TEXT FITTER + typewriter (more efficient, same visual speed) */
+  /* DOA: trigger only when user reaches doa slide */
+  let doaStarted = false;
+  function setupDoaTrigger(){
+    const doaSlide = document.getElementById("slide-doa");
+    if (!doaSlide) return;
+
+    const obs = new IntersectionObserver((entries) => {
+      const e = entries[0];
+      if (!e.isIntersecting) return;
+      if (doaStarted) return;
+
+      doaStarted = true;
+      doaSlide.classList.add("isDoaActive"); // ✅ starts fade-in
+      initDoaTyping();                        // ✅ starts typewriter now
+      obs.disconnect();
+    }, { threshold: 0.55 });
+
+    obs.observe(doaSlide);
+  }
+
+  /* TEXT FITTER + typewriter (efficient) */
   function fitTextToBox(box, text, minPx, maxPx) {
     const meas = document.createElement("div");
     meas.style.position = "absolute";
@@ -373,7 +393,7 @@
     box.textContent = "";
     let i = 0;
 
-    // Same “speed” as 12ms/char, but using rAF to reduce timer overhead
+    // Similar speed feel as before
     const msPerChar = 12;
     let last = performance.now();
     let carry = 0;
@@ -397,7 +417,6 @@
 
     doaRAF = requestAnimationFrame(step);
 
-    // Resize: refit text, but don’t spam it
     let resizeT = 0;
     window.addEventListener("resize", () => {
       clearTimeout(resizeT);
