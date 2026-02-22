@@ -1,34 +1,37 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --maxW: 900px;
+  /* Page ratio used by ALL slides (your 1240x1748 images) */
+  --pageW: 1240;
+  --pageH: 1748;
+
+  /* Safe padding from viewport edges */
+  --vpad: 18px;
+
   --radius: 22px;
   --shadow: 0 20px 60px rgba(0,0,0,.22);
 
-  /* =======================
-     FLIP CARD POSITION (card_bg.webp)
-     These 3 values control the red-square placement.
-     ======================= */
-  --card-left: 23%;   /* move left/right */
-  --card-top: 8%;     /* move up/down */
-  --card-width: 40%;  /* size of card */
+  /* ===== Flip card placement on card_bg.webp (tune if needed) ===== */
+  --card-left: 23%;
+  --card-top: 8%;
+  --card-width: 40%;
 
-  /* RSVP placement (rsvp.webp) */
+  /* RSVP placement */
   --rsvp-left: 22%;
   --rsvp-top: 62%;
   --rsvp-width: 56%;
 
-  /* Countdown placement (countdown.webp) */
+  /* Countdown placement */
   --count-left: 50%;
   --count-top: 27%;
 
-  /* Gallery window placement (gallery.webp) */
+  /* Gallery viewport placement */
   --gal-left: 14%;
   --gal-top: 15%;
   --gal-width: 72%;
   --gal-height: 70%;
 
-  /* Doa text placement (doa_bg.webp) */
+  /* Doa placement */
   --doa-left: 22%;
   --doa-top: 12%;
   --doa-width: 56%;
@@ -49,45 +52,62 @@ body.locked{
   overflow:hidden;
 }
 
-.lockedContent{ display:none; }
 .hidden{ display:none !important; }
+.lockedContent{ display:none; }
 
-/* MUSIC BTN */
-.musicBtn{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  width:56px;
-  height:56px;
-  border-radius:50%;
-  border:none;
-  cursor:pointer;
-  background:rgba(255,255,255,.9);
-  box-shadow:var(--shadow);
-  z-index:50;
+/* ===== Slide snap behavior ===== */
+.slides{
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+.slide{
+  min-height: 100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: var(--vpad);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
-/* OPENING */
+/* ===== Shared STAGE size (THIS ensures opening + video + card align) ===== */
+.stage{
+  width: min(96vw, calc((100vh - (2 * var(--vpad))) * (var(--pageW) / var(--pageH))));
+  aspect-ratio: var(--pageW) / var(--pageH);
+
+  position:relative;
+  border-radius: var(--radius);
+  overflow:hidden;
+  box-shadow: var(--shadow);
+}
+
+/* For opening section too */
 .openingSection{
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:18px 14px;
+  padding: var(--vpad);
 }
-.openingWrap{
-  width:min(94vw, 720px);
-  position:relative;
-  border-radius:var(--radius);
-  overflow:hidden;
-  box-shadow:var(--shadow);
-}
-.openingImg, .openingVideo{
+
+/* All “page media” (images and the opening video) */
+.stageMedia{
   width:100%;
-  height:auto;
+  height:100%;
   display:block;
+  object-fit: contain;
   background:#000;
 }
+
+/* Overlay always matches media exactly */
+.overlay{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+/* ===== Opening cover tap layer ===== */
+.openingCover{ position:absolute; inset:0; }
 .openHit{
   position:absolute;
   inset:0;
@@ -108,34 +128,22 @@ body.locked{
   backdrop-filter: blur(8px);
 }
 
-/* MAIN SECTIONS */
-.section{
-  display:flex;
-  justify-content:center;
-  padding:18px 12px;
+/* ===== Music button ===== */
+.musicBtn{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  background:rgba(255,255,255,.9);
+  box-shadow: var(--shadow);
+  z-index:50;
 }
 
-.frame{
-  width:min(94vw, var(--maxW));
-  position:relative;
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-
-.frameImg{
-  width:100%;
-  height:auto;
-  display:block;
-}
-
-.overlay{
-  position:absolute;
-  inset:0;               /* ✅ makes % placement PERFECT */
-  pointer-events:none;
-}
-
-/* ========== FLIP CARD (fixed to red-square area) ========== */
+/* ===== Flip card ===== */
 .flipWrap{
   pointer-events:auto;
   position:absolute;
@@ -144,8 +152,8 @@ body.locked{
   width: var(--card-width);
   perspective: 1200px;
 }
-
 .flipper{
+  position:relative;
   transform-style:preserve-3d;
   transition: transform .9s cubic-bezier(.2,.85,.2,1);
   border-radius: 18px;
@@ -163,14 +171,13 @@ body.locked{
   inset:0;
   transform: rotateY(180deg);
 }
-
 .front img, .back img{
   width:100%;
   height:auto;
   display:block;
 }
 
-/* ========== RSVP ========== */
+/* ===== RSVP ===== */
 .rsvpOverlay{
   pointer-events:auto;
   position:absolute;
@@ -195,13 +202,12 @@ body.locked{
   box-shadow:0 10px 28px rgba(0,0,0,.18);
 }
 
-/* ========== COUNTDOWN ========== */
+/* ===== Countdown ===== */
 .countdownOverlay{
   position:absolute;
   left: var(--count-left);
   top: var(--count-top);
   transform: translate(-50%, -50%);
-  width: max-content;
   pointer-events:none;
 }
 .countdownText{
@@ -215,7 +221,7 @@ body.locked{
   font-size: clamp(16px, 3.6vw, 22px);
 }
 
-/* ========== GALLERY ========== */
+/* ===== Gallery ===== */
 .galleryOverlay{
   pointer-events:auto;
   position:absolute;
@@ -242,17 +248,17 @@ body.locked{
   display:flex;
   transition: transform .35s ease;
 }
-.slide{
+.slideImg{
   flex:0 0 100%;
   height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
 }
-.slide img{
+.slideImg img{
   width:100%;
   height:100%;
-  object-fit: contain; /* ✅ stay inside frame */
+  object-fit: contain;
   display:block;
 }
 .galleryNav{
@@ -266,7 +272,7 @@ body.locked{
   box-shadow:0 10px 28px rgba(0,0,0,.18);
 }
 
-/* ========== DOA ========== */
+/* ===== Doa ===== */
 .doaOverlay{
   position:absolute;
   left: var(--doa-left);
