@@ -29,11 +29,16 @@
   --gal-width: 72%;
   --gal-height: 70%;
 
-  /* DOA frame area (keeps above couple) */
+  /*
+    ✅ DOA text area = the “yellow box” above the couple.
+    This is the important fix:
+    - Keep text inside the top part of the red frame
+    - Never touch the couple area
+  */
   --doa-left: 19%;
   --doa-top: 12%;
   --doa-width: 62%;
-  --doa-height: 56%;
+  --doa-height: 38%;
 }
 
 body{
@@ -146,8 +151,11 @@ body.locked{
   width: var(--slot-width);
   height: var(--slot-height);
   pointer-events:auto;
-  overflow:hidden;   /* hard boundary */
+  overflow:hidden;     /* hard boundary */
   border-radius: 10px;
+
+  /* ✅ This is key for a correct “3D” flip */
+  perspective: 1200px;
 }
 
 .flipWrap{
@@ -174,6 +182,7 @@ body.locked{
   position:relative;
   transform-style: preserve-3d;
   transition: transform .9s cubic-bezier(.2,.85,.2,1);
+  will-change: transform;
 }
 
 .flipCard.isFlipped{
@@ -191,13 +200,13 @@ body.locked{
   transform: rotateY(180deg);
 }
 
-/* ✅ Bigger card: scale a bit more to remove remaining paper edges */
+/* ✅ Slightly bigger card so paper edges are not visible */
 .flipFace img{
   width:100%;
   height:100%;
   display:block;
   object-fit: cover;
-  transform: scale(1.075);  /* was 1.02/1.06, now bigger */
+  transform: scale(1.09);
   transform-origin: center;
 }
 
@@ -296,7 +305,7 @@ body.locked{
   box-shadow:0 10px 28px rgba(0,0,0,.18);
 }
 
-/* DOA text (no box, centered, inside red frame) */
+/* ✅ DOA text (no box, centered, auto-fitted, NEVER spills) */
 .doaOverlay{
   position:absolute;
   left: var(--doa-left);
@@ -305,7 +314,7 @@ body.locked{
   height: var(--doa-height);
 
   pointer-events:none;
-  overflow:hidden;           /* prevents spilling onto the couple */
+  overflow:hidden; /* ✅ clamps text to the yellow-box area */
   display:flex;
   align-items:flex-start;
   justify-content:center;
@@ -315,19 +324,18 @@ body.locked{
   width:100%;
   height:100%;
 
-  background: transparent;
+  background: transparent; /* ✅ no white box */
   padding:0;
 
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   word-break: break-word;
 
-  text-align:center;
-
+  text-align:center; /* ✅ center align */
   font-weight:800;
   line-height:1.32;
 
-  /* ✅ JS will override this with perfect fitted size */
+  /* JS will override with fitted size */
   font-size: 14px;
 
   color:#2b0b0b;
