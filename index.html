@@ -1,289 +1,177 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Our Wedding</title>
-  <link rel="stylesheet" href="style_working.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Invitation</title>
+<link rel="stylesheet" href="style.css">
+
+<link rel="preload" as="image" href="opening.webp">
+<link rel="preload" as="video" href="opening.webm" type="video/webm">
+<link rel="preload" as="image" href="card_bg.webp">
 </head>
 
 <body class="locked">
 
-  <!-- Music (starts after seal tap) -->
-  <audio id="bgMusic" src="music.mp3" preload="auto" loop></audio>
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
 
-  <!-- Top scene: paused video -> play on seal -> after end show card_bg + flippable card -->
-  <section id="scene" class="scene show" aria-label="Opening scene">
+<button id="musicToggle" class="musicBtn">🔊</button>
 
-    <!-- Opening video (paused at first frame). Seal tap starts playback. -->
-    <div id="openingWrap">
-      <div class="videoLayer">
-        <video id="openingVideo" class="openingVideo" playsinline preload="auto">
-          <source src="opening.webm" type="video/webm" />
-        </video>
-      </div>
+<!-- OPENING -->
+<section id="openingSection" class="openingSection">
+  <div class="openingWrap">
 
-      <!-- Seal button overlay (acts like envelope seal) -->
-      <button id="sealBtn" aria-label="Tap to open"></button>
+    <div id="openingCover">
+      <img src="opening.webp" class="openingImg" alt="Opening">
+      <button id="openHit" class="openHit">
+        <span class="tapText">Tap seal to open</span>
+      </button>
     </div>
 
-    <!-- Card scene shown after the video ends -->
-    <div id="cardScene" class="hidden">
-      <img class="bgImage" src="card_bg.webp" alt="" />
+    <video id="openingVideo" class="openingVideo hidden" playsinline>
+      <source src="opening.webm" type="video/webm">
+    </video>
 
-      <div class="cardLayer" id="cardLayer">
-        <div class="flipCard" id="flipCard" role="button" tabindex="0" aria-label="Tap to flip invitation">
-          <div class="flipInner">
-            <div class="cardFace front">
-              <img src="card_front.webp" alt="Invitation front" />
-            </div>
-            <div class="cardFace back">
-              <img src="card_back.webp" alt="Invitation back" />
-            </div>
-          </div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<main id="mainContent" class="content lockedContent">
+
+<!-- CARD SECTION -->
+<section class="imgSection">
+  <img src="card_bg.webp" class="sectionImg">
+  <div class="overlay">
+
+    <div class="flipWrap" id="flipWrap">
+      <div class="flipper" id="flipper">
+        <div class="front">
+          <img src="card_front.webp">
+        </div>
+        <div class="back">
+          <img src="card_back.webp">
         </div>
       </div>
-      <div class="tapHint">Tap the card to flip</div>
     </div>
 
-  </section>
+  </div>
+</section>
 
-  <!-- Scrollable sections (enabled after the opening ends) -->
-  <main id="content" class="content lockedContent" aria-label="Invitation content">
+<!-- RSVP -->
+<section class="imgSection">
+  <img src="rsvp.webp" class="sectionImg">
+  <div class="overlay rsvpOverlay">
+    <a href="https://maps.app.goo.gl/dcHFg6xttDfwuXhg6" target="_blank" class="rsvpBtn">Google Map</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform" target="_blank" class="rsvpBtn">RSVP</a>
+  </div>
+</section>
 
-    <!-- RSVP -->
-    <section class="imageSection" id="rsvp">
-      <div class="imgBlock">
-        <img class="sectionImg" src="rsvp.webp" alt="RSVP" />
-        <div class="rsvpButtons">
-          <!-- Replace the links below with your real links -->
-          <a href="https://maps.app.goo.gl/" target="_blank" rel="noopener">Google Map</a>
-          <a href="https://forms.gle/" target="_blank" rel="noopener">RSVP Form</a>
-        </div>
+<!-- COUNTDOWN -->
+<section class="imgSection">
+  <img src="countdown.webp" class="sectionImg">
+  <div class="overlay countdownOverlay">
+    <div id="countdown"></div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="imgSection">
+  <img src="gallery.webp" class="sectionImg">
+  <div class="overlay galleryOverlay">
+    <div class="galleryViewport">
+      <div class="galleryTrack" id="galleryTrack">
+        <img src="gallery1.webp">
+        <img src="gallery2.webp">
+        <img src="gallery3.webp">
+        <img src="gallery4.webp">
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <!-- Countdown -->
-    <section class="imageSection" id="countdown">
-      <div class="imgBlock">
-        <img class="sectionImg" src="countdown.webp" alt="Countdown" />
-        <div id="countdownText" class="countdownOverlay">Loading…</div>
-      </div>
-    </section>
+<!-- DOA -->
+<section class="imgSection">
+  <img src="doa_bg.webp" class="sectionImg">
+  <div class="overlay doaOverlay">
+    <div id="doaText">
+      <p class="line">(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them;</p>
+      <p class="line">and He placed between you affection and mercy. Verily in that are signs for those who reflect</p>
+      <p class="line">(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her.</p>
+      <p class="line">And when he covers her, she carries a light burden and continues therein.</p>
+      <p class="line">And when it becomes heavy, they both invoke Allah...</p>
+    </div>
+  </div>
+</section>
 
-    <!-- Gallery -->
-    <section class="imageSection" id="gallery">
-      <div class="imgBlock">
-        <img class="sectionImg" src="gallery.webp" alt="Gallery" />
-        <div class="galleryViewport" id="galleryViewport" aria-label="Photo gallery">
-          <div class="galleryTrack" id="galleryTrack">
-            <div class="gallerySlide"><img src="gallery1.webp" alt="Gallery 1" /></div>
-            <div class="gallerySlide"><img src="gallery2.webp" alt="Gallery 2" /></div>
-            <div class="gallerySlide"><img src="gallery3.webp" alt="Gallery 3" /></div>
-            <div class="gallerySlide"><img src="gallery4.webp" alt="Gallery 4" /></div>
-          </div>
-        </div>
-        <button class="galleryBtn left" id="galleryPrev" aria-label="Previous photo">‹</button>
-        <button class="galleryBtn right" id="galleryNext" aria-label="Next photo">›</button>
-        <div class="galleryDots" id="galleryDots" aria-hidden="true"></div>
-      </div>
-    </section>
+</main>
 
-    <!-- Doa text -->
-    <section class="imageSection" id="doa">
-      <div class="imgBlock">
-        <img class="sectionImg" src="doa_bg.webp" alt="Doa" />
-        <div class="doaText" id="doaText"></div>
-      </div>
-    </section>
+<script>
+const body = document.body;
+const openHit = document.getElementById("openHit");
+const openingVideo = document.getElementById("openingVideo");
+const openingCover = document.getElementById("openingCover");
+const openingSection = document.getElementById("openingSection");
+const mainContent = document.getElementById("mainContent");
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicToggle");
 
-  </main>
+openHit.onclick = async () => {
+  openingCover.classList.add("hidden");
+  openingVideo.classList.remove("hidden");
+  await music.play().catch(()=>{});
+  openingVideo.play();
+};
 
-  <script>
-    // ===== Elements =====
-    const body = document.body;
-    const sealBtn = document.getElementById('sealBtn');
-    const openingVideo = document.getElementById('openingVideo');
-    const openingWrap = document.getElementById('openingWrap');
-    const cardScene = document.getElementById('cardScene');
-    const content = document.getElementById('content');
-    const bgMusic = document.getElementById('bgMusic');
+openingVideo.onended = () => {
+  openingSection.style.display = "none";
+  body.classList.remove("locked");
+  mainContent.classList.remove("lockedContent");
+};
 
-    // Flip card
-    const flipCard = document.getElementById('flipCard');
+musicBtn.onclick = () => {
+  if(music.paused){ music.play(); musicBtn.textContent="🔊"; }
+  else{ music.pause(); musicBtn.textContent="🔇"; }
+};
 
-    // Countdown
-    const countdownText = document.getElementById('countdownText');
+/* Flip */
+document.getElementById("flipWrap").onclick=()=>{
+  document.getElementById("flipper").classList.toggle("flip");
+};
 
-    // Gallery
-    const galleryTrack = document.getElementById('galleryTrack');
-    const galleryViewport = document.getElementById('galleryViewport');
-    const galleryPrev = document.getElementById('galleryPrev');
-    const galleryNext = document.getElementById('galleryNext');
-    const galleryDots = document.getElementById('galleryDots');
+/* Countdown */
+const eventDate=new Date("2026-05-02T11:00:00+08:00");
+setInterval(()=>{
+  const now=new Date();
+  const diff=eventDate-now;
+  if(diff<0){document.getElementById("countdown").innerText="It's today!";return;}
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor(diff%86400000/3600000);
+  const m=Math.floor(diff%3600000/60000);
+  const s=Math.floor(diff%60000/1000);
+  document.getElementById("countdown").innerText=`${d}d ${h}h ${m}m ${s}s`;
+},1000);
 
-    // Doa
-    const doaTextEl = document.getElementById('doaText');
-    // Paste your doa text here (already embedded, no external doa.txt needed).
-    const doaFullText = `
-اللَّهُمَّ اجْعَلْنَا لَكُمَا نَاصِحِينَ وَبِكُمَا فَرِحِينَ
+/* Gallery swipe */
+const track=document.getElementById("galleryTrack");
+let index=0;
+document.querySelector(".galleryViewport").addEventListener("click",()=>{
+  index=(index+1)%4;
+  track.style.transform=`translateX(-${index*100}%)`;
+});
 
-"Dan Dia-lah yang menciptakan kamu dari tanah, kemudian apabila kamu sudah berupa manusia, maka kamu pun berkembang biak."
-
-"Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri supaya kamu merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang."
-
-Semoga Allah memberkati kalian berdua, menyatukan kalian dalam kebaikan, dan menjadikan rumah tangga kalian penuh sakinah, mawaddah, wa rahmah.
-`;
-
-    // ===== Helpers =====
-    function unlockScroll() {
-      body.classList.remove('locked');
-      content.classList.remove('lockedContent');
+/* Doa appear */
+const lines=document.querySelectorAll(".line");
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add("show");
     }
-
-    function showCardScene() {
-      openingWrap.classList.add('hidden');
-      cardScene.classList.remove('hidden');
-    }
-
-    // ===== Initial video state =====
-    // Ensure video shows first frame (paused) on load
-    openingVideo.addEventListener('loadeddata', () => {
-      try { openingVideo.pause(); openingVideo.currentTime = 0; } catch(e) {}
-    }, { once: true });
-
-    // Start video + music only when seal is tapped
-    sealBtn.addEventListener('click', async () => {
-      sealBtn.disabled = true;
-      sealBtn.classList.add('sealDisabled');
-
-      // Music: browsers require user gesture (this click counts)
-      try {
-        bgMusic.volume = 0.85;
-        await bgMusic.play();
-      } catch (e) {
-        // If autoplay is blocked, the rest of the site still works.
-      }
-
-      // Play the opening video
-      try {
-        openingVideo.currentTime = 0;
-        await openingVideo.play();
-      } catch (e) {
-        // If play fails, re-enable button
-        sealBtn.disabled = false;
-        sealBtn.classList.remove('sealDisabled');
-      }
-    });
-
-    // When video ends, instantly switch to card_bg and unlock scrolling
-    openingVideo.addEventListener('ended', () => {
-      showCardScene();
-      unlockScroll();
-    });
-
-    // ===== Flip card interactions =====
-    function toggleFlip() {
-      flipCard.classList.toggle('isFlipped');
-    }
-    flipCard.addEventListener('click', toggleFlip);
-    flipCard.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggleFlip();
-      }
-    });
-
-    // ===== Countdown =====
-    // Change this date/time to your actual wedding date.
-    const targetDate = new Date('2026-05-02T11:30:00+08:00');
-    function updateCountdown() {
-      const now = new Date();
-      let diff = targetDate - now;
-      if (diff < 0) diff = 0;
-      const totalSeconds = Math.floor(diff / 1000);
-      const days = Math.floor(totalSeconds / 86400);
-      const hours = Math.floor((totalSeconds % 86400) / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-      countdownText.textContent = `${days}d ${String(hours).padStart(2,'0')}h ${String(minutes).padStart(2,'0')}m ${String(seconds).padStart(2,'0')}s`;
-    }
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-
-    // ===== Gallery (buttons + swipe) =====
-    const totalSlides = galleryTrack.children.length;
-    let slideIndex = 0;
-
-    function renderDots() {
-      galleryDots.innerHTML = '';
-      for (let i = 0; i < totalSlides; i++) {
-        const dot = document.createElement('span');
-        dot.className = 'dot' + (i === slideIndex ? ' active' : '');
-        dot.addEventListener('click', () => goTo(i));
-        galleryDots.appendChild(dot);
-      }
-    }
-
-    function goTo(idx) {
-      slideIndex = (idx + totalSlides) % totalSlides;
-      galleryTrack.style.transform = `translateX(-${slideIndex * 100}%)`;
-      renderDots();
-    }
-
-    galleryPrev.addEventListener('click', () => goTo(slideIndex - 1));
-    galleryNext.addEventListener('click', () => goTo(slideIndex + 1));
-    renderDots();
-
-    // Swipe handling
-    let startX = 0;
-    let isDragging = false;
-    galleryViewport.addEventListener('pointerdown', (e) => {
-      isDragging = true;
-      startX = e.clientX;
-      galleryViewport.setPointerCapture(e.pointerId);
-    });
-    galleryViewport.addEventListener('pointermove', (e) => {
-      if (!isDragging) return;
-      const dx = e.clientX - startX;
-      galleryTrack.style.transition = 'none';
-      galleryTrack.style.transform = `translateX(calc(-${slideIndex * 100}% + ${dx}px))`;
-    });
-    galleryViewport.addEventListener('pointerup', (e) => {
-      if (!isDragging) return;
-      isDragging = false;
-      const dx = e.clientX - startX;
-      galleryTrack.style.transition = '';
-      const threshold = 40;
-      if (dx > threshold) goTo(slideIndex - 1);
-      else if (dx < -threshold) goTo(slideIndex + 1);
-      else goTo(slideIndex);
-    });
-    galleryViewport.addEventListener('pointercancel', () => { isDragging = false; goTo(slideIndex); });
-
-    // ===== Doa typewriter (1 by 1) =====
-    // Start typing when section enters view
-    let doaStarted = false;
-    function typeDoa() {
-      if (doaStarted) return;
-      doaStarted = true;
-      const text = doaFullText.trim();
-      let i = 0;
-      doaTextEl.textContent = '';
-      const timer = setInterval(() => {
-        doaTextEl.textContent += text[i] ?? '';
-        i++;
-        if (i >= text.length) clearInterval(timer);
-      }, 22);
-    }
-
-    const doaObserver = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) typeDoa();
-      }
-    }, { threshold: 0.35 });
-    doaObserver.observe(document.getElementById('doa'));
-  </script>
+  });
+},{threshold:0.5});
+lines.forEach(line=>io.observe(line));
+</script>
 
 </body>
 </html>
