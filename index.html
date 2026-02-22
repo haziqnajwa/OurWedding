@@ -1,184 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Our Wedding</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Wedding</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body class="locked">
 
-<audio id="bgMusic" loop>
-  <source src="music.mp3" type="audio/mpeg" />
-</audio>
+  <!-- Music -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg" />
+  </audio>
+  <button id="musicToggle" class="musicBtn" aria-label="Toggle music">🔊</button>
 
-<button id="musicToggle" class="musicBtn">🔊</button>
-
-<!-- OPENING -->
-<section id="openingSection" class="openingSection">
-  <div class="stage">
-    <div id="openingCover" class="openingCover">
-      <img class="stageMedia" src="opening.webp" />
-      <button id="openHit" class="openHit">
-        <span class="tapText">Tap seal to open</span>
-      </button>
-    </div>
-
-    <video id="openingVideo" class="stageMedia hidden" playsinline preload="metadata">
-      <source src="opening.webm" type="video/webm" />
-    </video>
-  </div>
-</section>
-
-<main id="mainContent" class="slides lockedContent">
-
-  <!-- CARD -->
-  <section class="slide">
+  <!-- OPENING: opening.webp -> tap -> opening.webm -->
+  <section id="openingSection" class="openingSection">
     <div class="stage">
-      <img class="stageMedia" src="card_bg.webp" />
-
-      <div class="overlay">
-        <div class="cardSlot">
-          <button class="flipWrap" id="flipWrap">
-            <div class="flipCard" id="flipCard">
-              <div class="flipFace flipFront">
-                <img src="card_front.webp">
-              </div>
-              <div class="flipFace flipBack">
-                <img src="card_back.webp">
-              </div>
-            </div>
-          </button>
-        </div>
+      <div id="openingCover" class="openingCover">
+        <img class="stageMedia" src="opening.webp" alt="Opening cover" />
+        <!-- Click anywhere (illusion: tap seal) -->
+        <button id="openHit" class="openHit" aria-label="Open invitation">
+          <span class="tapText">Tap seal to open</span>
+        </button>
       </div>
+
+      <video id="openingVideo" class="stageMedia hidden" playsinline preload="metadata">
+        <source src="opening.webm" type="video/webm" />
+      </video>
     </div>
   </section>
 
-  <!-- DOA -->
-  <section class="slide">
-    <div class="stage">
-      <img class="stageMedia" src="doa_bg.webp" />
-      <div class="overlay">
-        <div class="doaOverlay">
-          <div id="doaType" class="doaType"
-data-text="(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Verily in that are signs for those who reflect.
+  <!-- MAIN SLIDES -->
+  <main id="mainContent" class="slides lockedContent">
 
-(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her; And when he covers her, she carries a light burden and continues therein; And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”">
+    <!-- SLIDE 1: CARD BG + FLIP CARD -->
+    <section class="slide" id="slide-card">
+      <div class="stage">
+        <img class="stageMedia" src="card_bg.webp" alt="Card background" />
+        <div class="overlay">
+          <div class="cardSlot" aria-label="Flip card area">
+            <button class="flipWrap" id="flipWrap" aria-label="Flip invitation card">
+              <div class="flipCard" id="flipCard">
+                <div class="flipFace flipFront">
+                  <img src="card_front.webp" alt="Card front" />
+                </div>
+                <div class="flipFace flipBack">
+                  <img src="card_back.webp" alt="Card back" />
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <!-- Optional hint -->
+          <div class="hint">Tap card to flip • Scroll down</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: RSVP -->
+    <section class="slide" id="slide-rsvp">
+      <div class="stage">
+        <img class="stageMedia" src="rsvp.webp" alt="RSVP" />
+        <div class="overlay">
+          <div class="rsvpBtns">
+            <!-- Replace href with your real links -->
+            <a class="btnPill" href="https://maps.google.com" target="_blank" rel="noopener">Google Map</a>
+            <a class="btnPill" href="https://forms.gle/" target="_blank" rel="noopener">RSVP</a>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-</main>
+    <!-- SLIDE 3: COUNTDOWN -->
+    <section class="slide" id="slide-countdown">
+      <div class="stage">
+        <img class="stageMedia" src="countdown.webp" alt="Countdown" />
+        <div class="overlay">
+          <div class="countdownBox" aria-label="Countdown timer">
+            <div class="cdItem">
+              <div class="cdNum" id="cdDays">--</div>
+              <div class="cdLbl">Days</div>
+            </div>
+            <div class="cdItem">
+              <div class="cdNum" id="cdHours">--</div>
+              <div class="cdLbl">Hours</div>
+            </div>
+            <div class="cdItem">
+              <div class="cdNum" id="cdMins">--</div>
+              <div class="cdLbl">Mins</div>
+            </div>
+            <div class="cdItem">
+              <div class="cdNum" id="cdSecs">--</div>
+              <div class="cdLbl">Secs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<script>
+    <!-- SLIDE 4: GALLERY (swipe) -->
+    <section class="slide" id="slide-gallery">
+      <div class="stage">
+        <img class="stageMedia" src="gallery.webp" alt="Gallery frame" />
+        <div class="overlay">
+          <div class="galleryFrame" aria-label="Gallery swipe area">
+            <div class="galleryTrack" id="galleryTrack">
+              <div class="gSlide"><img src="gallery1.webp" alt="Gallery 1" /></div>
+              <div class="gSlide"><img src="gallery2.webp" alt="Gallery 2" /></div>
+              <div class="gSlide"><img src="gallery3.webp" alt="Gallery 3" /></div>
+              <div class="gSlide"><img src="gallery4.webp" alt="Gallery 4" /></div>
+            </div>
+          </div>
 
-const body = document.body;
-const openingSection = document.getElementById("openingSection");
-const openingCover   = document.getElementById("openingCover");
-const openingVideo   = document.getElementById("openingVideo");
-const openHit        = document.getElementById("openHit");
-const mainContent    = document.getElementById("mainContent");
-const music          = document.getElementById("bgMusic");
-const musicBtn       = document.getElementById("musicToggle");
+          <div class="galleryDots" id="galleryDots" aria-label="Gallery indicators"></div>
+        </div>
+      </div>
+    </section>
 
-let opened = false;
+    <!-- SLIDE 5: DOA -->
+    <section class="slide" id="slide-doa">
+      <div class="stage">
+        <img class="stageMedia" src="doa_bg.webp" alt="Doa background" />
+        <div class="overlay">
+          <div class="doaOverlay">
+            <div
+              id="doaType"
+              class="doaType"
+              data-text="(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Verily in that are signs for those who reflect.
 
-openHit.addEventListener("click", async () => {
-  if (opened) return;
-  opened = true;
+(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her; And when he covers her, she carries a light burden and continues therein; And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  try { await music.play(); } catch(e){}
+  </main>
 
-  openingCover.classList.add("hidden");
-  openingVideo.classList.remove("hidden");
+  <script>
+    // ===== Opening flow + music =====
+    const body = document.body;
+    const openingSection = document.getElementById("openingSection");
+    const openingCover   = document.getElementById("openingCover");
+    const openingVideo   = document.getElementById("openingVideo");
+    const openHit        = document.getElementById("openHit");
+    const mainContent    = document.getElementById("mainContent");
 
-  try { await openingVideo.play(); }
-  catch(e){
-    openingVideo.classList.add("hidden");
-    openingCover.classList.remove("hidden");
-    opened = false;
-  }
-});
+    const music = document.getElementById("bgMusic");
+    const musicBtn = document.getElementById("musicToggle");
 
-openingVideo.addEventListener("ended", () => {
-  openingSection.style.display = "none";
-  body.classList.remove("locked");
-  mainContent.classList.remove("lockedContent");
-  initDoaTyping();
-});
+    let opened = false;
 
-musicBtn.addEventListener("click", async () => {
-  if (music.paused) {
-    try { await music.play(); } catch(e){}
-    musicBtn.textContent = "🔊";
-  } else {
-    music.pause();
-    musicBtn.textContent = "🔇";
-  }
-});
+    openHit.addEventListener("click", async () => {
+      if (opened) return;
+      opened = true;
 
-document.getElementById("flipWrap")
-.addEventListener("click", () =>
-  document.getElementById("flipCard").classList.toggle("isFlipped")
-);
+      // start music after user gesture
+      try { await music.play(); } catch(e){}
 
-/* STRICT TEXT FITTER */
-function fitTextToBox(box, text, minPx, maxPx) {
+      openingCover.classList.add("hidden");
+      openingVideo.classList.remove("hidden");
 
-  const meas = document.createElement("div");
-  meas.style.position = "absolute";
-  meas.style.visibility = "hidden";
-  meas.style.width = box.clientWidth + "px";
-  meas.style.height = box.clientHeight + "px";
-  meas.style.whiteSpace = "pre-wrap";
-  meas.style.overflow = "hidden";
-  meas.style.lineHeight = getComputedStyle(box).lineHeight;
-  meas.style.fontWeight = getComputedStyle(box).fontWeight;
-  meas.style.textAlign = "center";
-  meas.textContent = text;
-  document.body.appendChild(meas);
+      try { await openingVideo.play(); }
+      catch(e){
+        // fallback: if autoplay blocked weirdly
+        openingVideo.classList.add("hidden");
+        openingCover.classList.remove("hidden");
+        opened = false;
+      }
+    });
 
-  let lo = minPx, hi = maxPx, best = minPx;
+    openingVideo.addEventListener("ended", () => {
+      openingSection.style.display = "none";
+      body.classList.remove("locked");
+      mainContent.classList.remove("lockedContent");
 
-  for (let i=0;i<20;i++){
-    let mid = (lo+hi)/2;
-    meas.style.fontSize = mid+"px";
-    if (meas.scrollHeight <= meas.clientHeight) {
-      best = mid;
-      lo = mid;
-    } else {
-      hi = mid;
+      initCountdown();
+      initGalleryDots();
+      initDoaTyping();
+    });
+
+    musicBtn.addEventListener("click", async () => {
+      if (music.paused) {
+        try { await music.play(); } catch(e){}
+        musicBtn.textContent = "🔊";
+      } else {
+        music.pause();
+        musicBtn.textContent = "🔇";
+      }
+    });
+
+    // ===== Flip card =====
+    document.getElementById("flipWrap")
+      .addEventListener("click", () =>
+        document.getElementById("flipCard").classList.toggle("isFlipped")
+      );
+
+    // ===== Countdown (2 May 2026, 11:00 AM GMT+8) =====
+    const targetDate = new Date("2026-05-02T11:00:00+08:00");
+    let cdTimer = null;
+
+    function pad2(n){ return String(n).padStart(2, "0"); }
+
+    function tickCountdown(){
+      const now = new Date();
+      let diff = targetDate - now;
+      if (diff < 0) diff = 0;
+
+      const totalSec = Math.floor(diff / 1000);
+      const days = Math.floor(totalSec / 86400);
+      const hours = Math.floor((totalSec % 86400) / 3600);
+      const mins = Math.floor((totalSec % 3600) / 60);
+      const secs = totalSec % 60;
+
+      document.getElementById("cdDays").textContent = days;
+      document.getElementById("cdHours").textContent = pad2(hours);
+      document.getElementById("cdMins").textContent = pad2(mins);
+      document.getElementById("cdSecs").textContent = pad2(secs);
     }
-  }
 
-  document.body.removeChild(meas);
-  box.style.fontSize = best+"px";
-}
+    function initCountdown(){
+      tickCountdown();
+      if (cdTimer) clearInterval(cdTimer);
+      cdTimer = setInterval(tickCountdown, 1000);
+    }
 
-function initDoaTyping(){
-  const box = document.getElementById("doaType");
-  const text = box.dataset.text;
+    // ===== Gallery swipe (CSS scroll-snap + dots) =====
+    const track = document.getElementById("galleryTrack");
+    const dotsWrap = document.getElementById("galleryDots");
 
-  fitTextToBox(box, text, 9, 17);
+    function initGalleryDots(){
+      if (!track || !dotsWrap) return;
 
-  box.textContent="";
-  let i=0;
+      const slides = Array.from(track.children);
+      dotsWrap.innerHTML = "";
 
-  const timer=setInterval(()=>{
-    box.textContent += text[i] ?? "";
-    i++;
-    if(i>=text.length) clearInterval(timer);
-  },12);
+      slides.forEach((_, i) => {
+        const b = document.createElement("button");
+        b.className = "dot" + (i === 0 ? " on" : "");
+        b.setAttribute("aria-label", "Go to photo " + (i + 1));
+        b.addEventListener("click", () => {
+          track.scrollTo({ left: i * track.clientWidth, behavior: "smooth" });
+        });
+        dotsWrap.appendChild(b);
+      });
 
-  window.addEventListener("resize",()=>{
-    fitTextToBox(box,text,9,17);
-  });
-}
+      track.addEventListener("scroll", () => {
+        const idx = Math.round(track.scrollLeft / track.clientWidth);
+        Array.from(dotsWrap.children).forEach((d, j) => d.classList.toggle("on", j === idx));
+      }, { passive: true });
+    }
 
-</script>
+    // ===== Doa typing + fit-to-box =====
+    function fitTextToBox(box, text, minPx, maxPx) {
+      const meas = document.createElement("div");
+      meas.style.position = "absolute";
+      meas.style.visibility = "hidden";
+      meas.style.width = box.clientWidth + "px";
+      meas.style.height = box.clientHeight + "px";
+      meas.style.whiteSpace = "pre-wrap";
+      meas.style.overflow = "hidden";
+      meas.style.lineHeight = getComputedStyle(box).lineHeight;
+      meas.style.fontWeight = getComputedStyle(box).fontWeight;
+      meas.style.textAlign = "center";
+      meas.style.letterSpacing = getComputedStyle(box).letterSpacing;
+      meas.textContent = text;
+      document.body.appendChild(meas);
 
+      let lo = minPx, hi = maxPx, best = minPx;
+      for (let i=0;i<22;i++){
+        const mid = (lo+hi)/2;
+        meas.style.fontSize = mid + "px";
+        if (meas.scrollHeight <= meas.clientHeight) {
+          best = mid;
+          lo = mid;
+        } else {
+          hi = mid;
+        }
+      }
+      document.body.removeChild(meas);
+      box.style.fontSize = best + "px";
+    }
+
+    function initDoaTyping(){
+      const box = document.getElementById("doaType");
+      if (!box) return;
+
+      const text = box.dataset.text || "";
+
+      // IMPORTANT: Fit first, then type
+      fitTextToBox(box, text, 9, 18);
+
+      box.textContent = "";
+      let i = 0;
+      const timer = setInterval(() => {
+        box.textContent += text[i] ?? "";
+        i++;
+        if (i >= text.length) clearInterval(timer);
+      }, 12);
+
+      window.addEventListener("resize", () => {
+        fitTextToBox(box, text, 9, 18);
+      });
+    }
+  </script>
 </body>
 </html>
