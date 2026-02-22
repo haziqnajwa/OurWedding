@@ -36,7 +36,7 @@
     </div>
   </section>
 
-  <!-- MAIN CONTENT (snap slides) -->
+  <!-- MAIN CONTENT -->
   <main id="mainContent" class="slides lockedContent">
 
     <!-- SLIDE 1: CARD BG + FLIP CARD -->
@@ -45,18 +45,20 @@
         <img class="stageMedia" src="card_bg.webp" alt="Card background" />
         <div class="overlay">
 
-          <!-- SLOT MATCHES YOUR RED RECTANGLE EXACTLY -->
+          <!-- SLOT EXACTLY MATCHES YOUR RED RECTANGLE -->
           <div class="cardSlot">
-            <div class="flipWrap" id="flipWrap" role="button" tabindex="0" aria-label="Flip card">
-              <div class="flipper" id="flipper">
-                <div class="face front">
-                  <img src="card_front.webp" alt="Front card">
+            <button class="flipWrap" id="flipWrap" type="button" aria-label="Flip invitation card">
+              <span class="srOnly">Flip invitation card</span>
+
+              <div class="flipCard" id="flipCard">
+                <div class="flipFace flipFront">
+                  <img src="card_front.webp" alt="Card Front">
                 </div>
-                <div class="face back">
-                  <img src="card_back.webp" alt="Back card">
+                <div class="flipFace flipBack">
+                  <img src="card_back.webp" alt="Card Back">
                 </div>
               </div>
-            </div>
+            </button>
           </div>
 
         </div>
@@ -116,19 +118,14 @@
       </div>
     </section>
 
-    <!-- SLIDE 5: DOA (typewriter) -->
+    <!-- SLIDE 5: DOA (typed letters) -->
     <section class="slide">
       <div class="stage">
         <img class="stageMedia" src="doa_bg.webp" alt="Doa" />
         <div class="overlay">
           <div class="doaOverlay">
             <div id="doaType" class="doaType"
-                 data-text="(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them;
-and He placed between you affection and mercy. Verily in that are signs for those who reflect.
-
-(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her;
-And when he covers her, she carries a light burden and continues therein;
-And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”">
+              data-text="(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Verily in that are signs for those who reflect.\n\n(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her; And when he covers her, she carries a light burden and continues therein; And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”">
             </div>
           </div>
         </div>
@@ -156,10 +153,8 @@ And when it becomes heavy, they both invoke Allah, their Lord, “If You should 
       if (opened) return;
       opened = true;
 
-      // Start music after user gesture
       try { await music.play(); } catch (e) {}
 
-      // Cover -> Video
       openingCover.classList.add("hidden");
       openingVideo.classList.remove("hidden");
 
@@ -176,13 +171,10 @@ And when it becomes heavy, they both invoke Allah, their Lord, “If You should 
       body.classList.remove("locked");
       mainContent.classList.remove("lockedContent");
 
-      // Start exactly at slide 1
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-
       initDoaTyping();
     });
 
-    // Music toggle button
     musicBtn.addEventListener("click", async () => {
       if (music.paused) {
         try { await music.play(); } catch(e) {}
@@ -193,74 +185,55 @@ And when it becomes heavy, they both invoke Allah, their Lord, “If You should 
       }
     });
 
-    // Flip card
-    const flipper = document.getElementById("flipper");
+    // ✅ Flip card (front <-> back)
     const flipWrap = document.getElementById("flipWrap");
+    const flipCard = document.getElementById("flipCard");
+    flipWrap.addEventListener("click", () => flipCard.classList.toggle("isFlipped"));
 
-    function toggleFlip(){ flipper.classList.toggle("flip"); }
-
-    flipWrap.addEventListener("click", toggleFlip);
-    flipWrap.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        toggleFlip();
-      }
-    });
-
-    // Countdown (2 May 2026 11:00 AM GMT+8)
+    // Countdown
     const countdownEl = document.getElementById("countdown");
     const eventDate = new Date("2026-05-02T11:00:00+08:00");
-
     function tick(){
       const now = new Date();
       const diff = eventDate - now;
       if (diff <= 0) { countdownEl.textContent = "It’s today!"; return; }
-
-      const s = Math.floor(diff / 1000);
-      const d = Math.floor(s / 86400);
-      const h = Math.floor((s % 86400) / 3600);
-      const m = Math.floor((s % 3600) / 60);
-      const ss = s % 60;
-
+      const s = Math.floor(diff/1000);
+      const d = Math.floor(s/86400);
+      const h = Math.floor((s%86400)/3600);
+      const m = Math.floor((s%3600)/60);
+      const ss = s%60;
       countdownEl.textContent = `${d}d ${h}h ${m}m ${ss}s`;
     }
+    tick(); setInterval(tick, 1000);
 
-    tick();
-    setInterval(tick, 1000);
-
-    // Gallery swipe + buttons
+    // Gallery
     const track = document.getElementById("galleryTrack");
     const viewport = document.getElementById("galleryViewport");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
     const total = track.children.length;
-
     let idx = 0;
 
     function go(i){
       idx = (i + total) % total;
       track.style.transform = `translateX(-${idx * 100}%)`;
     }
-
     prevBtn.addEventListener("click", () => go(idx - 1));
     nextBtn.addEventListener("click", () => go(idx + 1));
 
     let startX = 0, dragging = false;
     viewport.addEventListener("pointerdown", (e) => {
-      dragging = true;
-      startX = e.clientX;
+      dragging = true; startX = e.clientX;
       viewport.setPointerCapture(e.pointerId);
     });
-
     viewport.addEventListener("pointerup", (e) => {
       if (!dragging) return;
       dragging = false;
-
       const dx = e.clientX - startX;
       if (Math.abs(dx) > 45) go(dx < 0 ? idx + 1 : idx - 1);
     });
 
-    // Doa: typewriter (letters 1-by-1)
+    // ✅ Doa typewriter: letters 1-by-1, centered, no box
     function initDoaTyping(){
       const box = document.getElementById("doaType");
       if (!box) return;
@@ -274,7 +247,8 @@ And when it becomes heavy, they both invoke Allah, their Lord, “If You should 
 
         box.textContent = "";
         let i = 0;
-        const speed = 18; // ms per character
+
+        const speed = 14; // faster letters (adjust 10–20)
 
         const timer = setInterval(() => {
           box.textContent += fullText[i] ?? "";
