@@ -41,8 +41,15 @@
 
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:url("bg_red.webp") center/cover fixed no-repeat;
+  background:url("bg_red.webp") center/cover no-repeat;
+  /* background-attachment: fixed can cause scroll jank on mobile.
+     We'll keep it for desktop by applying fixed only on larger screens. */
+  background-attachment: scroll;
   overflow-x:hidden;
+}
+
+@media (min-width: 900px){
+  body{ background-attachment: fixed; }
 }
 
 body.locked{
@@ -62,6 +69,10 @@ body.locked{
   justify-content:center;
   padding:var(--vpad);
   scroll-snap-align:start;
+
+  /* Big win: browser can skip rendering off-screen slides */
+  content-visibility:auto;
+  contain-intrinsic-size: 100vh;
 }
 
 /* Stage: fixed aspect, responsive */
@@ -72,6 +83,9 @@ body.locked{
   border-radius:var(--radius);
   overflow:hidden;
   box-shadow:0 20px 60px rgba(0,0,0,.22);
+
+  /* Helps isolate layout/paint work for smoother scrolling */
+  contain: layout paint;
 }
 
 .stageMedia{
@@ -157,6 +171,8 @@ body.locked{
   position:relative;
   transform-style:preserve-3d;
   transition:transform .9s cubic-bezier(.2,.85,.2,1);
+
+  will-change: transform; /* small performance hint */
 }
 
 .flipCard.isFlipped{transform:rotateY(180deg)}
@@ -226,10 +242,7 @@ body.locked{
   align-items:flex-end;
 }
 
-.cdItem{
-  flex:1;
-  text-align:center;
-}
+.cdItem{flex:1;text-align:center}
 
 .cdNum{
   font-weight:900;
@@ -306,9 +319,7 @@ body.locked{
 }
 
 .dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
+  width:10px;height:10px;border-radius:50%;
   border:none;
   background:rgba(255,255,255,.55);
   cursor:pointer;
