@@ -1,177 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wedding Invitation</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Wedding</title>
+  <link rel="stylesheet" href="style.css" />
 
-<link rel="preload" as="image" href="opening.webp">
-<link rel="preload" as="video" href="opening.webm" type="video/webm">
-<link rel="preload" as="image" href="card_bg.webp">
+  <link rel="preload" as="image" href="opening.webp">
+  <link rel="preload" as="video" href="opening.webm" type="video/webm">
+  <link rel="preload" as="image" href="card_bg.webp">
 </head>
 
 <body class="locked">
+  <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg" />
+  </audio>
 
-<audio id="bgMusic" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
+  <button id="musicToggle" class="musicBtn" aria-label="Toggle music">🔊</button>
 
-<button id="musicToggle" class="musicBtn">🔊</button>
+  <!-- OPENING: opening.webp -> tap -> opening.webm -> end -> show content -->
+  <section id="openingSection" class="openingSection">
+    <div class="openingWrap">
+      <div id="openingCover" class="openingCover">
+        <img class="openingImg" src="opening.webp" alt="Opening cover" />
+        <button id="openHit" class="openHit" aria-label="Tap seal to open">
+          <span class="tapText">Tap seal to open</span>
+        </button>
+      </div>
 
-<!-- OPENING -->
-<section id="openingSection" class="openingSection">
-  <div class="openingWrap">
-
-    <div id="openingCover">
-      <img src="opening.webp" class="openingImg" alt="Opening">
-      <button id="openHit" class="openHit">
-        <span class="tapText">Tap seal to open</span>
-      </button>
+      <video id="openingVideo" class="openingVideo hidden" playsinline webkit-playsinline preload="metadata">
+        <source src="opening.webm" type="video/webm" />
+      </video>
     </div>
+  </section>
 
-    <video id="openingVideo" class="openingVideo hidden" playsinline>
-      <source src="opening.webm" type="video/webm">
-    </video>
+  <main id="mainContent" class="content lockedContent">
 
-  </div>
-</section>
+    <!-- CARD BG + FLIP CARD -->
+    <section class="section">
+      <div class="frame">
+        <img class="frameImg" src="card_bg.webp" alt="Card background" />
+        <div class="overlay">
 
-<!-- MAIN CONTENT -->
-<main id="mainContent" class="content lockedContent">
+          <!-- IMPORTANT: flip card placed by % in CSS -->
+          <div class="flipWrap" id="flipWrap" role="button" tabindex="0" aria-label="Flip card">
+            <div class="flipper" id="flipper">
+              <div class="front">
+                <img src="card_front.webp" alt="Front card">
+              </div>
+              <div class="back">
+                <img src="card_back.webp" alt="Back card">
+              </div>
+            </div>
+          </div>
 
-<!-- CARD SECTION -->
-<section class="imgSection">
-  <img src="card_bg.webp" class="sectionImg">
-  <div class="overlay">
-
-    <div class="flipWrap" id="flipWrap">
-      <div class="flipper" id="flipper">
-        <div class="front">
-          <img src="card_front.webp">
-        </div>
-        <div class="back">
-          <img src="card_back.webp">
         </div>
       </div>
-    </div>
+    </section>
 
-  </div>
-</section>
-
-<!-- RSVP -->
-<section class="imgSection">
-  <img src="rsvp.webp" class="sectionImg">
-  <div class="overlay rsvpOverlay">
-    <a href="https://maps.app.goo.gl/dcHFg6xttDfwuXhg6" target="_blank" class="rsvpBtn">Google Map</a>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform" target="_blank" class="rsvpBtn">RSVP</a>
-  </div>
-</section>
-
-<!-- COUNTDOWN -->
-<section class="imgSection">
-  <img src="countdown.webp" class="sectionImg">
-  <div class="overlay countdownOverlay">
-    <div id="countdown"></div>
-  </div>
-</section>
-
-<!-- GALLERY -->
-<section class="imgSection">
-  <img src="gallery.webp" class="sectionImg">
-  <div class="overlay galleryOverlay">
-    <div class="galleryViewport">
-      <div class="galleryTrack" id="galleryTrack">
-        <img src="gallery1.webp">
-        <img src="gallery2.webp">
-        <img src="gallery3.webp">
-        <img src="gallery4.webp">
+    <!-- RSVP -->
+    <section class="section">
+      <div class="frame">
+        <img class="frameImg" src="rsvp.webp" alt="RSVP" />
+        <div class="overlay">
+          <div class="rsvpOverlay">
+            <a class="rsvpBtn" href="https://maps.app.goo.gl/dcHFg6xttDfwuXhg6" target="_blank" rel="noopener">Google Map</a>
+            <a class="rsvpBtn" href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform" target="_blank" rel="noopener">RSVP</a>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- DOA -->
-<section class="imgSection">
-  <img src="doa_bg.webp" class="sectionImg">
-  <div class="overlay doaOverlay">
-    <div id="doaText">
-      <p class="line">(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them;</p>
-      <p class="line">and He placed between you affection and mercy. Verily in that are signs for those who reflect</p>
-      <p class="line">(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her.</p>
-      <p class="line">And when he covers her, she carries a light burden and continues therein.</p>
-      <p class="line">And when it becomes heavy, they both invoke Allah...</p>
-    </div>
-  </div>
-</section>
+    <!-- COUNTDOWN -->
+    <section class="section">
+      <div class="frame">
+        <img class="frameImg" src="countdown.webp" alt="Countdown" />
+        <div class="overlay">
+          <div class="countdownOverlay">
+            <div id="countdown" class="countdownText">Loading…</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-</main>
+    <!-- GALLERY -->
+    <section class="section">
+      <div class="frame">
+        <img class="frameImg" src="gallery.webp" alt="Gallery frame" />
+        <div class="overlay">
+          <div class="galleryOverlay">
+            <button class="galleryNav" id="prevBtn" aria-label="Previous">‹</button>
+            <div class="galleryViewport" id="galleryViewport">
+              <div class="galleryTrack" id="galleryTrack">
+                <div class="slide"><img src="gallery1.webp" alt="Gallery 1"></div>
+                <div class="slide"><img src="gallery2.webp" alt="Gallery 2"></div>
+                <div class="slide"><img src="gallery3.webp" alt="Gallery 3"></div>
+                <div class="slide"><img src="gallery4.webp" alt="Gallery 4"></div>
+              </div>
+            </div>
+            <button class="galleryNav" id="nextBtn" aria-label="Next">›</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<script>
-const body = document.body;
-const openHit = document.getElementById("openHit");
-const openingVideo = document.getElementById("openingVideo");
-const openingCover = document.getElementById("openingCover");
-const openingSection = document.getElementById("openingSection");
-const mainContent = document.getElementById("mainContent");
-const music = document.getElementById("bgMusic");
-const musicBtn = document.getElementById("musicToggle");
+    <!-- DOA -->
+    <section class="section">
+      <div class="frame">
+        <img class="frameImg" src="doa_bg.webp" alt="Doa" />
+        <div class="overlay">
+          <div class="doaOverlay" id="doaText">
+            <p class="line">(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them;</p>
+            <p class="line">and He placed between you affection and mercy. Verily in that are signs for those who reflect</p>
+            <p class="line">(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her.</p>
+            <p class="line">And when he covers her, she carries a light burden and continues therein.</p>
+            <p class="line">And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-openHit.onclick = async () => {
-  openingCover.classList.add("hidden");
-  openingVideo.classList.remove("hidden");
-  await music.play().catch(()=>{});
-  openingVideo.play();
-};
+  </main>
 
-openingVideo.onended = () => {
-  openingSection.style.display = "none";
-  body.classList.remove("locked");
-  mainContent.classList.remove("lockedContent");
-};
+  <script>
+    const body = document.body;
 
-musicBtn.onclick = () => {
-  if(music.paused){ music.play(); musicBtn.textContent="🔊"; }
-  else{ music.pause(); musicBtn.textContent="🔇"; }
-};
+    const openingSection = document.getElementById("openingSection");
+    const openingCover = document.getElementById("openingCover");
+    const openingVideo = document.getElementById("openingVideo");
+    const openHit = document.getElementById("openHit");
 
-/* Flip */
-document.getElementById("flipWrap").onclick=()=>{
-  document.getElementById("flipper").classList.toggle("flip");
-};
+    const mainContent = document.getElementById("mainContent");
+    const music = document.getElementById("bgMusic");
+    const musicBtn = document.getElementById("musicToggle");
 
-/* Countdown */
-const eventDate=new Date("2026-05-02T11:00:00+08:00");
-setInterval(()=>{
-  const now=new Date();
-  const diff=eventDate-now;
-  if(diff<0){document.getElementById("countdown").innerText="It's today!";return;}
-  const d=Math.floor(diff/86400000);
-  const h=Math.floor(diff%86400000/3600000);
-  const m=Math.floor(diff%3600000/60000);
-  const s=Math.floor(diff%60000/1000);
-  document.getElementById("countdown").innerText=`${d}d ${h}h ${m}m ${s}s`;
-},1000);
+    let opened = false;
 
-/* Gallery swipe */
-const track=document.getElementById("galleryTrack");
-let index=0;
-document.querySelector(".galleryViewport").addEventListener("click",()=>{
-  index=(index+1)%4;
-  track.style.transform=`translateX(-${index*100}%)`;
-});
+    openHit.addEventListener("click", async () => {
+      if (opened) return;
+      opened = true;
 
-/* Doa appear */
-const lines=document.querySelectorAll(".line");
-const io=new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      entry.target.classList.add("show");
+      // music starts after user gesture
+      try { await music.play(); } catch(e) {}
+
+      // cover -> video
+      openingCover.classList.add("hidden");
+      openingVideo.classList.remove("hidden");
+
+      try {
+        await openingVideo.play();
+      } catch(e) {
+        // revert if blocked
+        openingVideo.classList.add("hidden");
+        openingCover.classList.remove("hidden");
+        opened = false;
+      }
+    });
+
+    openingVideo.addEventListener("ended", () => {
+      openingSection.style.display = "none";
+      body.classList.remove("locked");
+      mainContent.classList.remove("lockedContent");
+      initDoaReveal();
+    });
+
+    musicBtn.addEventListener("click", async () => {
+      if (music.paused) {
+        try { await music.play(); } catch(e) {}
+        musicBtn.textContent = "🔊";
+      } else {
+        music.pause();
+        musicBtn.textContent = "🔇";
+      }
+    });
+
+    // Flip card
+    const flipper = document.getElementById("flipper");
+    const flipWrap = document.getElementById("flipWrap");
+    function toggleFlip(){ flipper.classList.toggle("flip"); }
+    flipWrap.addEventListener("click", toggleFlip);
+    flipWrap.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFlip(); }
+    });
+
+    // Countdown (2 May 2026, 11:00 AM GMT+8)
+    const countdownEl = document.getElementById("countdown");
+    const eventDate = new Date("2026-05-02T11:00:00+08:00");
+    function tick(){
+      const now = new Date();
+      const diff = eventDate - now;
+      if (diff <= 0) { countdownEl.textContent = "It’s today!"; return; }
+      const s = Math.floor(diff/1000);
+      const d = Math.floor(s/86400);
+      const h = Math.floor((s%86400)/3600);
+      const m = Math.floor((s%3600)/60);
+      const ss = s%60;
+      countdownEl.textContent = `${d}d ${h}h ${m}m ${ss}s`;
     }
-  });
-},{threshold:0.5});
-lines.forEach(line=>io.observe(line));
-</script>
+    tick(); setInterval(tick, 1000);
 
+    // Gallery swipe + buttons
+    const track = document.getElementById("galleryTrack");
+    const viewport = document.getElementById("galleryViewport");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const total = track.children.length;
+    let idx = 0;
+
+    function go(i){
+      idx = (i + total) % total;
+      track.style.transform = `translateX(-${idx * 100}%)`;
+    }
+    prevBtn.addEventListener("click", () => go(idx - 1));
+    nextBtn.addEventListener("click", () => go(idx + 1));
+
+    let startX = 0, dragging = false;
+    viewport.addEventListener("pointerdown", (e) => {
+      dragging = true; startX = e.clientX;
+      viewport.setPointerCapture(e.pointerId);
+    });
+    viewport.addEventListener("pointerup", (e) => {
+      if (!dragging) return;
+      dragging = false;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 45) go(dx < 0 ? idx + 1 : idx - 1);
+    });
+
+    // Doa appearing
+    function initDoaReveal(){
+      const lines = document.querySelectorAll("#doaText .line");
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("show");
+          io.unobserve(entry.target);
+        });
+      }, { threshold: 0.55 });
+      lines.forEach(l => io.observe(l));
+    }
+  </script>
 </body>
 </html>
