@@ -1,54 +1,29 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --pageW: 1240;
-  --pageH: 1748;
+  --pageW:1240;
+  --pageH:1748;
 
-  --vpad: 18px;
-  --radius: 22px;
-  --shadow: 0 20px 60px rgba(0,0,0,.22);
+  --vpad:18px;
+  --radius:22px;
 
-  /* Card slot from your red overlay */
-  --slot-left: 11.50%;
-  --slot-top: 7.67%;
-  --slot-width: 77.20%;
-  --slot-height: 82.67%;
+  /* Card placement */
+  --slot-left:11.5%;
+  --slot-top:7.7%;
+  --slot-width:77.2%;
+  --slot-height:82.7%;
 
-  /* RSVP placement */
-  --rsvp-left: 22%;
-  --rsvp-top: 62%;
-  --rsvp-width: 56%;
-
-  /* Countdown placement */
-  --count-left: 50%;
-  --count-top: 27%;
-
-  /* Gallery */
-  --gal-left: 14%;
-  --gal-top: 15%;
-  --gal-width: 72%;
-  --gal-height: 70%;
-
-  /*
-    ✅ DOA text area = the “yellow box” above the couple.
-    This is the important fix:
-    - Keep text inside the top part of the red frame
-    - Never touch the couple area
-  */
-  --doa-left: 19%;
-  --doa-top: 12%;
-  --doa-width: 62%;
-  --doa-height: 38%;
+  /* Smaller DOA text area (yellow box match) */
+  --doa-left:22%;
+  --doa-top:14.5%;
+  --doa-width:56%;
+  --doa-height:27%;
 }
 
 body{
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: url("bg_red.webp") center/cover fixed no-repeat;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:url("bg_red.webp") center/cover fixed no-repeat;
   overflow-x:hidden;
-}
-
-@media (max-width:768px){
-  body{ background-attachment:scroll; }
 }
 
 body.locked{
@@ -56,48 +31,35 @@ body.locked{
   overflow:hidden;
 }
 
-.hidden{ display:none !important; }
-.lockedContent{ display:none; }
+.hidden{display:none!important}
+.lockedContent{display:none}
 
-/* Snap slides */
-.slides{
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-}
+/* Slides */
+.slides{scroll-snap-type:y mandatory}
 .slide{
-  min-height: 100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding: var(--vpad);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-/* Shared stage sizing (opening/video/card aligned) */
-.stage{
-  width: min(96vw, calc((100vh - (2 * var(--vpad))) * (var(--pageW) / var(--pageH))));
-  aspect-ratio: var(--pageW) / var(--pageH);
-  position:relative;
-  border-radius: var(--radius);
-  overflow:hidden;
-  box-shadow: var(--shadow);
-}
-
-.openingSection{
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding: var(--vpad);
+  padding:var(--vpad);
+  scroll-snap-align:start;
+}
+
+/* Stage */
+.stage{
+  width:min(96vw,calc((100vh - (2*var(--vpad)))*(var(--pageW)/var(--pageH))));
+  aspect-ratio:var(--pageW)/var(--pageH);
+  position:relative;
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.22);
 }
 
 .stageMedia{
   width:100%;
   height:100%;
+  object-fit:contain;
   display:block;
-  object-fit: contain;
-  background:#000;
 }
 
 .overlay{
@@ -106,8 +68,15 @@ body.locked{
   pointer-events:none;
 }
 
-/* Opening cover */
-.openingCover{ position:absolute; inset:0; }
+/* Opening */
+.openingSection{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:var(--vpad);
+}
+
 .openHit{
   position:absolute;
   inset:0;
@@ -117,15 +86,15 @@ body.locked{
   display:flex;
   align-items:flex-end;
   justify-content:center;
-  padding:22px;
+  padding:20px;
 }
+
 .tapText{
-  padding:10px 16px;
+  background:rgba(0,0,0,.4);
+  color:#fff;
+  padding:10px 18px;
   border-radius:999px;
   font-weight:900;
-  color:#fff;
-  background:rgba(0,0,0,.35);
-  backdrop-filter: blur(8px);
 }
 
 /* Music */
@@ -137,184 +106,66 @@ body.locked{
   height:56px;
   border-radius:50%;
   border:none;
+  background:#fff;
   cursor:pointer;
-  background:rgba(255,255,255,.9);
-  box-shadow: var(--shadow);
-  z-index:50;
 }
 
-/* ===== Card slot + flip ===== */
+/* Card flip */
 .cardSlot{
   position:absolute;
-  left: var(--slot-left);
-  top: var(--slot-top);
-  width: var(--slot-width);
-  height: var(--slot-height);
-  pointer-events:auto;
-  overflow:hidden;     /* hard boundary */
-  border-radius: 10px;
-
-  /* ✅ This is key for a correct “3D” flip */
-  perspective: 1200px;
+  left:var(--slot-left);
+  top:var(--slot-top);
+  width:var(--slot-width);
+  height:var(--slot-height);
+  perspective:1200px;
+  overflow:hidden;
 }
 
 .flipWrap{
   width:100%;
   height:100%;
   border:none;
-  background:transparent;
-  padding:0;
+  background:none;
   cursor:pointer;
-}
-
-.flipWrap:focus{ outline:none; }
-.srOnly{
-  position:absolute;
-  width:1px;height:1px;
-  padding:0;margin:-1px;
-  overflow:hidden;clip:rect(0,0,0,0);
-  white-space:nowrap;border:0;
 }
 
 .flipCard{
   width:100%;
   height:100%;
   position:relative;
-  transform-style: preserve-3d;
-  transition: transform .9s cubic-bezier(.2,.85,.2,1);
-  will-change: transform;
+  transform-style:preserve-3d;
+  transition:transform .9s cubic-bezier(.2,.85,.2,1);
 }
 
 .flipCard.isFlipped{
-  transform: rotateY(180deg);
+  transform:rotateY(180deg);
 }
 
 .flipFace{
   position:absolute;
   inset:0;
   backface-visibility:hidden;
-  -webkit-backface-visibility:hidden;
 }
 
 .flipBack{
-  transform: rotateY(180deg);
+  transform:rotateY(180deg);
 }
 
-/* ✅ Slightly bigger card so paper edges are not visible */
 .flipFace img{
   width:100%;
   height:100%;
-  display:block;
-  object-fit: cover;
-  transform: scale(1.09);
-  transform-origin: center;
+  object-fit:cover;
+  transform:scale(1.09);
 }
 
-/* RSVP */
-.rsvpOverlay{
-  pointer-events:auto;
-  position:absolute;
-  left: var(--rsvp-left);
-  top: var(--rsvp-top);
-  width: var(--rsvp-width);
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.rsvpBtn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  font-weight:900;
-  padding:12px 14px;
-  border-radius:999px;
-  background:rgba(255,255,255,.88);
-  color:#3b0b0b;
-  border:1px solid rgba(120,0,0,.25);
-  box-shadow:0 10px 28px rgba(0,0,0,.18);
-}
-
-/* Countdown */
-.countdownOverlay{
-  position:absolute;
-  left: var(--count-left);
-  top: var(--count-top);
-  transform: translate(-50%, -50%);
-  pointer-events:none;
-}
-.countdownText{
-  padding:12px 16px;
-  border-radius:18px;
-  background:rgba(255,255,255,.18);
-  border:1px solid rgba(255,255,255,.22);
-  backdrop-filter: blur(10px);
-  color:#fff;
-  font-weight:900;
-  font-size: clamp(16px, 3.6vw, 22px);
-}
-
-/* Gallery */
-.galleryOverlay{
-  pointer-events:auto;
-  position:absolute;
-  left: var(--gal-left);
-  top: var(--gal-top);
-  width: var(--gal-width);
-  height: var(--gal-height);
-  display:grid;
-  grid-template-columns:44px 1fr 44px;
-  align-items:center;
-  gap:10px;
-}
-.galleryViewport{
-  overflow:hidden;
-  width:100%;
-  height:100%;
-  border-radius:18px;
-  background:rgba(255,255,255,.12);
-  box-shadow:0 12px 30px rgba(0,0,0,.18);
-  touch-action: pan-y;
-}
-.galleryTrack{
-  height:100%;
-  display:flex;
-  transition: transform .35s ease;
-}
-.gSlide{
-  flex:0 0 100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.gSlide img{
-  width:100%;
-  height:100%;
-  object-fit: contain;
-  display:block;
-}
-.galleryNav{
-  width:44px;
-  height:44px;
-  border-radius:999px;
-  border:none;
-  cursor:pointer;
-  font-size:26px;
-  background:rgba(255,255,255,.75);
-  box-shadow:0 10px 28px rgba(0,0,0,.18);
-}
-
-/* ✅ DOA text (no box, centered, auto-fitted, NEVER spills) */
+/* DOA TEXT */
 .doaOverlay{
   position:absolute;
-  left: var(--doa-left);
-  top: var(--doa-top);
-  width: var(--doa-width);
-  height: var(--doa-height);
-
-  pointer-events:none;
-  overflow:hidden; /* ✅ clamps text to the yellow-box area */
+  left:var(--doa-left);
+  top:var(--doa-top);
+  width:var(--doa-width);
+  height:var(--doa-height);
+  overflow:hidden;
   display:flex;
   align-items:flex-start;
   justify-content:center;
@@ -323,21 +174,12 @@ body.locked{
 .doaType{
   width:100%;
   height:100%;
-
-  background: transparent; /* ✅ no white box */
-  padding:0;
-
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-
-  text-align:center; /* ✅ center align */
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  text-align:center;
   font-weight:800;
-  line-height:1.32;
-
-  /* JS will override with fitted size */
-  font-size: 14px;
-
+  line-height:1.35; /* paragraph spacing */
   color:#2b0b0b;
-  text-shadow: 0 1px 0 rgba(255,255,255,.6), 0 2px 10px rgba(0,0,0,.15);
+  font-size:14px;
+  text-shadow:0 1px 0 rgba(255,255,255,.6);
 }
