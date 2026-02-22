@@ -1,3 +1,4 @@
+/* style.css */
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
@@ -19,11 +20,11 @@
   --doa-width:56%;
   --doa-height:27%;
 
-  /* RSVP buttons (move lower so it doesn't cover "Reception") */
+  /* RSVP buttons (moved lower so it doesn't cover "Reception") */
   --rsvp-left:18%;
   --rsvp-width:64%;
-  --rsvp-top1:58%;
-  --rsvp-top2:67%;
+  --rsvp-top1:62%;
+  --rsvp-top2:71%;
   --rsvp-height:8%;
 
   /* Countdown placement (red area, under "COUNTDOWN") */
@@ -32,18 +33,17 @@
   --cd-width:84%;
   --cd-height:18%;
 
-  /* Gallery photo viewport inside the white frame */
-  --gal-left:12%;
-  --gal-top:18%;
-  --gal-width:76%;
-  --gal-height:60%;
+  /* Gallery photo viewport inside the white frame:
+     moved down under "Gallery" and kept above seal */
+  --gal-left:13%;
+  --gal-top:22%;
+  --gal-width:74%;
+  --gal-height:52%;
 }
 
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
   background:url("bg_red.webp") center/cover no-repeat;
-  /* background-attachment: fixed can cause scroll jank on mobile.
-     We'll keep it for desktop by applying fixed only on larger screens. */
   background-attachment: scroll;
   overflow-x:hidden;
 }
@@ -70,7 +70,6 @@ body.locked{
   padding:var(--vpad);
   scroll-snap-align:start;
 
-  /* Big win: browser can skip rendering off-screen slides */
   content-visibility:auto;
   contain-intrinsic-size: 100vh;
 }
@@ -84,7 +83,6 @@ body.locked{
   overflow:hidden;
   box-shadow:0 20px 60px rgba(0,0,0,.22);
 
-  /* Helps isolate layout/paint work for smoother scrolling */
   contain: layout paint;
 }
 
@@ -100,6 +98,48 @@ body.locked{
   inset:0;
   pointer-events:none;
 }
+
+/* ---------- Cinematic vintage overlay (subtle) ---------- */
+.stage::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.25) 100%);
+  opacity:.35;
+  z-index:2;
+}
+
+.stage::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.22;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255,255,255,.55) 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 28%, rgba(255,255,255,.40) 0 1px, transparent 2px),
+    radial-gradient(circle at 35% 72%, rgba(255,255,255,.45) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 78%, rgba(255,255,255,.35) 0 1px, transparent 2px);
+  filter: blur(.2px);
+  animation: sparkleDrift 8s linear infinite;
+  mix-blend-mode: screen;
+  z-index:3;
+}
+
+@keyframes sparkleDrift{
+  0%{ transform:translate3d(0,0,0); }
+  50%{ transform:translate3d(-8px,10px,0); }
+  100%{ transform:translate3d(0,0,0); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .stage::after{ animation:none; }
+}
+
+/* Make sure overlays are above media */
+.stageMedia{ position:relative; z-index:1; }
+.overlay{ z-index:4; }
 
 /* Opening */
 .openingSection{
@@ -120,6 +160,7 @@ body.locked{
   align-items:flex-end;
   justify-content:center;
   padding:20px;
+  z-index:5;
 }
 
 .tapText{
@@ -171,8 +212,7 @@ body.locked{
   position:relative;
   transform-style:preserve-3d;
   transition:transform .9s cubic-bezier(.2,.85,.2,1);
-
-  will-change: transform; /* small performance hint */
+  will-change: transform;
 }
 
 .flipCard.isFlipped{transform:rotateY(180deg)}
@@ -351,6 +391,19 @@ body.locked{
   color:#2b0b0b;
   font-size:14px;
   text-shadow:0 1px 0 rgba(255,255,255,.6);
+
+  /* start hidden (fade in when slide is reached) */
+  opacity:0;
+  transform:translateY(10px);
+}
+
+/* Fade-in animation will run only when slide-doa becomes active */
+.slide.isDoaActive .doaType{
+  animation: doaFadeIn .9s ease-out forwards;
+}
+
+@keyframes doaFadeIn{
+  to{ opacity:1; transform:translateY(0); }
 }
 
 /* Slightly larger tap targets on small screens */
