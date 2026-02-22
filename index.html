@@ -18,31 +18,36 @@
 
   <button id="musicToggle" class="musicBtn" aria-label="Toggle music">🔊</button>
 
-  <!-- OPENING: opening.webp -> tap -> opening.webm -> end -> show content -->
+  <!-- OPENING STAGE (same size/position as the first card slide) -->
   <section id="openingSection" class="openingSection">
-    <div class="openingWrap">
+    <div class="stage">
+
+      <!-- 1) opening.webp -->
       <div id="openingCover" class="openingCover">
-        <img class="openingImg" src="opening.webp" alt="Opening cover" />
+        <img class="stageMedia" src="opening.webp" alt="Opening cover" />
         <button id="openHit" class="openHit" aria-label="Tap seal to open">
           <span class="tapText">Tap seal to open</span>
         </button>
       </div>
 
-      <video id="openingVideo" class="openingVideo hidden" playsinline webkit-playsinline preload="metadata">
+      <!-- 2) opening.webm -->
+      <video id="openingVideo" class="stageMedia hidden" playsinline webkit-playsinline preload="metadata">
         <source src="opening.webm" type="video/webm" />
       </video>
+
     </div>
   </section>
 
-  <main id="mainContent" class="content lockedContent">
+  <!-- MAIN CONTENT (snaps like slides) -->
+  <main id="mainContent" class="slides lockedContent">
 
-    <!-- CARD BG + FLIP CARD -->
-    <section class="section">
-      <div class="frame">
-        <img class="frameImg" src="card_bg.webp" alt="Card background" />
+    <!-- SLIDE 1: CARD BG + FLIP CARD -->
+    <section class="slide">
+      <div class="stage">
+        <img class="stageMedia" src="card_bg.webp" alt="Card background" />
         <div class="overlay">
 
-          <!-- IMPORTANT: flip card placed by % in CSS -->
+          <!-- Flip card inside your red-square area -->
           <div class="flipWrap" id="flipWrap" role="button" tabindex="0" aria-label="Flip card">
             <div class="flipper" id="flipper">
               <div class="front">
@@ -58,23 +63,28 @@
       </div>
     </section>
 
-    <!-- RSVP -->
-    <section class="section">
-      <div class="frame">
-        <img class="frameImg" src="rsvp.webp" alt="RSVP" />
+    <!-- SLIDE 2: RSVP -->
+    <section class="slide">
+      <div class="stage">
+        <img class="stageMedia" src="rsvp.webp" alt="RSVP" />
         <div class="overlay">
           <div class="rsvpOverlay">
-            <a class="rsvpBtn" href="https://maps.app.goo.gl/dcHFg6xttDfwuXhg6" target="_blank" rel="noopener">Google Map</a>
-            <a class="rsvpBtn" href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform" target="_blank" rel="noopener">RSVP</a>
+            <a class="rsvpBtn"
+              href="https://maps.app.goo.gl/dcHFg6xttDfwuXhg6"
+              target="_blank" rel="noopener">Google Map</a>
+
+            <a class="rsvpBtn"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform"
+              target="_blank" rel="noopener">RSVP</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- COUNTDOWN -->
-    <section class="section">
-      <div class="frame">
-        <img class="frameImg" src="countdown.webp" alt="Countdown" />
+    <!-- SLIDE 3: COUNTDOWN -->
+    <section class="slide">
+      <div class="stage">
+        <img class="stageMedia" src="countdown.webp" alt="Countdown" />
         <div class="overlay">
           <div class="countdownOverlay">
             <div id="countdown" class="countdownText">Loading…</div>
@@ -83,31 +93,33 @@
       </div>
     </section>
 
-    <!-- GALLERY -->
-    <section class="section">
-      <div class="frame">
-        <img class="frameImg" src="gallery.webp" alt="Gallery frame" />
+    <!-- SLIDE 4: GALLERY -->
+    <section class="slide">
+      <div class="stage">
+        <img class="stageMedia" src="gallery.webp" alt="Gallery frame" />
         <div class="overlay">
           <div class="galleryOverlay">
             <button class="galleryNav" id="prevBtn" aria-label="Previous">‹</button>
+
             <div class="galleryViewport" id="galleryViewport">
               <div class="galleryTrack" id="galleryTrack">
-                <div class="slide"><img src="gallery1.webp" alt="Gallery 1"></div>
-                <div class="slide"><img src="gallery2.webp" alt="Gallery 2"></div>
-                <div class="slide"><img src="gallery3.webp" alt="Gallery 3"></div>
-                <div class="slide"><img src="gallery4.webp" alt="Gallery 4"></div>
+                <div class="slideImg"><img src="gallery1.webp" alt="Gallery 1"></div>
+                <div class="slideImg"><img src="gallery2.webp" alt="Gallery 2"></div>
+                <div class="slideImg"><img src="gallery3.webp" alt="Gallery 3"></div>
+                <div class="slideImg"><img src="gallery4.webp" alt="Gallery 4"></div>
               </div>
             </div>
+
             <button class="galleryNav" id="nextBtn" aria-label="Next">›</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- DOA -->
-    <section class="section">
-      <div class="frame">
-        <img class="frameImg" src="doa_bg.webp" alt="Doa" />
+    <!-- SLIDE 5: DOA -->
+    <section class="slide">
+      <div class="stage">
+        <img class="stageMedia" src="doa_bg.webp" alt="Doa" />
         <div class="overlay">
           <div class="doaOverlay" id="doaText">
             <p class="line">(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them;</p>
@@ -131,6 +143,7 @@
     const openHit = document.getElementById("openHit");
 
     const mainContent = document.getElementById("mainContent");
+
     const music = document.getElementById("bgMusic");
     const musicBtn = document.getElementById("musicToggle");
 
@@ -140,17 +153,13 @@
       if (opened) return;
       opened = true;
 
-      // music starts after user gesture
       try { await music.play(); } catch(e) {}
 
-      // cover -> video
       openingCover.classList.add("hidden");
       openingVideo.classList.remove("hidden");
 
-      try {
-        await openingVideo.play();
-      } catch(e) {
-        // revert if blocked
+      try { await openingVideo.play(); }
+      catch(e){
         openingVideo.classList.add("hidden");
         openingCover.classList.remove("hidden");
         opened = false;
@@ -158,9 +167,15 @@
     });
 
     openingVideo.addEventListener("ended", () => {
+      // Instantly show the first slide (card_bg.webp) at the SAME stage position
       openingSection.style.display = "none";
+
       body.classList.remove("locked");
       mainContent.classList.remove("lockedContent");
+
+      // Ensure start exactly at the top of slide 1
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
       initDoaReveal();
     });
 
@@ -183,7 +198,7 @@
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFlip(); }
     });
 
-    // Countdown (2 May 2026, 11:00 AM GMT+8)
+    // Countdown
     const countdownEl = document.getElementById("countdown");
     const eventDate = new Date("2026-05-02T11:00:00+08:00");
     function tick(){
@@ -199,7 +214,7 @@
     }
     tick(); setInterval(tick, 1000);
 
-    // Gallery swipe + buttons
+    // Gallery buttons + swipe
     const track = document.getElementById("galleryTrack");
     const viewport = document.getElementById("galleryViewport");
     const prevBtn = document.getElementById("prevBtn");
