@@ -1,4 +1,4 @@
-/* style.css */
+/* style.css (UPDATED: gallery swipe friendliness + royal sparkle overlay retained) */
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
@@ -8,56 +8,47 @@
   --vpad:18px;
   --radius:22px;
 
-  /* Card placement (inside red square on card_bg.webp) */
   --slot-left:10.7%;
   --slot-top:6.7%;
   --slot-width:79.0%;
   --slot-height:84.8%;
 
-  /* DOA text area (yellow box) */
   --doa-left:22%;
   --doa-top:14.5%;
   --doa-width:56%;
   --doa-height:27%;
 
-  /* RSVP buttons (moved lower so it doesn't cover "Reception") */
   --rsvp-left:18%;
   --rsvp-width:64%;
   --rsvp-top1:62%;
   --rsvp-top2:71%;
   --rsvp-height:8%;
 
-  /* Countdown placement (red area, under "COUNTDOWN") */
   --cd-left:8%;
   --cd-top:20%;
   --cd-width:84%;
   --cd-height:18%;
 
-  /* Gallery photo viewport inside the white frame:
-     moved down under "Gallery" and kept above seal */
   --gal-left:13%;
   --gal-top:22%;
   --gal-width:74%;
   --gal-height:52%;
 
-  /* Cinematic Malay Vintage controls */
-  --vintage-sepia: .14;
-  --vintage-vignette: .52;
-  --grain-opacity: .18;
-  --sparkle-opacity: .55;   /* stronger sparkle visibility */
-  --lightleak-opacity: .22;
-  --paper-opacity: .18;
+  /* Royal sparkle controls */
+  --vignette-strength:.65;
+  --sparkle-brightness:.95;
+  --sparkle-glow:.9;
 }
 
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
   background:url("bg_red.webp") center/cover no-repeat;
-  background-attachment: scroll;
+  background-attachment:scroll;
   overflow-x:hidden;
 }
 
-@media (min-width: 900px){
-  body{ background-attachment: fixed; }
+@media (min-width:900px){
+  body{background-attachment:fixed;}
 }
 
 body.locked{
@@ -77,22 +68,19 @@ body.locked{
   justify-content:center;
   padding:var(--vpad);
   scroll-snap-align:start;
-
   content-visibility:auto;
-  contain-intrinsic-size: 100vh;
+  contain-intrinsic-size:100vh;
 }
 
-/* Stage: fixed aspect, responsive */
+/* Stage */
 .stage{
   width:min(96vw,calc((100vh - (2*var(--vpad)))*(var(--pageW)/var(--pageH))));
   aspect-ratio:var(--pageW)/var(--pageH);
   position:relative;
   border-radius:var(--radius);
   overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,.22);
-
-  contain: layout paint;
-  isolation:isolate; /* important for blend modes */
+  box-shadow:0 30px 80px rgba(0,0,0,.35);
+  isolation:isolate;
 }
 
 .stageMedia{
@@ -111,111 +99,61 @@ body.locked{
   z-index:4;
 }
 
-/* =========================================================
-   CINEMATIC MALAY VINTAGE OVERLAY (Golden Glow Version)
-   - Sparkles are ALWAYS ON (continuous)
-   - No vertical scratch lines
-   - Uses paper texture + grain + light leaks + vignette
-   ========================================================= */
+/* =====================================================
+   ROYAL MALAY CINEMATIC EFFECT
+   ===================================================== */
 
-/* 1) VIGNETTE + WARM VINTAGE TONE */
+/* Dramatic vignette */
 .stage::before{
   content:"";
   position:absolute;
   inset:-1px;
   pointer-events:none;
   z-index:2;
-
   background:
     radial-gradient(ellipse at center,
-      rgba(255,240,220,0.10) 0%,
-      rgba(255,240,220,0.03) 45%,
-      rgba(0,0,0,var(--vintage-vignette)) 100%
-    ),
-    linear-gradient(180deg,
-      rgba(255,228,190,var(--vintage-sepia)) 0%,
-      rgba(110,45,20,0.08) 100%
+      rgba(255,255,255,0.06) 0%,
+      rgba(0,0,0,var(--vignette-strength)) 85%
     );
-
   mix-blend-mode:multiply;
-  opacity:1;
 }
 
-/* 2) GOLDEN SPARKLES + FILM GRAIN + PAPER TEXTURE */
+/* Blinking glowing white sparkles */
 .stage::after{
   content:"";
   position:absolute;
-  inset:-1px;
+  inset:0;
   pointer-events:none;
   z-index:3;
-
   background:
-
-    /* 🌟 Golden Sparkles (stronger visibility) */
-    radial-gradient(circle at 12% 22%, rgba(255,255,255,var(--sparkle-opacity)) 0 1.4px, transparent 3px),
-    radial-gradient(circle at 24% 68%, rgba(255,245,210,calc(var(--sparkle-opacity)*.85)) 0 1.6px, transparent 3.4px),
-    radial-gradient(circle at 44% 35%, rgba(255,255,255,calc(var(--sparkle-opacity)*.75)) 0 1.2px, transparent 2.8px),
-    radial-gradient(circle at 62% 18%, rgba(255,235,190,calc(var(--sparkle-opacity)*.90)) 0 1.5px, transparent 3.2px),
-    radial-gradient(circle at 78% 52%, rgba(255,255,255,calc(var(--sparkle-opacity)*.70)) 0 1.3px, transparent 2.9px),
-    radial-gradient(circle at 88% 78%, rgba(255,240,200,calc(var(--sparkle-opacity)*.80)) 0 1.6px, transparent 3.3px),
-
-    /* 🌅 Soft golden light leaks */
-    radial-gradient(circle at 18% 12%,
-      rgba(255,210,150,var(--lightleak-opacity)) 0%,
-      rgba(255,210,150,0) 55%
-    ),
-    radial-gradient(circle at 85% 22%,
-      rgba(255,190,140,calc(var(--lightleak-opacity)*.8)) 0%,
-      rgba(255,190,140,0) 60%
-    ),
-
-    /* 🎞 Film grain */
-    repeating-linear-gradient(0deg,
-      rgba(255,255,255,var(--grain-opacity)) 0 1px,
-      rgba(0,0,0,calc(var(--grain-opacity)*.55)) 2px 3px
-    ),
-
-    /* 📜 Vintage paper texture (replaces scratches) */
-    radial-gradient(circle at 30% 40%,
-      rgba(120,60,30,var(--paper-opacity)) 0%,
-      transparent 65%
-    ),
-    radial-gradient(circle at 70% 65%,
-      rgba(100,50,25,calc(var(--paper-opacity)*.9)) 0%,
-      transparent 70%
-    );
-
-  background-size:
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    160% 160%,
-    170% 170%,
-    240px 240px,
-    100% 100%,
-    100% 100%;
-
-  mix-blend-mode:screen;
-  opacity:1;
-
-  /* Continuous sparkles movement (never stops) */
-  animation: sparkleFloat 18s linear infinite;
-  filter: blur(.12px);
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
+    radial-gradient(circle at 25% 75%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.5px, transparent 5px),
+    radial-gradient(circle at 40% 30%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
+    radial-gradient(circle at 55% 65%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.5px, transparent 5px),
+    radial-gradient(circle at 70% 25%, rgba(255,255,255,var(--sparkle-brightness)) 0 3.5px, transparent 7px),
+    radial-gradient(circle at 85% 50%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.5px, transparent 5px),
+    radial-gradient(circle at 90% 80%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
+    radial-gradient(circle at 15% 55%, rgba(255,255,255,var(--sparkle-brightness)) 0 3.5px, transparent 7px);
+  filter: drop-shadow(0 0 10px rgba(255,255,255,var(--sparkle-glow)));
+  animation:
+    sparkleBlink 2.8s infinite ease-in-out alternate,
+    sparkleFloat 18s linear infinite;
 }
 
-/* Continuous floating sparkle movement */
+@keyframes sparkleBlink{
+  0%{opacity:.55;}
+  50%{opacity:1;}
+  100%{opacity:.65;}
+}
+
 @keyframes sparkleFloat{
-  0%   { transform: translate3d(0,0,0) scale(1.01); }
-  50%  { transform: translate3d(-12px,10px,0) scale(1.02); }
-  100% { transform: translate3d(0,0,0) scale(1.01); }
+  0%{transform:translate3d(0,0,0);}
+  50%{transform:translate3d(-18px,12px,0);}
+  100%{transform:translate3d(0,0,0);}
 }
 
-/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce){
-  .stage::after{ animation:none; }
+  .stage::after{animation:none;}
 }
 
 /* Opening */
@@ -290,7 +228,6 @@ body.locked{
   position:relative;
   transform-style:preserve-3d;
   transition:transform .9s cubic-bezier(.2,.85,.2,1);
-  will-change: transform;
 }
 
 .flipCard.isFlipped{transform:rotateY(180deg)}
@@ -333,7 +270,7 @@ body.locked{
   color:#5b0b0b;
   background:rgba(255,255,255,.92);
   border-radius:999px;
-  box-shadow:0 10px 25px rgba(0,0,0,.18);
+  box-shadow:0 15px 35px rgba(0,0,0,.3);
 }
 
 #mapLink{top:var(--rsvp-top1)}
@@ -365,9 +302,8 @@ body.locked{
 .cdNum{
   font-weight:900;
   font-size:clamp(26px,4.2vw,56px);
-  line-height:1;
   color:#fff;
-  text-shadow:0 10px 25px rgba(0,0,0,.35);
+  text-shadow:0 10px 25px rgba(0,0,0,.5);
 }
 
 .cdLbl{
@@ -375,7 +311,7 @@ body.locked{
   font-weight:900;
   letter-spacing:.08em;
   font-size:clamp(10px,1.2vw,14px);
-  color:rgba(255,255,255,.92);
+  color:rgba(255,255,255,.95);
 }
 
 /* Gallery */
@@ -393,6 +329,12 @@ body.locked{
   height:var(--gal-height);
   overflow:hidden;
   border-radius:18px;
+
+  /* ✅ makes swipe feel correct on mobile */
+  touch-action: pan-y;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
 }
 
 .galleryViewport img{
@@ -414,12 +356,12 @@ body.locked{
   border:none;
   border-radius:50%;
   cursor:pointer;
-  background:rgba(255,255,255,.86);
+  background:rgba(255,255,255,.9);
   color:#4b0b0b;
   font-size:30px;
   line-height:44px;
   text-align:center;
-  box-shadow:0 10px 25px rgba(0,0,0,.18);
+  box-shadow:0 15px 35px rgba(0,0,0,.3);
 }
 
 .galleryArrow.left{left:calc(var(--gal-left) - 18px)}
@@ -433,18 +375,17 @@ body.locked{
   display:flex;
   justify-content:center;
   gap:10px;
-  pointer-events:auto;
 }
 
 .dot{
   width:10px;height:10px;border-radius:50%;
   border:none;
-  background:rgba(255,255,255,.55);
+  background:rgba(255,255,255,.6);
   cursor:pointer;
 }
-.dot.active{background:rgba(255,255,255,.95)}
+.dot.active{background:#fff}
 
-/* DOA TEXT */
+/* DOA */
 .doaOverlay{
   position:absolute;
   left:var(--doa-left);
@@ -455,34 +396,30 @@ body.locked{
   display:flex;
   align-items:flex-start;
   justify-content:center;
-  pointer-events:none;
 }
 
 .doaType{
   width:100%;
   height:100%;
   white-space:pre-wrap;
-  overflow-wrap:anywhere;
   text-align:center;
   font-weight:800;
   line-height:1.35;
   color:#2b0b0b;
   font-size:14px;
-  text-shadow:0 1px 0 rgba(255,255,255,.6);
-
   opacity:0;
   transform:translateY(10px);
 }
 
 .slide.isDoaActive .doaType{
-  animation: doaFadeIn .9s ease-out forwards;
+  animation:doaFadeIn .9s ease-out forwards;
 }
 
 @keyframes doaFadeIn{
-  to{ opacity:1; transform:translateY(0); }
+  to{opacity:1;transform:translateY(0);}
 }
 
-/* Slightly larger tap targets on small screens */
+/* Small screens */
 @media (max-width:520px){
   :root{
     --vpad:12px;
