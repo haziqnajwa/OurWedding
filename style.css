@@ -1,4 +1,4 @@
-/* style.css (FULL: soft romantic moving sparkles + vintage tone, brighter, royal but not dark) */
+/* style.css (UPDATED: gallery swipe friendliness + royal sparkle overlay retained) */
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
@@ -8,10 +8,11 @@
   --vpad:18px;
   --radius:22px;
 
-  --slot-left:10.7%;
-  --slot-top:6.7%;
-  --slot-width:79.0%;
-  --slot-height:84.8%;
+  /* ✅ UPDATED (pixel-perfect to card_bg.webp paper area) */
+  --slot-left:6.77%;
+  --slot-top:4.75%;
+  --slot-width:86.94%;
+  --slot-height:91.76%;
 
   --doa-left:22%;
   --doa-top:14.5%;
@@ -20,224 +21,171 @@
 
   --rsvp-left:18%;
   --rsvp-width:64%;
-  --rsvp-top1:62%;
-  --rsvp-top2:71%;
-  --rsvp-height:8%;
+  --rsvp-top1:48%;
+  --rsvp-top2:57.5%;
+  --rsvp-height:5.5%;
 
-  --cd-left:8%;
-  --cd-top:20%;
-  --cd-width:84%;
-  --cd-height:18%;
-
-  --gal-left:13%;
-  --gal-top:22%;
-  --gal-width:74%;
-  --gal-height:52%;
-
-  /* Soft romantic vintage tuning (brighter) */
-  --vintage-warm: .10;      /* warm sepia wash */
-  --vignette: .32;          /* lighter vignette */
-  --grain: .06;             /* very subtle grain */
-  --sparkle-alpha: .55;     /* sparkle visibility */
-  --sparkle-glow: .55;      /* soft glow */
+  --countdown-top:33%;
+  --countdown-left:8%;
+  --countdown-width:84%;
 }
 
+html,body{height:100%}
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:url("bg_red.webp") center/cover no-repeat;
-  background-attachment:scroll;
-  overflow-x:hidden;
-}
-
-@media (min-width:900px){
-  body{background-attachment:fixed;}
-}
-
-body.locked{
-  height:100vh;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   overflow:hidden;
+  background:#260707;
+  color:#fff;
 }
 
-.hidden{display:none!important}
-.lockedContent{display:none}
+.slides{
+  height:100vh;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;
+}
 
-/* Slides */
-.slides{scroll-snap-type:y mandatory}
 .slide{
-  min-height:100vh;
+  height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:var(--vpad);
   scroll-snap-align:start;
-
-  content-visibility:auto;
-  contain-intrinsic-size:100vh;
+  position:relative;
 }
 
-/* Stage */
 .stage{
-  width:min(96vw,calc((100vh - (2*var(--vpad)))*(var(--pageW)/var(--pageH))));
-  aspect-ratio:var(--pageW)/var(--pageH);
-  position:relative;
+  width:min(92vw, calc(var(--pageW)*1px));
+  height:calc(100vh - (var(--vpad)*2));
+  max-height:calc(var(--pageH)*1px);
+  aspect-ratio: var(--pageW) / var(--pageH);
   border-radius:var(--radius);
   overflow:hidden;
-
-  /* slightly lighter shadow so card doesn't feel too dark */
-  box-shadow:0 26px 70px rgba(0,0,0,.28);
-  isolation:isolate;
+  position:relative;
+  box-shadow:0 30px 60px rgba(0,0,0,.55);
+  background:#000;
 }
 
+/* media fits inside each stage */
 .stageMedia{
+  position:absolute;
+  inset:0;
   width:100%;
   height:100%;
   object-fit:contain;
-  display:block;
-  position:relative;
-  z-index:1;
 }
 
-.overlay{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:4;
-}
-
-/* =====================================================
-   SOFT ROMANTIC SPARKLE + VINTAGE FILM FEEL (BRIGHTER)
-   (No feature/flow changes; visual only)
-   ===================================================== */
-
-/* Warm vintage wash + gentle vignette (brighter than before) */
+/* Vignette for cinematic feel */
 .stage::before{
   content:"";
   position:absolute;
-  inset:-1px;
+  inset:0;
   pointer-events:none;
-  z-index:2;
-
   background:
-    radial-gradient(ellipse at center,
-      rgba(255,255,255,0.10) 0%,
-      rgba(0,0,0,var(--vignette)) 92%
-    ),
-    linear-gradient(180deg,
-      rgba(255,236,210,var(--vintage-warm)) 0%,
-      rgba(120,55,30,0.05) 100%
-    );
-
-  mix-blend-mode:multiply;
+    radial-gradient(120% 120% at 50% 35%,
+      rgba(255,255,255,0.06) 0%,
+      rgba(0,0,0,0.00) 40%,
+      rgba(0,0,0,0.35) 78%,
+      rgba(0,0,0,0.62) 100%);
+  mix-blend-mode:overlay;
+  z-index:2;
 }
 
-/* Moving + twinkling sparkles (two layers for depth) + subtle grain */
+/* Royal sparkle overlay (global) */
 .stage::after{
   content:"";
   position:absolute;
   inset:0;
   pointer-events:none;
   z-index:3;
-
-  background:
-    /* Sparkle layer A (slightly larger) */
-    radial-gradient(circle at 10% 20%, rgba(255,255,255,var(--sparkle-alpha)) 0 2.6px, transparent 6px),
-    radial-gradient(circle at 25% 75%, rgba(255,255,255,calc(var(--sparkle-alpha)*.85)) 0 2.2px, transparent 5.2px),
-    radial-gradient(circle at 42% 32%, rgba(255,255,255,calc(var(--sparkle-alpha)*.90)) 0 2.8px, transparent 6.4px),
-    radial-gradient(circle at 58% 62%, rgba(255,255,255,calc(var(--sparkle-alpha)*.80)) 0 2.3px, transparent 5.4px),
-    radial-gradient(circle at 74% 22%, rgba(255,255,255,var(--sparkle-alpha)) 0 3.1px, transparent 7px),
-    radial-gradient(circle at 86% 50%, rgba(255,255,255,calc(var(--sparkle-alpha)*.85)) 0 2.3px, transparent 5.4px),
-    radial-gradient(circle at 90% 82%, rgba(255,255,255,calc(var(--sparkle-alpha)*.80)) 0 2.7px, transparent 6.2px),
-    radial-gradient(circle at 16% 56%, rgba(255,255,255,var(--sparkle-alpha)) 0 3.0px, transparent 6.8px),
-
-    /* Sparkle layer B (smaller “dust” points) */
-    radial-gradient(circle at 18% 14%, rgba(255,255,255,calc(var(--sparkle-alpha)*.55)) 0 1.4px, transparent 3.6px),
-    radial-gradient(circle at 32% 44%, rgba(255,255,255,calc(var(--sparkle-alpha)*.50)) 0 1.2px, transparent 3.2px),
-    radial-gradient(circle at 48% 76%, rgba(255,255,255,calc(var(--sparkle-alpha)*.55)) 0 1.5px, transparent 3.7px),
-    radial-gradient(circle at 66% 38%, rgba(255,255,255,calc(var(--sparkle-alpha)*.50)) 0 1.2px, transparent 3.2px),
-    radial-gradient(circle at 80% 70%, rgba(255,255,255,calc(var(--sparkle-alpha)*.55)) 0 1.5px, transparent 3.8px),
-
-    /* very subtle grain (keeps vintage feel) */
-    repeating-linear-gradient(0deg,
-      rgba(255,255,255,var(--grain)) 0 1px,
-      rgba(0,0,0,calc(var(--grain)*.7)) 2px 3px
-    );
-
-  filter: drop-shadow(0 0 10px rgba(255,255,255,var(--sparkle-glow)));
-  mix-blend-mode:screen;
-
-  animation:
-    sparkleDriftA 20s linear infinite,
-    sparkleTwinkle 2.4s ease-in-out infinite;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.95) 0 1px, transparent 2px),
+    radial-gradient(circle, rgba(255,255,255,.8) 0 1px, transparent 2px),
+    radial-gradient(circle, rgba(255,255,255,.6) 0 1px, transparent 2px),
+    radial-gradient(circle, rgba(255,255,255,.5) 0 1px, transparent 2px),
+    radial-gradient(circle, rgba(255,255,255,.4) 0 1px, transparent 2px),
+    radial-gradient(circle, rgba(255,255,255,.35) 0 1px, transparent 2px);
+  background-size:
+    220px 220px,
+    280px 280px,
+    340px 340px,
+    420px 420px,
+    520px 520px,
+    680px 680px;
+  background-position:
+    10% 20%,
+    70% 10%,
+    40% 65%,
+    85% 55%,
+    20% 80%,
+    60% 90%;
+  opacity:.55;
+  filter: blur(.4px);
+  animation: sparkleBlink 1.7s infinite ease-in-out, sparkleFloat 9s infinite ease-in-out;
+  mix-blend-mode: screen;
 }
 
-/* Drift (layer moves) */
-@keyframes sparkleDriftA{
-  0%   { transform: translate3d(0,0,0); }
-  50%  { transform: translate3d(-16px,10px,0); }
-  100% { transform: translate3d(0,0,0); }
+@keyframes sparkleBlink{
+  0%,100%{opacity:.35}
+  50%{opacity:.75}
 }
 
-/* Twinkle (blink-blink sparkle) */
-@keyframes sparkleTwinkle{
-  0%   { opacity:.55; }
-  20%  { opacity:.95; }
-  45%  { opacity:.62; }
-  65%  { opacity:1; }
-  85%  { opacity:.70; }
-  100% { opacity:.92; }
+@keyframes sparkleFloat{
+  0%{transform:translate3d(0,0,0)}
+  50%{transform:translate3d(-8px, -14px, 0)}
+  100%{transform:translate3d(0,0,0)}
 }
 
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce){
-  .stage::after{ animation:none; }
+  .stage::after{animation:none}
 }
 
-/* Opening */
-.openingSection{
-  min-height:100vh;
+/* ---------- LOCK (prevents scroll until opened) ---------- */
+.lockedContent{
+  overflow:hidden;
+}
+
+/* OPENING overlay for the first slide */
+#openingOverlay{
+  position:absolute;
+  inset:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:var(--vpad);
-}
-
-.openHit{
-  position:absolute;
-  inset:0;
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  padding:20px;
-  z-index:5;
+  z-index:10;
   pointer-events:auto;
 }
 
-.tapText{
-  background:rgba(0,0,0,.4);
-  color:#fff;
-  padding:10px 18px;
-  border-radius:999px;
-  font-weight:900;
-}
-
-/* Music */
-.musicBtn{
+/* ---------- MUSIC button ---------- */
+#musicBtn{
   position:fixed;
-  right:18px;
-  bottom:18px;
-  width:56px;
-  height:56px;
-  border-radius:50%;
+  top:14px;
+  right:14px;
+  z-index:100;
+  width:46px;
+  height:46px;
+  border-radius:999px;
   border:none;
-  background:#fff;
+  background:rgba(255,255,255,.92);
+  color:#3b0b0b;
+  font-weight:900;
   cursor:pointer;
-  z-index:50;
+  box-shadow:0 12px 28px rgba(0,0,0,.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#musicBtn:active{transform:scale(.98)}
+
+/* ---------- OVERLAY base ---------- */
+.overlay{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:5;
 }
 
-/* Card flip */
+/* ---------- CARD SLOT (Flip card) ---------- */
 .cardSlot{
   position:absolute;
   left:var(--slot-left);
@@ -276,11 +224,14 @@ body.locked{
 
 .flipBack{transform:rotateY(180deg)}
 
+/* ✅ UPDATED: keep cover + center, tiny overscale to prevent 1px gaps */
 .flipFace img{
   width:100%;
   height:100%;
   object-fit:cover;
-  transform:scale(1.10);
+  object-position:center;
+  /* tiny overscale to avoid 1px gaps on some browsers */
+  transform:scale(1.02);
 }
 
 /* RSVP */
@@ -306,161 +257,144 @@ body.locked{
   color:#5b0b0b;
   background:rgba(255,255,255,.92);
   border-radius:999px;
-  box-shadow:0 15px 35px rgba(0,0,0,.25);
+  box-shadow:0 15px 35px rgba(0,0,0,.3);
 }
 
 #mapLink{top:var(--rsvp-top1)}
 #rsvpLink{top:var(--rsvp-top2)}
 
 /* Countdown */
-.countdownOverlay{
+.countdownBox{
   position:absolute;
-  left:var(--cd-left);
-  top:var(--cd-top);
-  width:var(--cd-width);
-  height:var(--cd-height);
+  top:var(--countdown-top);
+  left:var(--countdown-left);
+  width:var(--countdown-width);
   display:flex;
-  align-items:flex-end;
-  justify-content:center;
+  justify-content:space-between;
+  gap:10px;
   pointer-events:none;
 }
 
-.countdownRow{
-  width:100%;
-  display:flex;
-  gap:clamp(10px,2vw,22px);
-  justify-content:space-between;
-  align-items:flex-end;
+.cdItem{
+  flex:1;
+  text-align:center;
+  padding:10px 0;
 }
 
-.cdItem{flex:1;text-align:center}
-
 .cdNum{
+  font-size:clamp(24px, 4vw, 50px);
   font-weight:900;
-  font-size:clamp(26px,4.2vw,56px);
-  color:#fff;
-  text-shadow:0 10px 25px rgba(0,0,0,.45);
+  letter-spacing:.05em;
+  text-shadow:0 10px 25px rgba(0,0,0,.35);
 }
 
 .cdLbl{
-  margin-top:6px;
-  font-weight:900;
-  letter-spacing:.08em;
-  font-size:clamp(10px,1.2vw,14px);
-  color:rgba(255,255,255,.95);
+  margin-top:3px;
+  font-size:clamp(10px, 1.2vw, 14px);
+  opacity:.85;
+  letter-spacing:.18em;
+  text-transform:uppercase;
 }
 
 /* Gallery */
-.galleryOverlay{
+.galleryWrap{
   position:absolute;
-  left:0; top:0; width:100%; height:100%;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   pointer-events:auto;
 }
 
-.galleryViewport{
-  position:absolute;
-  left:var(--gal-left);
-  top:var(--gal-top);
-  width:var(--gal-width);
-  height:var(--gal-height);
-  overflow:hidden;
+.galleryViewer{
+  width:min(86vw, 520px);
+  aspect-ratio: 3/4;
   border-radius:18px;
-
-  /* swipe friendliness */
-  touch-action: pan-y;
-  user-select:none;
-  -webkit-user-select:none;
-  -webkit-touch-callout:none;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 18px 45px rgba(0,0,0,.5);
+  background:rgba(0,0,0,.25);
 }
 
-.galleryViewport img{
+.galleryImg{
+  position:absolute;
+  inset:0;
   width:100%;
   height:100%;
   object-fit:cover;
-  display:block;
+  user-select:none;
+  -webkit-user-drag:none;
 }
 
-.fadeIn{animation:fadeIn .22s ease-out}
-@keyframes fadeIn{from{opacity:.25;transform:scale(.99)}to{opacity:1;transform:scale(1)}}
-
-.galleryArrow{
+.gNav{
   position:absolute;
-  top:calc(var(--gal-top) + (var(--gal-height)/2));
+  top:50%;
   transform:translateY(-50%);
   width:44px;
   height:44px;
   border:none;
-  border-radius:50%;
-  cursor:pointer;
+  border-radius:999px;
   background:rgba(255,255,255,.9);
-  color:#4b0b0b;
-  font-size:30px;
-  line-height:44px;
-  text-align:center;
-  box-shadow:0 15px 35px rgba(0,0,0,.25);
-}
-
-.galleryArrow.left{left:calc(var(--gal-left) - 18px)}
-.galleryArrow.right{left:calc(var(--gal-left) + var(--gal-width) - 26px)}
-
-.galleryDots{
-  position:absolute;
-  left:0;
-  right:0;
-  top:calc(var(--gal-top) + var(--gal-height) + 1.5%);
-  display:flex;
-  justify-content:center;
-  gap:10px;
-}
-
-.dot{
-  width:10px;height:10px;border-radius:50%;
-  border:none;
-  background:rgba(255,255,255,.6);
+  color:#3b0b0b;
+  font-weight:900;
   cursor:pointer;
+  box-shadow:0 12px 28px rgba(0,0,0,.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:2;
 }
-.dot.active{background:#fff}
 
-/* DOA */
-.doaOverlay{
+.gPrev{left:10px}
+.gNext{right:10px}
+.gNav:active{transform:translateY(-50%) scale(.98)}
+
+/* Swipe friendliness */
+.galleryViewer{
+  touch-action: pan-y;
+}
+
+/* Doa / Text typing */
+.doaBox{
   position:absolute;
   left:var(--doa-left);
   top:var(--doa-top);
   width:var(--doa-width);
   height:var(--doa-height);
   overflow:hidden;
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
+  pointer-events:none;
 }
 
-.doaType{
-  width:100%;
-  height:100%;
-  white-space:pre-wrap;
+#doaText{
+  font-size:clamp(14px, 1.5vw, 20px);
+  line-height:1.55;
+  color:#3b0b0b;
   text-align:center;
-  font-weight:800;
-  line-height:1.35;
-  color:#2b0b0b;
-  font-size:14px;
-
+  white-space:pre-wrap;
+  text-shadow:0 1px 0 rgba(255,255,255,.5);
   opacity:0;
-  transform:translateY(10px);
+  transform:translateY(8px);
+  transition:opacity .8s ease, transform .8s ease;
 }
 
-.slide.isDoaActive .doaType{
-  animation:doaFadeIn .9s ease-out forwards;
+#slide-doa.isActive #doaText{
+  opacity:1;
+  transform:translateY(0);
 }
 
-@keyframes doaFadeIn{
-  to{opacity:1;transform:translateY(0);}
-}
+/* helpers */
+.hidden{display:none !important}
 
-/* Small screens */
+/* Responsive tweaks */
 @media (max-width:520px){
   :root{
-    --vpad:12px;
-    --rsvp-height:9%;
+    --vpad:14px;
+    --radius:18px;
   }
-  .galleryArrow{width:40px;height:40px;line-height:40px;font-size:28px}
+  #musicBtn{top:10px; right:10px}
+  .galleryViewer{width:min(90vw, 420px)}
+}
+
+@media (max-height:720px){
+  :root{--vpad:10px}
 }
