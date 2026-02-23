@@ -1,4 +1,4 @@
-<!-- index.html -->
+<!-- index.html (UPDATED: gallery supports swipe + left/right click) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,11 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Our Wedding</title>
 
-  <!-- Preload CSS + first screen -->
   <link rel="preload" href="style.css" as="style">
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Preload opening cover image (critical) -->
   <link rel="preload" as="image" href="opening.webp" fetchpriority="high">
 </head>
 
@@ -38,7 +35,6 @@
       </button>
     </div>
 
-    <!-- Keep metadata preload only (fast start, doesn't download full video immediately) -->
     <video id="openingVideo" class="stageMedia hidden" playsinline preload="metadata">
       <source src="opening.webm" type="video/webm" />
     </video>
@@ -50,15 +46,7 @@
   <!-- CARD -->
   <section class="slide" id="slide-card">
     <div class="stage">
-      <img
-        class="stageMedia"
-        src="card_bg.webp"
-        alt="Card background"
-        loading="lazy"
-        decoding="async"
-        fetchpriority="low"
-      />
-
+      <img class="stageMedia" src="card_bg.webp" alt="Card background" loading="lazy" decoding="async" fetchpriority="low" />
       <div class="overlay">
         <div class="cardSlot" aria-label="Flip card">
           <button class="flipWrap" id="flipWrap" type="button" aria-label="Flip invitation card">
@@ -79,14 +67,7 @@
   <!-- RSVP -->
   <section class="slide" id="slide-rsvp">
     <div class="stage">
-      <img
-        class="stageMedia"
-        src="rsvp.webp"
-        alt="Reception RSVP"
-        loading="lazy"
-        decoding="async"
-        fetchpriority="low"
-      />
+      <img class="stageMedia" src="rsvp.webp" alt="Reception RSVP" loading="lazy" decoding="async" fetchpriority="low" />
       <div class="overlay">
         <div class="rsvpOverlay">
           <a class="rsvpBtn" id="mapLink" href="https://maps.app.goo.gl/iP7zZd9WUK2fvfvW9" target="_blank" rel="noopener">Google Map</a>
@@ -99,14 +80,7 @@
   <!-- COUNTDOWN -->
   <section class="slide" id="slide-countdown">
     <div class="stage">
-      <img
-        class="stageMedia"
-        src="countdown.webp"
-        alt="Countdown"
-        loading="lazy"
-        decoding="async"
-        fetchpriority="low"
-      />
+      <img class="stageMedia" src="countdown.webp" alt="Countdown" loading="lazy" decoding="async" fetchpriority="low" />
       <div class="overlay">
         <div class="countdownOverlay" aria-label="Countdown timer">
           <div class="countdownRow">
@@ -123,20 +97,15 @@
   <!-- GALLERY -->
   <section class="slide" id="slide-gallery">
     <div class="stage">
-      <img
-        class="stageMedia"
-        src="gallery.webp"
-        alt="Gallery frame"
-        loading="lazy"
-        decoding="async"
-        fetchpriority="low"
-      />
+      <img class="stageMedia" src="gallery.webp" alt="Gallery frame" loading="lazy" decoding="async" fetchpriority="low" />
       <div class="overlay">
         <div class="galleryOverlay" aria-label="Photo gallery">
           <button class="galleryArrow left" id="galleryPrev" type="button" aria-label="Previous photo">‹</button>
-          <div class="galleryViewport" id="galleryViewport">
+
+          <div class="galleryViewport" id="galleryViewport" aria-label="Swipe gallery">
             <img id="galleryImg" alt="Gallery photo" decoding="async" fetchpriority="low" />
           </div>
+
           <button class="galleryArrow right" id="galleryNext" type="button" aria-label="Next photo">›</button>
           <div class="galleryDots" id="galleryDots" aria-hidden="true"></div>
         </div>
@@ -147,14 +116,7 @@
   <!-- DOA -->
   <section class="slide" id="slide-doa">
     <div class="stage">
-      <img
-        class="stageMedia"
-        src="doa_bg.webp"
-        alt="Doa"
-        loading="lazy"
-        decoding="async"
-        fetchpriority="low"
-      />
+      <img class="stageMedia" src="doa_bg.webp" alt="Doa" loading="lazy" decoding="async" fetchpriority="low" />
       <div class="overlay">
         <div class="doaOverlay">
           <div
@@ -184,7 +146,6 @@
 
   let opened = false;
 
-  // Preload images later during idle time (won't block UI)
   function preloadImagesIdle(list) {
     const run = () => {
       for (const src of list) {
@@ -218,15 +179,12 @@
     openingSection.style.display = "none";
     body.classList.remove("locked");
     mainContent.classList.remove("lockedContent");
-
-    // Instant to avoid extra work
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 
     initCountdown();
-    initGallery();
-    setupDoaTrigger(); // ✅ DOA will start only when the slide is reached
+    initGallery();       // ✅ includes swipe + click arrows
+    setupDoaTrigger();
 
-    // Preload gallery photos after opening finishes (idle)
     preloadImagesIdle(["gallery1.webp","gallery2.webp","gallery3.webp","gallery4.webp"]);
   });
 
@@ -255,7 +213,7 @@
     const minEl  = document.getElementById("cdMins");
     const secEl  = document.getElementById("cdSecs");
 
-    const target = new Date(2026, 4, 2, 11, 0, 0); // 4 = May (0-based)
+    const target = new Date(2026, 4, 2, 11, 0, 0); // May = 4
     const pad2 = (n) => String(n).padStart(2, "0");
 
     const tick = () => {
@@ -279,7 +237,7 @@
     cdTimer = setInterval(tick, 1000);
   }
 
-  /* GALLERY (swipe + arrows) */
+  /* GALLERY (Click arrows + Swipe left/right on mobile) */
   function initGallery(){
     const images = ["gallery1.webp","gallery2.webp","gallery3.webp","gallery4.webp"];
     const imgEl = document.getElementById("galleryImg");
@@ -288,7 +246,7 @@
     const dotsWrap = document.getElementById("galleryDots");
     const viewport = document.getElementById("galleryViewport");
 
-    if (!imgEl || !prev || !next || !viewport) return;
+    if (!imgEl || !prev || !next || !viewport || !dotsWrap) return;
 
     let idx = 0;
 
@@ -301,6 +259,7 @@
       [...dotsWrap.children].forEach((d, di) => d.classList.toggle("active", di === idx));
     };
 
+    // dots
     dotsWrap.innerHTML = "";
     images.forEach((_, i) => {
       const b = document.createElement("button");
@@ -310,22 +269,76 @@
       dotsWrap.appendChild(b);
     });
 
+    // click arrows
     prev.addEventListener("click", () => setIdx(idx - 1));
     next.addEventListener("click", () => setIdx(idx + 1));
 
-    let startX = null;
+    // --- SWIPE SUPPORT ---
+    let startX = 0, startY = 0, tracking = false, locked = false;
+
+    const onStart = (x, y) => {
+      startX = x; startY = y;
+      tracking = true;
+      locked = false;
+    };
+
+    const onMove = (x, y, ev) => {
+      if (!tracking) return;
+      const dx = x - startX;
+      const dy = y - startY;
+
+      // If horizontal intent, prevent vertical page scroll just for this gesture
+      if (!locked && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+        locked = Math.abs(dx) > Math.abs(dy);
+      }
+      if (locked) ev.preventDefault();
+    };
+
+    const onEnd = (x, y) => {
+      if (!tracking) return;
+      tracking = false;
+
+      const dx = x - startX;
+      const dy = y - startY;
+
+      // require mostly-horizontal swipe
+      if (Math.abs(dx) < 35 || Math.abs(dx) < Math.abs(dy)) return;
+
+      if (dx > 0) setIdx(idx - 1); // swipe right -> previous
+      else setIdx(idx + 1);        // swipe left  -> next
+    };
+
+    // Touch events (best on mobile)
+    viewport.addEventListener("touchstart", (e) => {
+      if (!e.touches || !e.touches[0]) return;
+      const t = e.touches[0];
+      onStart(t.clientX, t.clientY);
+    }, { passive: true });
+
+    viewport.addEventListener("touchmove", (e) => {
+      if (!e.touches || !e.touches[0]) return;
+      const t = e.touches[0];
+      onMove(t.clientX, t.clientY, e);
+    }, { passive: false });
+
+    viewport.addEventListener("touchend", (e) => {
+      const t = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0] : null;
+      if (!t) return;
+      onEnd(t.clientX, t.clientY);
+    }, { passive: true });
+
+    // Pointer events fallback (desktop/tablet)
     viewport.addEventListener("pointerdown", (e) => {
-      startX = e.clientX;
+      onStart(e.clientX, e.clientY);
       viewport.setPointerCapture(e.pointerId);
     }, { passive: true });
 
+    viewport.addEventListener("pointermove", (e) => {
+      onMove(e.clientX, e.clientY, e);
+    }, { passive: false });
+
     viewport.addEventListener("pointerup", (e) => {
-      if (startX === null) return;
-      const dx = e.clientX - startX;
-      startX = null;
-      if (Math.abs(dx) < 35) return;
-      if (dx > 0) setIdx(idx - 1);
-      else setIdx(idx + 1);
+      onEnd(e.clientX, e.clientY);
     }, { passive: true });
 
     setIdx(0);
@@ -343,15 +356,15 @@
       if (doaStarted) return;
 
       doaStarted = true;
-      doaSlide.classList.add("isDoaActive"); // ✅ starts fade-in
-      initDoaTyping();                        // ✅ starts typewriter now
+      doaSlide.classList.add("isDoaActive");
+      initDoaTyping();
       obs.disconnect();
     }, { threshold: 0.55 });
 
     obs.observe(doaSlide);
   }
 
-  /* TEXT FITTER + typewriter (efficient) */
+  /* Text fitter + typewriter */
   function fitTextToBox(box, text, minPx, maxPx) {
     const meas = document.createElement("div");
     meas.style.position = "absolute";
@@ -370,12 +383,8 @@
     for (let i=0;i<20;i++){
       const mid = (lo+hi)/2;
       meas.style.fontSize = mid+"px";
-      if (meas.scrollHeight <= meas.clientHeight) {
-        best = mid;
-        lo = mid;
-      } else {
-        hi = mid;
-      }
+      if (meas.scrollHeight <= meas.clientHeight) { best = mid; lo = mid; }
+      else { hi = mid; }
     }
 
     document.body.removeChild(meas);
@@ -393,7 +402,6 @@
     box.textContent = "";
     let i = 0;
 
-    // Similar speed feel as before
     const msPerChar = 12;
     let last = performance.now();
     let carry = 0;
@@ -411,7 +419,6 @@
         i = Math.min(text.length, i + add);
         box.textContent = text.slice(0, i);
       }
-
       if (i < text.length) doaRAF = requestAnimationFrame(step);
     };
 
