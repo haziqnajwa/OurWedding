@@ -1,4 +1,4 @@
-<!-- index.html (UPDATED: gallery supports swipe + left/right click) -->
+<!-- index.html (FULL + swipe gallery + DOA triggers only when reached) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,13 +23,7 @@
 <section id="openingSection" class="openingSection">
   <div class="stage">
     <div id="openingCover" class="openingCover">
-      <img
-        class="stageMedia"
-        src="opening.webp"
-        alt="Opening cover"
-        decoding="async"
-        fetchpriority="high"
-      />
+      <img class="stageMedia" src="opening.webp" alt="Opening cover" decoding="async" fetchpriority="high" />
       <button id="openHit" class="openHit" aria-label="Open invitation">
         <span class="tapText">Tap seal to open</span>
       </button>
@@ -182,8 +176,8 @@
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 
     initCountdown();
-    initGallery();       // ✅ includes swipe + click arrows
-    setupDoaTrigger();
+    initGallery();       // ✅ click + swipe
+    setupDoaTrigger();   // ✅ DOA starts only when reached
 
     preloadImagesIdle(["gallery1.webp","gallery2.webp","gallery3.webp","gallery4.webp"]);
   });
@@ -203,7 +197,7 @@
       document.getElementById("flipCard").classList.toggle("isFlipped")
     );
 
-  /* COUNTDOWN (2 May 2026 11:00 AM, local time) */
+  /* COUNTDOWN (2 May 2026 11:00 AM) */
   let cdTimer = null;
   function initCountdown(){
     if (cdTimer) return;
@@ -259,7 +253,6 @@
       [...dotsWrap.children].forEach((d, di) => d.classList.toggle("active", di === idx));
     };
 
-    // dots
     dotsWrap.innerHTML = "";
     images.forEach((_, i) => {
       const b = document.createElement("button");
@@ -269,82 +262,60 @@
       dotsWrap.appendChild(b);
     });
 
-    // click arrows
     prev.addEventListener("click", () => setIdx(idx - 1));
     next.addEventListener("click", () => setIdx(idx + 1));
 
-    // --- SWIPE SUPPORT ---
+    // Swipe support
     let startX = 0, startY = 0, tracking = false, locked = false;
 
-    const onStart = (x, y) => {
-      startX = x; startY = y;
-      tracking = true;
-      locked = false;
-    };
-
+    const onStart = (x, y) => { startX = x; startY = y; tracking = true; locked = false; };
     const onMove = (x, y, ev) => {
       if (!tracking) return;
       const dx = x - startX;
       const dy = y - startY;
-
-      // If horizontal intent, prevent vertical page scroll just for this gesture
-      if (!locked && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
-        locked = Math.abs(dx) > Math.abs(dy);
-      }
+      if (!locked && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) locked = Math.abs(dx) > Math.abs(dy);
       if (locked) ev.preventDefault();
     };
-
     const onEnd = (x, y) => {
       if (!tracking) return;
       tracking = false;
-
       const dx = x - startX;
       const dy = y - startY;
-
-      // require mostly-horizontal swipe
       if (Math.abs(dx) < 35 || Math.abs(dx) < Math.abs(dy)) return;
-
-      if (dx > 0) setIdx(idx - 1); // swipe right -> previous
-      else setIdx(idx + 1);        // swipe left  -> next
+      if (dx > 0) setIdx(idx - 1);
+      else setIdx(idx + 1);
     };
 
-    // Touch events (best on mobile)
     viewport.addEventListener("touchstart", (e) => {
-      if (!e.touches || !e.touches[0]) return;
-      const t = e.touches[0];
+      const t = e.touches && e.touches[0];
+      if (!t) return;
       onStart(t.clientX, t.clientY);
     }, { passive: true });
 
     viewport.addEventListener("touchmove", (e) => {
-      if (!e.touches || !e.touches[0]) return;
-      const t = e.touches[0];
+      const t = e.touches && e.touches[0];
+      if (!t) return;
       onMove(t.clientX, t.clientY, e);
     }, { passive: false });
 
     viewport.addEventListener("touchend", (e) => {
-      const t = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0] : null;
+      const t = e.changedTouches && e.changedTouches[0];
       if (!t) return;
       onEnd(t.clientX, t.clientY);
     }, { passive: true });
 
-    // Pointer events fallback (desktop/tablet)
     viewport.addEventListener("pointerdown", (e) => {
       onStart(e.clientX, e.clientY);
       viewport.setPointerCapture(e.pointerId);
     }, { passive: true });
 
-    viewport.addEventListener("pointermove", (e) => {
-      onMove(e.clientX, e.clientY, e);
-    }, { passive: false });
-
-    viewport.addEventListener("pointerup", (e) => {
-      onEnd(e.clientX, e.clientY);
-    }, { passive: true });
+    viewport.addEventListener("pointermove", (e) => { onMove(e.clientX, e.clientY, e); }, { passive: false });
+    viewport.addEventListener("pointerup", (e) => { onEnd(e.clientX, e.clientY); }, { passive: true });
 
     setIdx(0);
   }
 
-  /* DOA: trigger only when user reaches doa slide */
+  /* DOA: trigger only when slide is reached */
   let doaStarted = false;
   function setupDoaTrigger(){
     const doaSlide = document.getElementById("slide-doa");
