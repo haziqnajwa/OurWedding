@@ -1,4 +1,4 @@
-/* style.css (UPDATED: gallery swipe friendliness + royal sparkle overlay retained) */
+/* style.css (FULL: soft romantic moving sparkles + vintage tone, brighter, royal but not dark) */
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
@@ -34,10 +34,12 @@
   --gal-width:74%;
   --gal-height:52%;
 
-  /* Royal sparkle controls */
-  --vignette-strength:.30;
-  --sparkle-brightness:.70;
-  --sparkle-glow:.6;
+  /* Soft romantic vintage tuning (brighter) */
+  --vintage-warm: .10;      /* warm sepia wash */
+  --vignette: .32;          /* lighter vignette */
+  --grain: .06;             /* very subtle grain */
+  --sparkle-alpha: .55;     /* sparkle visibility */
+  --sparkle-glow: .55;      /* soft glow */
 }
 
 body{
@@ -68,6 +70,7 @@ body.locked{
   justify-content:center;
   padding:var(--vpad);
   scroll-snap-align:start;
+
   content-visibility:auto;
   contain-intrinsic-size:100vh;
 }
@@ -79,7 +82,9 @@ body.locked{
   position:relative;
   border-radius:var(--radius);
   overflow:hidden;
-  box-shadow:0 30px 80px rgba(0,0,0,.35);
+
+  /* slightly lighter shadow so card doesn't feel too dark */
+  box-shadow:0 26px 70px rgba(0,0,0,.28);
   isolation:isolate;
 }
 
@@ -100,60 +105,91 @@ body.locked{
 }
 
 /* =====================================================
-   ROYAL MALAY CINEMATIC EFFECT
+   SOFT ROMANTIC SPARKLE + VINTAGE FILM FEEL (BRIGHTER)
+   (No feature/flow changes; visual only)
    ===================================================== */
 
-/* Dramatic vignette */
+/* Warm vintage wash + gentle vignette (brighter than before) */
 .stage::before{
   content:"";
   position:absolute;
   inset:-1px;
   pointer-events:none;
   z-index:2;
+
   background:
     radial-gradient(ellipse at center,
-      rgba(255,255,255,0.06) 0%,
-      rgba(0,0,0,var(--vignette-strength)) 85%
+      rgba(255,255,255,0.10) 0%,
+      rgba(0,0,0,var(--vignette)) 92%
+    ),
+    linear-gradient(180deg,
+      rgba(255,236,210,var(--vintage-warm)) 0%,
+      rgba(120,55,30,0.05) 100%
     );
+
   mix-blend-mode:multiply;
 }
 
-/* Blinking glowing white sparkles */
+/* Moving + twinkling sparkles (two layers for depth) + subtle grain */
 .stage::after{
   content:"";
   position:absolute;
   inset:0;
   pointer-events:none;
   z-index:3;
+
   background:
-    radial-gradient(circle at 10% 20%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
-    radial-gradient(circle at 25% 75%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.5px, transparent 5px),
-    radial-gradient(circle at 40% 30%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
-    radial-gradient(circle at 55% 65%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.5px, transparent 5px),
-    radial-gradient(circle at 70% 25%, rgba(255,255,255,var(--sparkle-brightness)) 0 3.5px, transparent 7px),
-    radial-gradient(circle at 85% 50%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.5px, transparent 5px),
-    radial-gradient(circle at 90% 80%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
-    radial-gradient(circle at 15% 55%, rgba(255,255,255,var(--sparkle-brightness)) 0 3.5px, transparent 7px);
+    /* Sparkle layer A (slightly larger) */
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,var(--sparkle-alpha)) 0 2.6px, transparent 6px),
+    radial-gradient(circle at 25% 75%, rgba(255,255,255,calc(var(--sparkle-alpha)*.85)) 0 2.2px, transparent 5.2px),
+    radial-gradient(circle at 42% 32%, rgba(255,255,255,calc(var(--sparkle-alpha)*.90)) 0 2.8px, transparent 6.4px),
+    radial-gradient(circle at 58% 62%, rgba(255,255,255,calc(var(--sparkle-alpha)*.80)) 0 2.3px, transparent 5.4px),
+    radial-gradient(circle at 74% 22%, rgba(255,255,255,var(--sparkle-alpha)) 0 3.1px, transparent 7px),
+    radial-gradient(circle at 86% 50%, rgba(255,255,255,calc(var(--sparkle-alpha)*.85)) 0 2.3px, transparent 5.4px),
+    radial-gradient(circle at 90% 82%, rgba(255,255,255,calc(var(--sparkle-alpha)*.80)) 0 2.7px, transparent 6.2px),
+    radial-gradient(circle at 16% 56%, rgba(255,255,255,var(--sparkle-alpha)) 0 3.0px, transparent 6.8px),
+
+    /* Sparkle layer B (smaller “dust” points) */
+    radial-gradient(circle at 18% 14%, rgba(255,255,255,calc(var(--sparkle-alpha)*.55)) 0 1.4px, transparent 3.6px),
+    radial-gradient(circle at 32% 44%, rgba(255,255,255,calc(var(--sparkle-alpha)*.50)) 0 1.2px, transparent 3.2px),
+    radial-gradient(circle at 48% 76%, rgba(255,255,255,calc(var(--sparkle-alpha)*.55)) 0 1.5px, transparent 3.7px),
+    radial-gradient(circle at 66% 38%, rgba(255,255,255,calc(var(--sparkle-alpha)*.50)) 0 1.2px, transparent 3.2px),
+    radial-gradient(circle at 80% 70%, rgba(255,255,255,calc(var(--sparkle-alpha)*.55)) 0 1.5px, transparent 3.8px),
+
+    /* very subtle grain (keeps vintage feel) */
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,var(--grain)) 0 1px,
+      rgba(0,0,0,calc(var(--grain)*.7)) 2px 3px
+    );
+
   filter: drop-shadow(0 0 10px rgba(255,255,255,var(--sparkle-glow)));
+  mix-blend-mode:screen;
+
   animation:
-    sparkleBlink 2.8s infinite ease-in-out alternate,
-    sparkleFloat 18s linear infinite;
+    sparkleDriftA 20s linear infinite,
+    sparkleTwinkle 2.4s ease-in-out infinite;
 }
 
-@keyframes sparkleBlink{
-  0%{opacity:.55;}
-  50%{opacity:1;}
-  100%{opacity:.65;}
+/* Drift (layer moves) */
+@keyframes sparkleDriftA{
+  0%   { transform: translate3d(0,0,0); }
+  50%  { transform: translate3d(-16px,10px,0); }
+  100% { transform: translate3d(0,0,0); }
 }
 
-@keyframes sparkleFloat{
-  0%{transform:translate3d(0,0,0);}
-  50%{transform:translate3d(-18px,12px,0);}
-  100%{transform:translate3d(0,0,0);}
+/* Twinkle (blink-blink sparkle) */
+@keyframes sparkleTwinkle{
+  0%   { opacity:.55; }
+  20%  { opacity:.95; }
+  45%  { opacity:.62; }
+  65%  { opacity:1; }
+  85%  { opacity:.70; }
+  100% { opacity:.92; }
 }
 
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce){
-  .stage::after{animation:none;}
+  .stage::after{ animation:none; }
 }
 
 /* Opening */
@@ -270,7 +306,7 @@ body.locked{
   color:#5b0b0b;
   background:rgba(255,255,255,.92);
   border-radius:999px;
-  box-shadow:0 15px 35px rgba(0,0,0,.3);
+  box-shadow:0 15px 35px rgba(0,0,0,.25);
 }
 
 #mapLink{top:var(--rsvp-top1)}
@@ -303,7 +339,7 @@ body.locked{
   font-weight:900;
   font-size:clamp(26px,4.2vw,56px);
   color:#fff;
-  text-shadow:0 10px 25px rgba(0,0,0,.5);
+  text-shadow:0 10px 25px rgba(0,0,0,.45);
 }
 
 .cdLbl{
@@ -330,7 +366,7 @@ body.locked{
   overflow:hidden;
   border-radius:18px;
 
-  /* ✅ makes swipe feel correct on mobile */
+  /* swipe friendliness */
   touch-action: pan-y;
   user-select:none;
   -webkit-user-select:none;
@@ -361,7 +397,7 @@ body.locked{
   font-size:30px;
   line-height:44px;
   text-align:center;
-  box-shadow:0 15px 35px rgba(0,0,0,.3);
+  box-shadow:0 15px 35px rgba(0,0,0,.25);
 }
 
 .galleryArrow.left{left:calc(var(--gal-left) - 18px)}
@@ -407,6 +443,7 @@ body.locked{
   line-height:1.35;
   color:#2b0b0b;
   font-size:14px;
+
   opacity:0;
   transform:translateY(10px);
 }
