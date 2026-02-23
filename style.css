@@ -35,9 +35,9 @@
   --gal-height:52%;
 
   /* Royal sparkle controls */
-  --vignette-strength:.65;
-  --sparkle-brightness:.95;
-  --sparkle-glow:.9;
+  --vignette-strength:.30;
+  --sparkle-brightness:.70;
+  --sparkle-glow:.6;
 }
 
 body{
