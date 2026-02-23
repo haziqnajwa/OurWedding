@@ -1,5 +1,7 @@
-/* style.css (UPDATED: gallery swipe friendliness + royal sparkle overlay retained) */
-*{margin:0;padding:0;box-sizing:border-box}
+/* style.css — RESTORED to match current index.html selectors
+   + ONLY change for card_front/back: slight scale-up inside flip faces */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root{
   --pageW:1240;
@@ -8,35 +10,30 @@
   --vpad:18px;
   --radius:22px;
 
-  /* ✅ UPDATED (pixel-perfect to card_bg.webp paper area) */
-  --slot-left:6.77%;
-  --slot-top:4.75%;
-  --slot-width:86.94%;
-  --slot-height:91.76%;
+  /* Flip-card placement (keep as-is if you previously tuned these) */
+  --slot-left: 6.77%;
+  --slot-top:  4.75%;
+  --slot-width: 86.94%;
+  --slot-height: 91.76%;
 
-  --doa-left:22%;
-  --doa-top:14.5%;
-  --doa-width:56%;
-  --doa-height:27%;
-
+  /* RSVP */
   --rsvp-left:18%;
   --rsvp-width:64%;
   --rsvp-top1:48%;
   --rsvp-top2:57.5%;
   --rsvp-height:5.5%;
-
-  --countdown-top:33%;
-  --countdown-left:8%;
-  --countdown-width:84%;
 }
 
-html,body{height:100%}
+html, body { height: 100%; }
 body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  overflow:hidden;
   background:#260707;
   color:#fff;
+  overflow:hidden;
 }
+
+/* Locked state before opening video ends */
+body.locked { overflow: hidden; }
 
 .slides{
   height:100vh;
@@ -45,13 +42,17 @@ body{
   scroll-behavior:smooth;
 }
 
-.slide{
+/* JS toggles this class off after opening video ends */
+.lockedContent{ overflow:hidden; }
+
+.slide,
+.openingSection{
   height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  scroll-snap-align:start;
   position:relative;
+  scroll-snap-align:start;
 }
 
 .stage{
@@ -66,7 +67,6 @@ body{
   background:#000;
 }
 
-/* media fits inside each stage */
 .stageMedia{
   position:absolute;
   inset:0;
@@ -75,7 +75,7 @@ body{
   object-fit:contain;
 }
 
-/* Vignette for cinematic feel */
+/* Cinematic vignette */
 .stage::before{
   content:"";
   position:absolute;
@@ -91,7 +91,7 @@ body{
   z-index:2;
 }
 
-/* Royal sparkle overlay (global) */
+/* Sparkles overlay */
 .stage::after{
   content:"";
   position:absolute;
@@ -137,27 +137,14 @@ body{
 }
 
 @media (prefers-reduced-motion: reduce){
-  .stage::after{animation:none}
+  .stage::after{ animation:none; }
 }
 
-/* ---------- LOCK (prevents scroll until opened) ---------- */
-.lockedContent{
-  overflow:hidden;
-}
+/* Utility */
+.hidden{ display:none !important; }
 
-/* OPENING overlay for the first slide */
-#openingOverlay{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:10;
-  pointer-events:auto;
-}
-
-/* ---------- MUSIC button ---------- */
-#musicBtn{
+/* ---------- MUSIC BUTTON (matches index.html: #musicToggle + .musicBtn) ---------- */
+.musicBtn{
   position:fixed;
   top:14px;
   right:14px;
@@ -175,7 +162,42 @@ body{
   align-items:center;
   justify-content:center;
 }
-#musicBtn:active{transform:scale(.98)}
+.musicBtn:active{ transform:scale(.98); }
+
+/* ---------- OPENING (matches .openingCover + .openHit) ---------- */
+.openingCover{
+  position:absolute;
+  inset:0;
+}
+
+/* IMPORTANT: make seal button clickable on desktop + mobile */
+.openHit{
+  position:absolute;
+  inset:0;
+  z-index:6;              /* above opening image */
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  pointer-events:auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Optional helper label (your HTML uses .tapText) */
+.tapText{
+  position:absolute;
+  left:50%;
+  bottom:8%;
+  transform:translateX(-50%);
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(0,0,0,.28);
+  color:rgba(255,255,255,.92);
+  font-weight:700;
+  letter-spacing:.02em;
+  font-size:14px;
+  text-shadow:0 2px 10px rgba(0,0,0,.45);
+  pointer-events:none;
+}
 
 /* ---------- OVERLAY base ---------- */
 .overlay{
@@ -185,7 +207,7 @@ body{
   z-index:5;
 }
 
-/* ---------- CARD SLOT (Flip card) ---------- */
+/* ---------- CARD (Flip) ---------- */
 .cardSlot{
   position:absolute;
   left:var(--slot-left);
@@ -194,7 +216,7 @@ body{
   height:var(--slot-height);
   perspective:1200px;
   overflow:hidden;
-  pointer-events:auto;
+  pointer-events:auto;     /* allow tapping to flip */
 }
 
 .flipWrap{
@@ -214,7 +236,7 @@ body{
   transition:transform .9s cubic-bezier(.2,.85,.2,1);
 }
 
-.flipCard.isFlipped{transform:rotateY(180deg)}
+.flipCard.isFlipped{ transform:rotateY(180deg); }
 
 .flipFace{
   position:absolute;
@@ -222,19 +244,22 @@ body{
   backface-visibility:hidden;
 }
 
-.flipBack{transform:rotateY(180deg)}
+.flipBack{ transform:rotateY(180deg); }
 
-/* ✅ UPDATED: keep cover + center, tiny overscale to prevent 1px gaps */
+/* ✅ ONLY CHANGE REQUESTED:
+   Make card_front.webp and card_back.webp slightly bigger to cover paper bg.
+   (Does NOT touch slot size, text, flow, or any other card.) */
 .flipFace img{
   width:100%;
   height:100%;
-  object-fit:cover;
+  object-fit:contain;      /* preserve your design */
   object-position:center;
-  /* tiny overscale to avoid 1px gaps on some browsers */
-  transform:scale(1.02);
+  display:block;
+  transform:scale(1.06);   /* slight enlargement to remove top/bottom gaps */
+  transform-origin:center;
 }
 
-/* RSVP */
+/* ---------- RSVP ---------- */
 .rsvpOverlay{
   position:absolute;
   left:var(--rsvp-left);
@@ -260,26 +285,27 @@ body{
   box-shadow:0 15px 35px rgba(0,0,0,.3);
 }
 
-#mapLink{top:var(--rsvp-top1)}
-#rsvpLink{top:var(--rsvp-top2)}
+#mapLink{ top:var(--rsvp-top1); }
+#rsvpLink{ top:var(--rsvp-top2); }
 
-/* Countdown */
-.countdownBox{
+/* ---------- COUNTDOWN (matches index.html: .countdownOverlay .countdownRow) ---------- */
+.countdownOverlay{
   position:absolute;
-  top:var(--countdown-top);
-  left:var(--countdown-left);
-  width:var(--countdown-width);
+  inset:0;
   display:flex;
-  justify-content:space-between;
-  gap:10px;
+  align-items:center;
+  justify-content:center;
   pointer-events:none;
 }
 
-.cdItem{
-  flex:1;
-  text-align:center;
-  padding:10px 0;
+.countdownRow{
+  width:min(88%, 720px);
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
 }
+
+.cdItem{ flex:1; text-align:center; padding:10px 0; }
 
 .cdNum{
   font-size:clamp(24px, 4vw, 50px);
@@ -287,7 +313,6 @@ body{
   letter-spacing:.05em;
   text-shadow:0 10px 25px rgba(0,0,0,.35);
 }
-
 .cdLbl{
   margin-top:3px;
   font-size:clamp(10px, 1.2vw, 14px);
@@ -296,8 +321,8 @@ body{
   text-transform:uppercase;
 }
 
-/* Gallery */
-.galleryWrap{
+/* ---------- GALLERY (matches index.html selectors) ---------- */
+.galleryOverlay{
   position:absolute;
   inset:0;
   display:flex;
@@ -306,7 +331,7 @@ body{
   pointer-events:auto;
 }
 
-.galleryViewer{
+.galleryViewport{
   width:min(86vw, 520px);
   aspect-ratio: 3/4;
   border-radius:18px;
@@ -314,9 +339,10 @@ body{
   position:relative;
   box-shadow:0 18px 45px rgba(0,0,0,.5);
   background:rgba(0,0,0,.25);
+  touch-action: pan-y; /* allow vertical scroll, JS handles horizontal swipe */
 }
 
-.galleryImg{
+#galleryImg{
   position:absolute;
   inset:0;
   width:100%;
@@ -324,12 +350,13 @@ body{
   object-fit:cover;
   user-select:none;
   -webkit-user-drag:none;
+  opacity:1;
 }
 
-.gNav{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
+.fadeIn{ animation: fadeIn .22s ease-out; }
+@keyframes fadeIn{ from{opacity:.4; transform:scale(1.01)} to{opacity:1; transform:scale(1)} }
+
+.galleryArrow{
   width:44px;
   height:44px;
   border:none;
@@ -342,59 +369,63 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:2;
 }
 
-.gPrev{left:10px}
-.gNext{right:10px}
-.gNav:active{transform:translateY(-50%) scale(.98)}
+.galleryArrow.left{ margin-right:14px; }
+.galleryArrow.right{ margin-left:14px; }
+.galleryArrow:active{ transform:scale(.98); }
 
-/* Swipe friendliness */
-.galleryViewer{
-  touch-action: pan-y;
-}
-
-/* Doa / Text typing */
-.doaBox{
+.galleryDots{
   position:absolute;
-  left:var(--doa-left);
-  top:var(--doa-top);
-  width:var(--doa-width);
-  height:var(--doa-height);
-  overflow:hidden;
+  bottom:10%;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  pointer-events:auto;
+}
+
+.dot{
+  width:9px;
+  height:9px;
+  border-radius:99px;
+  border:none;
+  background:rgba(255,255,255,.45);
+  cursor:pointer;
+}
+.dot.active{ background:rgba(255,255,255,.92); }
+
+/* ---------- DOA ---------- */
+.doaOverlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   pointer-events:none;
 }
 
-#doaText{
-  font-size:clamp(14px, 1.5vw, 20px);
-  line-height:1.55;
+.doaType{
+  width:min(82%, 820px);
+  height:min(46%, 520px);
   color:#3b0b0b;
   text-align:center;
   white-space:pre-wrap;
+  line-height:1.55;
   text-shadow:0 1px 0 rgba(255,255,255,.5);
-  opacity:0;
-  transform:translateY(8px);
-  transition:opacity .8s ease, transform .8s ease;
+  overflow:hidden;
 }
 
-#slide-doa.isActive #doaText{
-  opacity:1;
-  transform:translateY(0);
-}
-
-/* helpers */
-.hidden{display:none !important}
-
-/* Responsive tweaks */
+/* ---------- Responsive ---------- */
 @media (max-width:520px){
   :root{
     --vpad:14px;
     --radius:18px;
   }
-  #musicBtn{top:10px; right:10px}
-  .galleryViewer{width:min(90vw, 420px)}
+  .musicBtn{ top:10px; right:10px; }
+  .tapText{ font-size:13px; bottom:7%; }
 }
 
 @media (max-height:720px){
-  :root{--vpad:10px}
+  :root{ --vpad:10px; }
 }
