@@ -1,7 +1,5 @@
-/* style.css — RESTORED to match current index.html selectors
-   + ONLY change for card_front/back: slight scale-up inside flip faces */
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* style.css (FULL: soft romantic moving sparkles + vintage tone, brighter, royal but not dark) */
+*{margin:0;padding:0;box-sizing:border-box}
 
 :root{
   --pageW:1240;
@@ -10,204 +8,236 @@
   --vpad:18px;
   --radius:22px;
 
-  /* Flip-card placement (keep as-is if you previously tuned these) */
-  --slot-left: 6.77%;
-  --slot-top:  4.75%;
-  --slot-width: 86.94%;
-  --slot-height: 91.76%;
+  --slot-left:10.7%;
+  --slot-top:6.7%;
+  --slot-width:79.0%;
+  --slot-height:84.8%;
 
-  /* RSVP */
+  --doa-left:22%;
+  --doa-top:14.5%;
+  --doa-width:56%;
+  --doa-height:27%;
+
   --rsvp-left:18%;
   --rsvp-width:64%;
-  --rsvp-top1:48%;
-  --rsvp-top2:57.5%;
-  --rsvp-height:5.5%;
+  --rsvp-top1:62%;
+  --rsvp-top2:71%;
+  --rsvp-height:8%;
+
+  --cd-left:8%;
+  --cd-top:20%;
+  --cd-width:84%;
+  --cd-height:18%;
+
+  --gal-left:13%;
+  --gal-top:22%;
+  --gal-width:74%;
+  --gal-height:52%;
+
+  /* Soft romantic vintage tuning (brighter) */
+  --vintage-warm: .10;      /* warm sepia wash */
+  --vignette: .32;          /* lighter vignette */
+  --grain: .06;             /* very subtle grain */
+  --sparkle-alpha: .55;     /* sparkle visibility */
+  --sparkle-glow: .55;      /* soft glow */
 }
 
-html, body { height: 100%; }
 body{
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  background:#260707;
-  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:url("bg_red.webp") center/cover no-repeat;
+  background-attachment:scroll;
+  overflow-x:hidden;
+}
+
+@media (min-width:900px){
+  body{background-attachment:fixed;}
+}
+
+body.locked{
+  height:100vh;
   overflow:hidden;
 }
 
-/* Locked state before opening video ends */
-body.locked { overflow: hidden; }
+.hidden{display:none!important}
+.lockedContent{display:none}
 
-.slides{
-  height:100vh;
-  overflow-y:auto;
-  scroll-snap-type:y mandatory;
-  scroll-behavior:smooth;
-}
-
-/* JS toggles this class off after opening video ends */
-.lockedContent{ overflow:hidden; }
-
-.slide,
-.openingSection{
-  height:100vh;
+/* Slides */
+.slides{scroll-snap-type:y mandatory}
+.slide{
+  min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  position:relative;
+  padding:var(--vpad);
   scroll-snap-align:start;
+
+  content-visibility:auto;
+  contain-intrinsic-size:100vh;
 }
 
+/* Stage */
 .stage{
-  width:min(92vw, calc(var(--pageW)*1px));
-  height:calc(100vh - (var(--vpad)*2));
-  max-height:calc(var(--pageH)*1px);
-  aspect-ratio: var(--pageW) / var(--pageH);
+  width:min(96vw,calc((100vh - (2*var(--vpad)))*(var(--pageW)/var(--pageH))));
+  aspect-ratio:var(--pageW)/var(--pageH);
+  position:relative;
   border-radius:var(--radius);
   overflow:hidden;
-  position:relative;
-  box-shadow:0 30px 60px rgba(0,0,0,.55);
-  background:#000;
+
+  /* slightly lighter shadow so card doesn't feel too dark */
+  box-shadow:0 26px 70px rgba(0,0,0,.28);
+  isolation:isolate;
 }
 
 .stageMedia{
-  position:absolute;
-  inset:0;
   width:100%;
   height:100%;
   object-fit:contain;
+  display:block;
+  position:relative;
+  z-index:1;
 }
 
-/* Cinematic vignette */
-.stage::before{
-  content:"";
+.overlay{
   position:absolute;
   inset:0;
   pointer-events:none;
-  background:
-    radial-gradient(120% 120% at 50% 35%,
-      rgba(255,255,255,0.06) 0%,
-      rgba(0,0,0,0.00) 40%,
-      rgba(0,0,0,0.35) 78%,
-      rgba(0,0,0,0.62) 100%);
-  mix-blend-mode:overlay;
-  z-index:2;
+  z-index:4;
 }
 
-/* Sparkles overlay */
+/* =====================================================
+   SOFT ROMANTIC SPARKLE + VINTAGE FILM FEEL (BRIGHTER)
+   (No feature/flow changes; visual only)
+   ===================================================== */
+
+/* Warm vintage wash + gentle vignette (brighter than before) */
+.stage::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  pointer-events:none;
+  z-index:2;
+
+  background:
+    radial-gradient(ellipse at center,
+      rgba(255,255,255,0.10) 0%,
+      rgba(0,0,0,var(--vignette)) 92%
+    ),
+    linear-gradient(180deg,
+      rgba(255,236,210,var(--vintage-warm)) 0%,
+      rgba(120,55,30,0.05) 100%
+    );
+
+  mix-blend-mode:multiply;
+}
+
+/* Moving + twinkling sparkles (two layers for depth) + subtle grain */
 .stage::after{
   content:"";
   position:absolute;
   inset:0;
   pointer-events:none;
   z-index:3;
-  background-image:
-    radial-gradient(circle, rgba(255,255,255,.95) 0 1px, transparent 2px),
-    radial-gradient(circle, rgba(255,255,255,.8) 0 1px, transparent 2px),
-    radial-gradient(circle, rgba(255,255,255,.6) 0 1px, transparent 2px),
-    radial-gradient(circle, rgba(255,255,255,.5) 0 1px, transparent 2px),
-    radial-gradient(circle, rgba(255,255,255,.4) 0 1px, transparent 2px),
-    radial-gradient(circle, rgba(255,255,255,.35) 0 1px, transparent 2px);
-  background-size:
-    220px 220px,
-    280px 280px,
-    340px 340px,
-    420px 420px,
-    520px 520px,
-    680px 680px;
-  background-position:
-    10% 20%,
-    70% 10%,
-    40% 65%,
-    85% 55%,
-    20% 80%,
-    60% 90%;
-  opacity:.55;
-  filter: blur(.4px);
-  animation: sparkleBlink 1.7s infinite ease-in-out, sparkleFloat 9s infinite ease-in-out;
-  mix-blend-mode: screen;
+
+  background:
+    /* Sparkle layer A (slightly larger) */
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,var(--sparkle-alpha)) 0 2.6px, transparent 6px),
+    radial-gradient(circle at 25% 75%, rgba(255,255,255,calc(var(--sparkle-alpha)*.85)) 0 2.2px, transparent 5.2px),
+    radial-gradient(circle at 42% 32%, rgba(255,255,255,calc(var(--sparkle-alpha)*.90)) 0 2.8px, transparent 6.4px),
+    radial-gradient(circle at 58% 62%, rgba(255,255,255,calc(var(--sparkle-alpha)*.80)) 0 2.3px, transparent 5.4px),
+    radial-gradient(circle at 74% 22%, rgba(255,255,255,var(--sparkle-alpha)) 0 3.1px, transparent 7px),
+    radial-gradient(circle at 86% 50%, rgba(255,255,255,calc(var(--sparkle-alpha)*.85)) 0 2.3px, transparent 5.4px),
+    radial-gradient(circle at 90% 82%, rgba(255,255,255,calc(var(--sparkle-alpha)*.80)) 0 2.7px, transparent 6.2px),
+    radial-gradient(circle at 16% 56%, rgba(255,255,255,var(--sparkle-alpha)) 0 3.0px, transparent 6.8px),
+
+    /* Sparkle layer B (smaller “dust” points) */
+    radial-gradient(circle at 18% 14%, rgba(255,255,255,calc(var(--sparkle-alpha)*.55)) 0 1.4px, transparent 3.6px),
+    radial-gradient(circle at 32% 44%, rgba(255,255,255,calc(var(--sparkle-alpha)*.50)) 0 1.2px, transparent 3.2px),
+    radial-gradient(circle at 48% 76%, rgba(255,255,255,calc(var(--sparkle-alpha)*.55)) 0 1.5px, transparent 3.7px),
+    radial-gradient(circle at 66% 38%, rgba(255,255,255,calc(var(--sparkle-alpha)*.50)) 0 1.2px, transparent 3.2px),
+    radial-gradient(circle at 80% 70%, rgba(255,255,255,calc(var(--sparkle-alpha)*.55)) 0 1.5px, transparent 3.8px),
+
+    /* very subtle grain (keeps vintage feel) */
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,var(--grain)) 0 1px,
+      rgba(0,0,0,calc(var(--grain)*.7)) 2px 3px
+    );
+
+  filter: drop-shadow(0 0 10px rgba(255,255,255,var(--sparkle-glow)));
+  mix-blend-mode:screen;
+
+  animation:
+    sparkleDriftA 20s linear infinite,
+    sparkleTwinkle 2.4s ease-in-out infinite;
 }
 
-@keyframes sparkleBlink{
-  0%,100%{opacity:.35}
-  50%{opacity:.75}
+/* Drift (layer moves) */
+@keyframes sparkleDriftA{
+  0%   { transform: translate3d(0,0,0); }
+  50%  { transform: translate3d(-16px,10px,0); }
+  100% { transform: translate3d(0,0,0); }
 }
 
-@keyframes sparkleFloat{
-  0%{transform:translate3d(0,0,0)}
-  50%{transform:translate3d(-8px, -14px, 0)}
-  100%{transform:translate3d(0,0,0)}
+/* Twinkle (blink-blink sparkle) */
+@keyframes sparkleTwinkle{
+  0%   { opacity:.55; }
+  20%  { opacity:.95; }
+  45%  { opacity:.62; }
+  65%  { opacity:1; }
+  85%  { opacity:.70; }
+  100% { opacity:.92; }
 }
 
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce){
   .stage::after{ animation:none; }
 }
 
-/* Utility */
-.hidden{ display:none !important; }
-
-/* ---------- MUSIC BUTTON (matches index.html: #musicToggle + .musicBtn) ---------- */
-.musicBtn{
-  position:fixed;
-  top:14px;
-  right:14px;
-  z-index:100;
-  width:46px;
-  height:46px;
-  border-radius:999px;
-  border:none;
-  background:rgba(255,255,255,.92);
-  color:#3b0b0b;
-  font-weight:900;
-  cursor:pointer;
-  box-shadow:0 12px 28px rgba(0,0,0,.35);
+/* Opening */
+.openingSection{
+  min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-}
-.musicBtn:active{ transform:scale(.98); }
-
-/* ---------- OPENING (matches .openingCover + .openHit) ---------- */
-.openingCover{
-  position:absolute;
-  inset:0;
+  padding:var(--vpad);
 }
 
-/* IMPORTANT: make seal button clickable on desktop + mobile */
 .openHit{
   position:absolute;
   inset:0;
-  z-index:6;              /* above opening image */
   border:none;
   background:transparent;
   cursor:pointer;
-  pointer-events:auto;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Optional helper label (your HTML uses .tapText) */
-.tapText{
-  position:absolute;
-  left:50%;
-  bottom:8%;
-  transform:translateX(-50%);
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(0,0,0,.28);
-  color:rgba(255,255,255,.92);
-  font-weight:700;
-  letter-spacing:.02em;
-  font-size:14px;
-  text-shadow:0 2px 10px rgba(0,0,0,.45);
-  pointer-events:none;
-}
-
-/* ---------- OVERLAY base ---------- */
-.overlay{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:20px;
   z-index:5;
+  pointer-events:auto;
 }
 
-/* ---------- CARD (Flip) ---------- */
+.tapText{
+  background:rgba(0,0,0,.4);
+  color:#fff;
+  padding:10px 18px;
+  border-radius:999px;
+  font-weight:900;
+}
+
+/* Music */
+.musicBtn{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  border:none;
+  background:#fff;
+  cursor:pointer;
+  z-index:50;
+}
+
+/* Card flip */
 .cardSlot{
   position:absolute;
   left:var(--slot-left);
@@ -216,7 +246,7 @@ body.locked { overflow: hidden; }
   height:var(--slot-height);
   perspective:1200px;
   overflow:hidden;
-  pointer-events:auto;     /* allow tapping to flip */
+  pointer-events:auto;
 }
 
 .flipWrap{
@@ -236,7 +266,7 @@ body.locked { overflow: hidden; }
   transition:transform .9s cubic-bezier(.2,.85,.2,1);
 }
 
-.flipCard.isFlipped{ transform:rotateY(180deg); }
+.flipCard.isFlipped{transform:rotateY(180deg)}
 
 .flipFace{
   position:absolute;
@@ -244,22 +274,16 @@ body.locked { overflow: hidden; }
   backface-visibility:hidden;
 }
 
-.flipBack{ transform:rotateY(180deg); }
+.flipBack{transform:rotateY(180deg)}
 
-/* ✅ ONLY CHANGE REQUESTED:
-   Make card_front.webp and card_back.webp slightly bigger to cover paper bg.
-   (Does NOT touch slot size, text, flow, or any other card.) */
 .flipFace img{
   width:100%;
   height:100%;
-  object-fit:contain;      /* preserve your design */
-  object-position:center;
-  display:block;
-  transform:scale(1.06);   /* slight enlargement to remove top/bottom gaps */
-  transform-origin:center;
+  object-fit:cover;
+  transform:scale(1.10);
 }
 
-/* ---------- RSVP ---------- */
+/* RSVP */
 .rsvpOverlay{
   position:absolute;
   left:var(--rsvp-left);
@@ -282,150 +306,161 @@ body.locked { overflow: hidden; }
   color:#5b0b0b;
   background:rgba(255,255,255,.92);
   border-radius:999px;
-  box-shadow:0 15px 35px rgba(0,0,0,.3);
+  box-shadow:0 15px 35px rgba(0,0,0,.25);
 }
 
-#mapLink{ top:var(--rsvp-top1); }
-#rsvpLink{ top:var(--rsvp-top2); }
+#mapLink{top:var(--rsvp-top1)}
+#rsvpLink{top:var(--rsvp-top2)}
 
-/* ---------- COUNTDOWN (matches index.html: .countdownOverlay .countdownRow) ---------- */
+/* Countdown */
 .countdownOverlay{
   position:absolute;
-  inset:0;
+  left:var(--cd-left);
+  top:var(--cd-top);
+  width:var(--cd-width);
+  height:var(--cd-height);
   display:flex;
-  align-items:center;
+  align-items:flex-end;
   justify-content:center;
   pointer-events:none;
 }
 
 .countdownRow{
-  width:min(88%, 720px);
+  width:100%;
   display:flex;
+  gap:clamp(10px,2vw,22px);
   justify-content:space-between;
-  gap:10px;
+  align-items:flex-end;
 }
 
-.cdItem{ flex:1; text-align:center; padding:10px 0; }
+.cdItem{flex:1;text-align:center}
 
 .cdNum{
-  font-size:clamp(24px, 4vw, 50px);
   font-weight:900;
-  letter-spacing:.05em;
-  text-shadow:0 10px 25px rgba(0,0,0,.35);
-}
-.cdLbl{
-  margin-top:3px;
-  font-size:clamp(10px, 1.2vw, 14px);
-  opacity:.85;
-  letter-spacing:.18em;
-  text-transform:uppercase;
+  font-size:clamp(26px,4.2vw,56px);
+  color:#fff;
+  text-shadow:0 10px 25px rgba(0,0,0,.45);
 }
 
-/* ---------- GALLERY (matches index.html selectors) ---------- */
+.cdLbl{
+  margin-top:6px;
+  font-weight:900;
+  letter-spacing:.08em;
+  font-size:clamp(10px,1.2vw,14px);
+  color:rgba(255,255,255,.95);
+}
+
+/* Gallery */
 .galleryOverlay{
   position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  left:0; top:0; width:100%; height:100%;
   pointer-events:auto;
 }
 
 .galleryViewport{
-  width:min(86vw, 520px);
-  aspect-ratio: 3/4;
-  border-radius:18px;
+  position:absolute;
+  left:var(--gal-left);
+  top:var(--gal-top);
+  width:var(--gal-width);
+  height:var(--gal-height);
   overflow:hidden;
-  position:relative;
-  box-shadow:0 18px 45px rgba(0,0,0,.5);
-  background:rgba(0,0,0,.25);
-  touch-action: pan-y; /* allow vertical scroll, JS handles horizontal swipe */
+  border-radius:18px;
+
+  /* swipe friendliness */
+  touch-action: pan-y;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
 }
 
-#galleryImg{
-  position:absolute;
-  inset:0;
+.galleryViewport img{
   width:100%;
   height:100%;
   object-fit:cover;
-  user-select:none;
-  -webkit-user-drag:none;
-  opacity:1;
+  display:block;
 }
 
-.fadeIn{ animation: fadeIn .22s ease-out; }
-@keyframes fadeIn{ from{opacity:.4; transform:scale(1.01)} to{opacity:1; transform:scale(1)} }
+.fadeIn{animation:fadeIn .22s ease-out}
+@keyframes fadeIn{from{opacity:.25;transform:scale(.99)}to{opacity:1;transform:scale(1)}}
 
 .galleryArrow{
+  position:absolute;
+  top:calc(var(--gal-top) + (var(--gal-height)/2));
+  transform:translateY(-50%);
   width:44px;
   height:44px;
   border:none;
-  border-radius:999px;
-  background:rgba(255,255,255,.9);
-  color:#3b0b0b;
-  font-weight:900;
+  border-radius:50%;
   cursor:pointer;
-  box-shadow:0 12px 28px rgba(0,0,0,.35);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  background:rgba(255,255,255,.9);
+  color:#4b0b0b;
+  font-size:30px;
+  line-height:44px;
+  text-align:center;
+  box-shadow:0 15px 35px rgba(0,0,0,.25);
 }
 
-.galleryArrow.left{ margin-right:14px; }
-.galleryArrow.right{ margin-left:14px; }
-.galleryArrow:active{ transform:scale(.98); }
+.galleryArrow.left{left:calc(var(--gal-left) - 18px)}
+.galleryArrow.right{left:calc(var(--gal-left) + var(--gal-width) - 26px)}
 
 .galleryDots{
   position:absolute;
-  bottom:10%;
-  left:50%;
-  transform:translateX(-50%);
+  left:0;
+  right:0;
+  top:calc(var(--gal-top) + var(--gal-height) + 1.5%);
   display:flex;
-  gap:8px;
-  pointer-events:auto;
+  justify-content:center;
+  gap:10px;
 }
 
 .dot{
-  width:9px;
-  height:9px;
-  border-radius:99px;
+  width:10px;height:10px;border-radius:50%;
   border:none;
-  background:rgba(255,255,255,.45);
+  background:rgba(255,255,255,.6);
   cursor:pointer;
 }
-.dot.active{ background:rgba(255,255,255,.92); }
+.dot.active{background:#fff}
 
-/* ---------- DOA ---------- */
+/* DOA */
 .doaOverlay{
   position:absolute;
-  inset:0;
+  left:var(--doa-left);
+  top:var(--doa-top);
+  width:var(--doa-width);
+  height:var(--doa-height);
+  overflow:hidden;
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   justify-content:center;
-  pointer-events:none;
 }
 
 .doaType{
-  width:min(82%, 820px);
-  height:min(46%, 520px);
-  color:#3b0b0b;
-  text-align:center;
+  width:100%;
+  height:100%;
   white-space:pre-wrap;
-  line-height:1.55;
-  text-shadow:0 1px 0 rgba(255,255,255,.5);
-  overflow:hidden;
+  text-align:center;
+  font-weight:800;
+  line-height:1.35;
+  color:#2b0b0b;
+  font-size:14px;
+
+  opacity:0;
+  transform:translateY(10px);
 }
 
-/* ---------- Responsive ---------- */
+.slide.isDoaActive .doaType{
+  animation:doaFadeIn .9s ease-out forwards;
+}
+
+@keyframes doaFadeIn{
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* Small screens */
 @media (max-width:520px){
   :root{
-    --vpad:14px;
-    --radius:18px;
+    --vpad:12px;
+    --rsvp-height:9%;
   }
-  .musicBtn{ top:10px; right:10px; }
-  .tapText{ font-size:13px; bottom:7%; }
-}
-
-@media (max-height:720px){
-  :root{ --vpad:10px; }
+  .galleryArrow{width:40px;height:40px;line-height:40px;font-size:28px}
 }
