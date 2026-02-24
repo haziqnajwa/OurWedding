@@ -625,9 +625,7 @@ body.locked{
 }
 
 /* ===============================
-   TAP TO FLIP ORNAMENT BADGE
-   =============================== */
-
+TAP TO FLIP (no fill, still royal/glowy) */
 .cardSlot::before{
   content:"✦  TAP TO FLIP  ✦";
   position:absolute;
@@ -639,27 +637,51 @@ body.locked{
   font-size:12px;
   letter-spacing:.25em;
   font-weight:700;
+  text-transform:uppercase;
 
-  color:#fff;
+  color:rgba(255,255,255,.95);
   text-align:center;
   white-space:nowrap;
 
-  background:linear-gradient(
-    145deg,
-    rgba(212,175,55,.95),
-    rgba(255,236,210,.95)
-  );
-
+  background:transparent;              /* ✅ removed gold fill */
   border-radius:999px;
+
+  /* subtle “royal” outline + glow */
+  border:1px solid rgba(212,175,55,.55);
   box-shadow:
-    0 10px 25px rgba(0,0,0,.35),
-    0 0 0 1px rgba(212,175,55,.6) inset,
-    0 0 25px rgba(212,175,55,.4);
+    0 10px 25px rgba(0,0,0,.28),
+    0 0 0 1px rgba(255,255,255,.10) inset,
+    0 0 22px rgba(212,175,55,.22);
+
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.25),
+    0 0 14px rgba(212,175,55,.22);
 
   z-index:10;
   pointer-events:none;
 
-  animation: royalPulse 2.6s ease-in-out infinite;
+  animation: royalPulseOutline 2.6s ease-in-out infinite;
+}
+
+@keyframes royalPulseOutline{
+  0%,100%{
+    transform:translateX(-50%) scale(1);
+    opacity:.92;
+    box-shadow:
+      0 10px 25px rgba(0,0,0,.28),
+      0 0 0 1px rgba(255,255,255,.10) inset,
+      0 0 18px rgba(212,175,55,.18);
+  }
+  50%{
+    transform:translateX(-50%) scale(1.05);
+    opacity:1;
+    box-shadow:
+      0 14px 32px rgba(0,0,0,.34),
+      0 0 0 1px rgba(255,255,255,.12) inset,
+      0 0 30px rgba(212,175,55,.28);
+  }
+}
+
 }
 
 /* Hide indicator after flip */
@@ -668,27 +690,41 @@ body.locked{
   opacity:0;
 }
 
-/* ===============================
-   SCROLL FOR MORE INDICATOR
-   =============================== */
-
+/* SCROLL FOR MORE (moved lower) */
 .cardSlot::after{
   content:"SCROLL FOR MORE";
   position:absolute;
-  bottom:5%;
+  bottom:1.2%;              /* ✅ lower (was ~5%) */
   left:50%;
   transform:translateX(-50%);
   font-size:11px;
   letter-spacing:.3em;
   font-weight:600;
-  color:rgba(255,255,255,.85);
+  color:rgba(255,255,255,.82);
   text-align:center;
 
-  padding-top:22px;
+  padding-top:22px;         /* space for the indicator line */
   pointer-events:none;
   z-index:10;
 
   animation: scrollFloat 2.4s ease-in-out infinite;
+
+  /* little “line” above the text */
+  background:
+    linear-gradient(transparent,transparent),
+    linear-gradient(to bottom,
+      rgba(255,255,255,.85) 0%,
+      rgba(255,255,255,.35) 100%);
+  background-repeat:no-repeat;
+  background-size: 0 0, 2px 18px;
+  background-position:center top;
+
+  text-shadow: 0 1px 10px rgba(0,0,0,.35);
+}
+
+@keyframes scrollFloat{
+  0%,100%{ transform:translate(-50%,0); opacity:.85; }
+  50%{ transform:translate(-50%,6px); opacity:1; }
 }
 
 /* Decorative animated arrows */
