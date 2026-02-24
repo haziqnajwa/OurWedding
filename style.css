@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap');
+
 /* style.css — Royal Classic Upgrade (CSS-only)
    Keeps your existing flow/JS/features intact.
    Adds: kerawang watermark, richer royal glow, classic film grain, romantic bokeh,
@@ -550,25 +552,52 @@ body.locked{
   justify-content:center;
 }
 
+/* Classic + elegant doa text */
 .doaType{
   width:100%;
   height:100%;
   white-space:pre-wrap;
   text-align:center;
-  font-weight:800;
-  line-height:1.35;
-  color:#2b0b0b;
-  font-size:14px;
+
+  /* ✅ classic serif */
+  font-family:'Cormorant Garamond','Playfair Display',serif;
+  font-weight:500;
+  line-height:1.7;
+  letter-spacing:.03em;
+
+  font-size:clamp(15px,1.35vw,20px);
+
+  /* warm ink + subtle antique-gold glow */
+  color:#2b0b0b; /* fallback */
+  background:linear-gradient(to bottom,#3a1a12 0%, #2b0b0b 55%, rgba(212,175,55,.92) 130%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.10),
+    0 10px 28px rgba(212,175,55,.12);
 
   opacity:0;
-  transform:translateY(10px);
+  transform:translateY(18px);
+  filter:blur(3px);
 }
 
 /* JS adds .isDoaActive to the slide */
 .slide.isDoaActive .doaType{
-  animation:doaFadeIn .9s ease-out forwards;
+  animation:doaFadeInSoft 1.6s cubic-bezier(.22,.85,.25,1) forwards;
 }
-@keyframes doaFadeIn{ to{opacity:1;transform:translateY(0);} }
+
+@keyframes doaFadeInSoft{
+  0%   { opacity:0; transform:translateY(18px); filter:blur(3px); }
+  60%  { opacity:1; transform:translateY(2px);  filter:blur(0.6px); }
+  100% { opacity:1; transform:translateY(0);   filter:blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .doaType{opacity:1;transform:none;filter:none}
+  .slide.isDoaActive .doaType{animation:none}
+}
 
 /* ===== DOA: calmer “gold dust” mood (less sparkle, more sacred) ===== */
 #slide-doa .stage::after{
@@ -680,8 +709,6 @@ TAP TO FLIP (no fill, still royal/glowy) */
       0 0 0 1px rgba(255,255,255,.12) inset,
       0 0 30px rgba(212,175,55,.28);
   }
-}
-
 }
 
 /* Hide indicator after flip */
