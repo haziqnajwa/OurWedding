@@ -53,8 +53,8 @@
   --grain-alpha:.03;               /* film grain */
   --bokeh-alpha:.09;               /* bokeh layer */
 
-  --sparkle-brightness:.110;
-  --sparkle-glow:.100;
+  --sparkle-brightness:1.09;
+  --sparkle-glow:1.1;
 
   /* Kerawang watermark */
   --kerawang-alpha:.10;            /* overall watermark visibility */
