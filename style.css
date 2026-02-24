@@ -48,13 +48,13 @@
   --champagne: 255, 236, 210;      /* warm cream highlight */
 
   --vignette-strength:.40;
-  --warm-glow-alpha:.25;           /* chandelier glow */
-  --songket-alpha:.06;             /* weave visibility */
-  --grain-alpha:.05;               /* film grain */
-  --bokeh-alpha:.10;               /* bokeh layer */
+  --warm-glow-alpha:.30;           /* chandelier glow */
+  --songket-alpha:.04;             /* weave visibility */
+  --grain-alpha:.03;               /* film grain */
+  --bokeh-alpha:.09;               /* bokeh layer */
 
-  --sparkle-brightness:.100;
-  --sparkle-glow:.92;
+  --sparkle-brightness:.110;
+  --sparkle-glow:.100;
 
   /* Kerawang watermark */
   --kerawang-alpha:.10;            /* overall watermark visibility */
@@ -201,8 +201,8 @@ body.locked{
   filter: drop-shadow(0 0 10px rgba(255,255,255,var(--sparkle-glow)));
   mix-blend-mode:screen;
   animation:
-    sparkleBlink 1.7s infinite ease-in-out,
-    sparkleFloat 9s infinite ease-in-out,
+    sparkleBlink 2.0s infinite ease-in-out,
+    sparkleFloat 12s infinite ease-in-out,
     grainShift 2.6s steps(2) infinite;
 }
 
