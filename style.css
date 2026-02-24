@@ -45,14 +45,14 @@
   --gold: 212, 175, 55;            /* antique gold (RGB) */
   --champagne: 255, 236, 210;      /* warm cream highlight */
 
-  --vignette-strength:.50;
-  --warm-glow-alpha:.18;           /* chandelier glow */
+  --vignette-strength:.40;
+  --warm-glow-alpha:.25;           /* chandelier glow */
   --songket-alpha:.06;             /* weave visibility */
   --grain-alpha:.05;               /* film grain */
   --bokeh-alpha:.10;               /* bokeh layer */
 
-  --sparkle-brightness:.92;
-  --sparkle-glow:.85;
+  --sparkle-brightness:.100;
+  --sparkle-glow:.92;
 
   /* Kerawang watermark */
   --kerawang-alpha:.10;            /* overall watermark visibility */
