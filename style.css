@@ -45,7 +45,7 @@
   --gold: 212, 175, 55;            /* antique gold (RGB) */
   --champagne: 255, 236, 210;      /* warm cream highlight */
 
-  --vignette-strength:.62;
+  --vignette-strength:.50;
   --warm-glow-alpha:.18;           /* chandelier glow */
   --songket-alpha:.06;             /* weave visibility */
   --grain-alpha:.05;               /* film grain */
@@ -612,4 +612,127 @@ body.locked{
     --kerawang-scale: 560px 560px;
   }
   .galleryArrow{width:40px;height:40px;line-height:40px;font-size:28px}
+}
+
+/* ============================================
+   ROYAL CARD SIGNALS (Flip + Scroll Indicators)
+   CSS-only, no HTML changes
+   ============================================ */
+
+/* Make sure overlay layer can hold decorative signals */
+.cardSlot{
+  position:absolute;
+}
+
+/* ===============================
+   TAP TO FLIP ORNAMENT BADGE
+   =============================== */
+
+.cardSlot::before{
+  content:"✦  TAP TO FLIP  ✦";
+  position:absolute;
+  top:6%;
+  left:50%;
+  transform:translateX(-50%);
+  padding:8px 18px;
+
+  font-size:12px;
+  letter-spacing:.25em;
+  font-weight:700;
+
+  color:#fff;
+  text-align:center;
+  white-space:nowrap;
+
+  background:linear-gradient(
+    145deg,
+    rgba(212,175,55,.95),
+    rgba(255,236,210,.95)
+  );
+
+  border-radius:999px;
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.35),
+    0 0 0 1px rgba(212,175,55,.6) inset,
+    0 0 25px rgba(212,175,55,.4);
+
+  z-index:10;
+  pointer-events:none;
+
+  animation: royalPulse 2.6s ease-in-out infinite;
+}
+
+/* Hide indicator after flip */
+.flipCard.isFlipped ~ * .cardSlot::before,
+.flipCard.isFlipped .cardSlot::before{
+  opacity:0;
+}
+
+/* ===============================
+   SCROLL FOR MORE INDICATOR
+   =============================== */
+
+.cardSlot::after{
+  content:"SCROLL FOR MORE";
+  position:absolute;
+  bottom:5%;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:11px;
+  letter-spacing:.3em;
+  font-weight:600;
+  color:rgba(255,255,255,.85);
+  text-align:center;
+
+  padding-top:22px;
+  pointer-events:none;
+  z-index:10;
+
+  animation: scrollFloat 2.4s ease-in-out infinite;
+}
+
+/* Decorative animated arrows */
+.cardSlot::after{
+  background:
+    linear-gradient(transparent,transparent),
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,.9) 0%,
+      rgba(255,255,255,.4) 100%
+    );
+  background-repeat:no-repeat;
+  background-size: 0 0, 2px 18px;
+  background-position:center top;
+}
+
+/* ===============================
+   Animations
+   =============================== */
+
+@keyframes royalPulse{
+  0%,100%{
+    transform:translateX(-50%) scale(1);
+    box-shadow:
+      0 10px 25px rgba(0,0,0,.35),
+      0 0 0 1px rgba(212,175,55,.6) inset,
+      0 0 18px rgba(212,175,55,.35);
+  }
+  50%{
+    transform:translateX(-50%) scale(1.05);
+    box-shadow:
+      0 14px 32px rgba(0,0,0,.45),
+      0 0 0 1px rgba(212,175,55,.7) inset,
+      0 0 32px rgba(212,175,55,.55);
+  }
+}
+
+@keyframes scrollFloat{
+  0%,100%{
+    transform:translate(-50%,0);
+    opacity:.85;
+  }
+  50%{
+    transform:translate(-50%,6px);
+    opacity:1;
+  }
 }
