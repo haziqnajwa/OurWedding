@@ -877,3 +877,11 @@ TAP TO FLIP (no fill, still royal/glowy) */
     );
   mix-blend-mode:soft-light;
 }
+.galleryViewer::after{
+  animation: royalDust 8s ease-in-out infinite alternate;
+}
+
+@keyframes royalDust{
+  0%{ opacity:.8; }
+  100%{ opacity:1; }
+}
