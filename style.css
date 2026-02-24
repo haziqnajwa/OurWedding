@@ -772,3 +772,108 @@ TAP TO FLIP (no fill, still royal/glowy) */
     opacity:1;
   }
 }
+
+/* =========================================
+   ROYAL COUNTDOWN UPGRADE
+   ========================================= */
+
+.countdownBox{
+  backdrop-filter: blur(2px);
+}
+
+/* Elegant number styling */
+.cdNum{
+  font-size:clamp(26px, 4vw, 52px);
+  font-weight:800;
+  letter-spacing:.08em;
+
+  background:linear-gradient(
+    to bottom,
+    #fff8e8,
+    #f2d6a8 40%,
+    #d4af37 60%,
+    #b9922f
+  );
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.15),
+    0 8px 25px rgba(212,175,55,.35);
+
+  animation: royalGlowPulse 3s ease-in-out infinite;
+}
+
+/* Elegant label */
+.cdLbl{
+  margin-top:6px;
+  font-size:clamp(10px, 1.2vw, 14px);
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  color:rgba(255,240,220,.85);
+  text-shadow:0 0 8px rgba(212,175,55,.25);
+}
+
+/* Soft breathing glow */
+@keyframes royalGlowPulse{
+  0%,100%{
+    filter:drop-shadow(0 0 6px rgba(212,175,55,.25));
+  }
+  50%{
+    filter:drop-shadow(0 0 14px rgba(212,175,55,.45));
+  }
+}
+
+/* =========================================
+   ROYAL CINEMATIC GALLERY
+   ========================================= */
+
+.galleryViewer{
+  position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:
+    0 25px 60px rgba(0,0,0,.55),
+    0 0 30px rgba(212,175,55,.18);
+}
+
+/* Romantic vignette inside gallery */
+.galleryViewer::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      120% 120% at 50% 50%,
+      rgba(0,0,0,0) 55%,
+      rgba(0,0,0,.35) 100%
+    );
+  mix-blend-mode:multiply;
+}
+
+/* Slow cinematic zoom */
+.galleryImg{
+  animation: kenBurns 12s ease-in-out infinite alternate;
+}
+
+/* Elegant zoom */
+@keyframes kenBurns{
+  0%{ transform:scale(1); }
+  100%{ transform:scale(1.06); }
+}
+
+/* Romantic warm overlay */
+.galleryViewer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(255,220,180,.18),
+      transparent 60%
+    );
+  mix-blend-mode:soft-light;
+}
