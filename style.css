@@ -1149,3 +1149,55 @@ TAP TO FLIP (no fill, still royal/glowy) */
   }
 }
 
+
+
+/* =========================
+   INVITATION SECTION OVERRIDE (fit inside inner parchment box)
+   Goal: keep all invitation overlay text within a tighter "yellow-box" safe area.
+   (No JS / feature changes)
+========================= */
+
+#slide-invitation .invitationContent{
+  /* tighter safe area (yellow box) */
+  width: 56%;
+  max-width: 420px;
+  top: 21%;
+  /* keep it centered */
+  left: 50%;
+  transform: translateX(-50%);
+  /* prevent text touching edges */
+  padding: 0 6px;
+  line-height: 1.42;
+}
+
+/* Scale typography down to stay within the safe area */
+#slide-invitation .invitationArabic{ font-size: 16px; margin-bottom: 10px; font-weight: 600; }
+#slide-invitation .invitationText{ font-size: 13px; margin: 4px 0; }
+#slide-invitation .invitationNamesTop{ font-size: 14px; margin: 8px 0; font-weight: 700; }
+#slide-invitation .invitationDivider{ font-size: 12px; margin: 6px 0; }
+#slide-invitation .invitationNamesMain{ font-size: 15px; margin: 8px 0; font-weight: 700; }
+#slide-invitation .invitationLabel{ font-size: 12px; margin-top: 10px; letter-spacing: 0.8px; font-weight: 600; }
+#slide-invitation .invitationDetails{ font-size: 12px; margin: 3px 0; }
+
+/* Mobile: even tighter */
+@media (max-width: 480px){
+  #slide-invitation .invitationContent{
+    width: 64%;
+    top: 20%;
+    max-width: 360px;
+    line-height: 1.38;
+  }
+  #slide-invitation .invitationArabic{ font-size: 15px; }
+  #slide-invitation .invitationText{ font-size: 12px; }
+  #slide-invitation .invitationNamesTop{ font-size: 13px; }
+  #slide-invitation .invitationNamesMain{ font-size: 14px; }
+  #slide-invitation .invitationLabel,
+  #slide-invitation .invitationDetails{ font-size: 11.5px; }
+}
+
+/* Very small devices */
+@media (max-width: 360px){
+  #slide-invitation .invitationContent{ width: 68%; top: 19%; }
+  #slide-invitation .invitationText{ font-size: 11.5px; }
+  #slide-invitation .invitationNamesMain{ font-size: 13.5px; }
+}
