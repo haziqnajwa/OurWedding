@@ -28,7 +28,7 @@
   <div class="stage">
     <div id="openingCover" class="openingCover">
       <img class="stageMedia" src="opening.webp" alt="Opening cover" decoding="async" fetchpriority="high" />
-      <button id="openHit" class="openHit" aria-label="Open invitation">
+      <button id="openHit" class="openHit" type="button" aria-label="Open invitation">
         <span class="tapText">Tap seal to open</span>
       </button>
     </div>
@@ -213,22 +213,44 @@
     else setTimeout(run, 350);
   }
 
-  openHit.addEventListener("click", async () => {
+  function startOpening() {
     if (opened) return;
     opened = true;
 
-    try { await music.play(); } catch(e){}
+    // iOS/Safari compatibility
+    openingVideo.setAttribute("playsinline", "");
+    openingVideo.setAttribute("webkit-playsinline", "");
 
+    // Try start background music (will only work after gesture)
+    (async () => { try { await music.play(); } catch(e){} })();
+
+    // Show video first so it can render a frame before play() on some browsers
     openingCover.classList.add("hidden");
     openingVideo.classList.remove("hidden");
 
-    try { await openingVideo.play(); }
-    catch(e){
-      openingVideo.classList.add("hidden");
-      openingCover.classList.remove("hidden");
-      opened = false;
-    }
-  }, { passive: true });
+    // Always restart from beginning
+    try { openingVideo.currentTime = 0; } catch(e) {}
+
+    // Small defer helps some mobile browsers apply layout before play()
+    requestAnimationFrame(async () => {
+      try {
+        await openingVideo.play();
+      } catch (e) {
+        // Fallback: restore cover if video playback is blocked
+        openingVideo.classList.add("hidden");
+        openingCover.classList.remove("hidden");
+        opened = false;
+      }
+    });
+  }
+
+  // Trigger on the most widely-supported user gesture events
+  openHit.addEventListener("click", startOpening, { passive: true });
+  openHit.addEventListener("pointerup", startOpening, { passive: true });
+  openHit.addEventListener("touchend", startOpening, { passive: true });
+  openHit.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") startOpening();
+  });
 
   openingVideo.addEventListener("ended", () => {
     openingSection.style.display = "none";
@@ -377,7 +399,6 @@
     setIdx(0);
   }
 
-
   /* INVITATION: text appears only when slide is reached */
   let inviteStarted = false;
   function setupInviteTrigger(){
@@ -396,7 +417,6 @@
 
     obs.observe(invSlide);
   }
-
 
   /* DOA: trigger only when slide is reached */
   let doaStarted = false;
@@ -426,13 +446,12 @@
     meas.style.position = "absolute";
     meas.style.visibility = "hidden";
 
-    // Match real box sizing
+    // Match real box sizing and typography exactly (prevents mobile clipping)
     meas.style.boxSizing = cs.boxSizing;
     meas.style.width = box.clientWidth + "px";
     meas.style.height = box.clientHeight + "px";
     meas.style.padding = cs.padding;
 
-    // Match typography exactly (fixes mobile clipping)
     meas.style.whiteSpace = "pre-wrap";
     meas.style.overflow = "hidden";
     meas.style.fontFamily = cs.fontFamily;
@@ -448,15 +467,15 @@
     document.body.appendChild(meas);
 
     let lo = minPx, hi = maxPx, best = minPx;
-    for (let i=0;i<20;i++){
-      const mid = (lo+hi)/2;
-      meas.style.fontSize = mid+"px";
+    for (let i = 0; i < 20; i++) {
+      const mid = (lo + hi) / 2;
+      meas.style.fontSize = mid + "px";
       if (meas.scrollHeight <= meas.clientHeight) { best = mid; lo = mid; }
       else { hi = mid; }
     }
 
     document.body.removeChild(meas);
-    box.style.fontSize = best+"px";
+    box.style.fontSize = best + "px";
   }
 
   let doaRAF = 0;
@@ -465,7 +484,7 @@
     if (!box) return;
 
     const text = box.dataset.text || "";
-    const maxPx = window.matchMedia("(max-width:520px)").matches ? 16 : 18;
+    const maxPx = window.matchMedia('(max-width:520px)').matches ? 16 : 18;
     fitTextToBox(box, text, 8, maxPx);
 
     box.textContent = "";
@@ -497,7 +516,7 @@
     window.addEventListener("resize", () => {
       clearTimeout(resizeT);
       resizeT = setTimeout(() => {
-        const maxPx = window.matchMedia("(max-width:520px)").matches ? 16 : 18;
+        const maxPx = window.matchMedia('(max-width:520px)').matches ? 16 : 18;
         fitTextToBox(box, text, 8, maxPx);
       }, 120);
     }, { passive: true });
