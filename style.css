@@ -707,11 +707,7 @@ body.locked{
 
   /* Higher-contrast “ink” */
   color:#1f0707;
-
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.18),
-    0 2px 6px rgba(0,0,0,.18),
-    0 10px 26px rgba(0,0,0,.10);
+  text-shadow: 0 1px 0 rgba(255,255,255,.18), 0 2px 6px rgba(0,0,0,.18), 0 10px 26px rgba(0,0,0,.10);
 
   word-break:break-word;
   overflow-wrap:anywhere;
@@ -1295,6 +1291,24 @@ TAP TO FLIP (no fill, still royal/glowy) */
 }
 
 
+@media (max-width:360px){
+  :root{
+    --doa-top: 13%;
+    --doa-height: 34%;
+    --doa-left: 16%;
+    --doa-width: 68%;
+  }
+}
+
+
+@media (max-width:520px){
+  :root{
+    --doa-top: 13.5%;
+    --doa-height: 31%;
+    --doa-left: 18%;
+    --doa-width: 64%;
+  }
+}
 @media (max-width:360px){
   :root{
     --doa-top: 13%;
