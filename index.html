@@ -1,0 +1,416 @@
+<!-- index.html (FULL + swipe gallery + DOA triggers only when reached) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Wedding</title>
+
+  <link rel="preload" href="style.css" as="style">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preload" as="image" href="opening.webp" fetchpriority="high">
+  <link rel="preload" as="video" href="opening.webm" type="video/webm" fetchpriority="high">
+  <link rel="preload" as="image" href="card_bg.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="card_front.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="card_back.webp" fetchpriority="high">
+</head>
+
+<body class="locked">
+
+<audio id="bgMusic" loop preload="none">
+  <source src="music.mp3" type="audio/mpeg" />
+</audio>
+
+<button id="musicToggle" class="musicBtn" aria-label="Toggle music">🔊</button>
+
+<!-- OPENING -->
+<section id="openingSection" class="openingSection">
+  <div class="stage">
+    <div id="openingCover" class="openingCover">
+      <img class="stageMedia" src="opening.webp" alt="Opening cover" decoding="async" fetchpriority="high" />
+      <button id="openHit" class="openHit" aria-label="Open invitation">
+        <span class="tapText">Tap seal to open</span>
+      </button>
+    </div>
+
+    <video id="openingVideo" class="stageMedia hidden" playsinline preload="auto" poster="opening.webp">
+      <source src="opening.webm" type="video/webm" />
+    </video>
+  </div>
+</section>
+
+<main id="mainContent" class="slides lockedContent">
+
+  <!-- CARD -->
+  <section class="slide" id="slide-card">
+    <div class="stage">
+      <img class="stageMedia" src="card_bg.webp" alt="Card background" loading="eager" decoding="async" fetchpriority="high" />
+      <div class="overlay">
+        <div class="cardSlot" aria-label="Flip card">
+          <button class="flipWrap" id="flipWrap" type="button" aria-label="Flip invitation card">
+            <div class="flipCard" id="flipCard">
+              <div class="flipFace flipFront">
+                <img src="card_front.webp" alt="Card front" loading="eager" decoding="async" fetchpriority="high">
+              </div>
+              <div class="flipFace flipBack">
+                <img src="card_back.webp" alt="Card back" loading="eager" decoding="async" fetchpriority="high">
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RSVP -->
+  <section class="slide" id="slide-rsvp">
+    <div class="stage">
+      <img class="stageMedia" src="rsvp.webp" alt="Reception RSVP" loading="lazy" decoding="async" fetchpriority="low" />
+      <div class="overlay">
+        <div class="rsvpOverlay">
+          <a class="rsvpBtn" id="mapLink" href="https://maps.app.goo.gl/iP7zZd9WUK2fvfvW9" target="_blank" rel="noopener">Google Map</a>
+          <a class="rsvpBtn" id="rsvpLink" href="https://docs.google.com/forms/d/e/1FAIpQLSfBWe5IBelfTU7LKJhVfb5zdgDtQ7D1xK-jmd0pqqEJ1QBq4A/viewform" target="_blank" rel="noopener">RSVP</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section class="slide" id="slide-countdown">
+    <div class="stage">
+      <img class="stageMedia" src="countdown.webp" alt="Countdown" loading="lazy" decoding="async" fetchpriority="low" />
+      <div class="overlay">
+        <div class="countdownOverlay" aria-label="Countdown timer">
+          <div class="countdownRow">
+            <div class="cdItem"><div class="cdNum" id="cdDays">--</div><div class="cdLbl">DAYS</div></div>
+            <div class="cdItem"><div class="cdNum" id="cdHours">--</div><div class="cdLbl">HOURS</div></div>
+            <div class="cdItem"><div class="cdNum" id="cdMins">--</div><div class="cdLbl">MINS</div></div>
+            <div class="cdItem"><div class="cdNum" id="cdSecs">--</div><div class="cdLbl">SECS</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="slide" id="slide-gallery">
+    <div class="stage">
+      <img class="stageMedia" src="gallery.webp" alt="Gallery frame" loading="lazy" decoding="async" fetchpriority="low" />
+      <div class="overlay">
+        <div class="galleryOverlay" aria-label="Photo gallery">
+          <button class="galleryArrow left" id="galleryPrev" type="button" aria-label="Previous photo">‹</button>
+
+          <div class="galleryViewport" id="galleryViewport" aria-label="Swipe gallery">
+            <img id="galleryImg" alt="Gallery photo" decoding="async" fetchpriority="low" />
+          </div>
+
+          <button class="galleryArrow right" id="galleryNext" type="button" aria-label="Next photo">›</button>
+          <div class="galleryDots" id="galleryDots" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOA -->
+  <section class="slide" id="slide-doa">
+    <div class="stage">
+      <img class="stageMedia" src="doa_bg.webp" alt="Doa" loading="lazy" decoding="async" fetchpriority="low" />
+      <div class="overlay">
+        <div class="doaOverlay">
+          <div
+            id="doaType"
+            class="doaType"
+            data-text="(30:21) And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy. Verily in that are signs for those who reflect.
+
+(7:189) It is He who created you from one soul and created from it its mate that he might dwell in security with her; And when he covers her, she carries a light burden and continues therein; And when it becomes heavy, they both invoke Allah, their Lord, “If You should give us a good [child], we will surely be among the grateful.”"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(() => {
+  const body = document.body;
+  const openingSection = document.getElementById("openingSection");
+  const openingCover   = document.getElementById("openingCover");
+  const openingVideo   = document.getElementById("openingVideo");
+  const openHit        = document.getElementById("openHit");
+  const mainContent    = document.getElementById("mainContent");
+  const music          = document.getElementById("bgMusic");
+  const musicBtn       = document.getElementById("musicToggle");
+
+  // Performance warm-up (no flow changes): start preparing the opening video and first card assets.
+  try { openingVideo.load(); } catch(e){}
+  preloadImagesIdle(["card_bg.webp","card_front.webp","card_back.webp"]); 
+
+  let opened = false;
+
+  function preloadImagesIdle(list) {
+    const run = () => {
+      for (const src of list) {
+        const img = new Image();
+        img.decoding = "async";
+        img.src = src;
+      }
+    };
+    if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 1200 });
+    else setTimeout(run, 350);
+  }
+
+  openHit.addEventListener("click", async () => {
+    if (opened) return;
+    opened = true;
+
+    try { await music.play(); } catch(e){}
+
+    openingCover.classList.add("hidden");
+    openingVideo.classList.remove("hidden");
+
+    try { await openingVideo.play(); }
+    catch(e){
+      openingVideo.classList.add("hidden");
+      openingCover.classList.remove("hidden");
+      opened = false;
+    }
+  }, { passive: true });
+
+  openingVideo.addEventListener("ended", () => {
+    openingSection.style.display = "none";
+    body.classList.remove("locked");
+    mainContent.classList.remove("lockedContent");
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
+    initCountdown();
+    initGallery();       // ✅ click + swipe
+    setupDoaTrigger();   // ✅ DOA starts only when reached
+
+    preloadImagesIdle(["gallery1.webp","gallery2.webp","gallery3.webp","gallery4.webp"]);
+  });
+
+  musicBtn.addEventListener("click", async () => {
+    if (music.paused) {
+      try { await music.play(); } catch(e){}
+      musicBtn.textContent = "🔊";
+    } else {
+      music.pause();
+      musicBtn.textContent = "🔇";
+    }
+  });
+
+  document.getElementById("flipWrap")
+    .addEventListener("click", () =>
+      document.getElementById("flipCard").classList.toggle("isFlipped")
+    );
+
+  /* COUNTDOWN (2 May 2026 11:00 AM) */
+  let cdTimer = null;
+  function initCountdown(){
+    if (cdTimer) return;
+
+    const daysEl = document.getElementById("cdDays");
+    const hrsEl  = document.getElementById("cdHours");
+    const minEl  = document.getElementById("cdMins");
+    const secEl  = document.getElementById("cdSecs");
+
+    const target = new Date(2026, 4, 2, 11, 0, 0); // May = 4
+    const pad2 = (n) => String(n).padStart(2, "0");
+
+    const tick = () => {
+      const now = new Date();
+      let diff = target - now;
+      if (diff <= 0) diff = 0;
+
+      const totalSec = Math.floor(diff / 1000);
+      const days = Math.floor(totalSec / (3600 * 24));
+      const hrs  = Math.floor((totalSec % (3600 * 24)) / 3600);
+      const mins = Math.floor((totalSec % 3600) / 60);
+      const secs = totalSec % 60;
+
+      daysEl.textContent = String(days);
+      hrsEl.textContent  = pad2(hrs);
+      minEl.textContent  = pad2(mins);
+      secEl.textContent  = pad2(secs);
+    };
+
+    tick();
+    cdTimer = setInterval(tick, 1000);
+  }
+
+  /* GALLERY (Click arrows + Swipe left/right on mobile) */
+  function initGallery(){
+    const images = ["gallery1.webp","gallery2.webp","gallery3.webp","gallery4.webp"];
+    const imgEl = document.getElementById("galleryImg");
+    const prev = document.getElementById("galleryPrev");
+    const next = document.getElementById("galleryNext");
+    const dotsWrap = document.getElementById("galleryDots");
+    const viewport = document.getElementById("galleryViewport");
+
+    if (!imgEl || !prev || !next || !viewport || !dotsWrap) return;
+
+    let idx = 0;
+
+    const setIdx = (i) => {
+      idx = (i + images.length) % images.length;
+      imgEl.classList.remove("fadeIn");
+      void imgEl.offsetWidth;
+      imgEl.src = images[idx];
+      imgEl.classList.add("fadeIn");
+      [...dotsWrap.children].forEach((d, di) => d.classList.toggle("active", di === idx));
+    };
+
+    dotsWrap.innerHTML = "";
+    images.forEach((_, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "dot" + (i===0 ? " active" : "");
+      b.addEventListener("click", () => setIdx(i));
+      dotsWrap.appendChild(b);
+    });
+
+    prev.addEventListener("click", () => setIdx(idx - 1));
+    next.addEventListener("click", () => setIdx(idx + 1));
+
+    // Swipe support
+    let startX = 0, startY = 0, tracking = false, locked = false;
+
+    const onStart = (x, y) => { startX = x; startY = y; tracking = true; locked = false; };
+    const onMove = (x, y, ev) => {
+      if (!tracking) return;
+      const dx = x - startX;
+      const dy = y - startY;
+      if (!locked && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) locked = Math.abs(dx) > Math.abs(dy);
+      if (locked) ev.preventDefault();
+    };
+    const onEnd = (x, y) => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = x - startX;
+      const dy = y - startY;
+      if (Math.abs(dx) < 35 || Math.abs(dx) < Math.abs(dy)) return;
+      if (dx > 0) setIdx(idx - 1);
+      else setIdx(idx + 1);
+    };
+
+    viewport.addEventListener("touchstart", (e) => {
+      const t = e.touches && e.touches[0];
+      if (!t) return;
+      onStart(t.clientX, t.clientY);
+    }, { passive: true });
+
+    viewport.addEventListener("touchmove", (e) => {
+      const t = e.touches && e.touches[0];
+      if (!t) return;
+      onMove(t.clientX, t.clientY, e);
+    }, { passive: false });
+
+    viewport.addEventListener("touchend", (e) => {
+      const t = e.changedTouches && e.changedTouches[0];
+      if (!t) return;
+      onEnd(t.clientX, t.clientY);
+    }, { passive: true });
+
+    viewport.addEventListener("pointerdown", (e) => {
+      onStart(e.clientX, e.clientY);
+      viewport.setPointerCapture(e.pointerId);
+    }, { passive: true });
+
+    viewport.addEventListener("pointermove", (e) => { onMove(e.clientX, e.clientY, e); }, { passive: false });
+    viewport.addEventListener("pointerup", (e) => { onEnd(e.clientX, e.clientY); }, { passive: true });
+
+    setIdx(0);
+  }
+
+  /* DOA: trigger only when slide is reached */
+  let doaStarted = false;
+  function setupDoaTrigger(){
+    const doaSlide = document.getElementById("slide-doa");
+    if (!doaSlide) return;
+
+    const obs = new IntersectionObserver((entries) => {
+      const e = entries[0];
+      if (!e.isIntersecting) return;
+      if (doaStarted) return;
+
+      doaStarted = true;
+      doaSlide.classList.add("isDoaActive");
+      initDoaTyping();
+      obs.disconnect();
+    }, { threshold: 0.55 });
+
+    obs.observe(doaSlide);
+  }
+
+  /* Text fitter + typewriter */
+  function fitTextToBox(box, text, minPx, maxPx) {
+    const meas = document.createElement("div");
+    meas.style.position = "absolute";
+    meas.style.visibility = "hidden";
+    meas.style.width = box.clientWidth + "px";
+    meas.style.height = box.clientHeight + "px";
+    meas.style.whiteSpace = "pre-wrap";
+    meas.style.overflow = "hidden";
+    meas.style.lineHeight = getComputedStyle(box).lineHeight;
+    meas.style.fontWeight = getComputedStyle(box).fontWeight;
+    meas.style.textAlign = "center";
+    meas.textContent = text;
+    document.body.appendChild(meas);
+
+    let lo = minPx, hi = maxPx, best = minPx;
+    for (let i=0;i<20;i++){
+      const mid = (lo+hi)/2;
+      meas.style.fontSize = mid+"px";
+      if (meas.scrollHeight <= meas.clientHeight) { best = mid; lo = mid; }
+      else { hi = mid; }
+    }
+
+    document.body.removeChild(meas);
+    box.style.fontSize = best+"px";
+  }
+
+  let doaRAF = 0;
+  function initDoaTyping(){
+    const box = document.getElementById("doaType");
+    if (!box) return;
+
+    const text = box.dataset.text || "";
+    fitTextToBox(box, text, 8, 18);
+
+    box.textContent = "";
+    let i = 0;
+
+    const msPerChar = 12;
+    let last = performance.now();
+    let carry = 0;
+
+    if (doaRAF) cancelAnimationFrame(doaRAF);
+
+    const step = (now) => {
+      const dt = now - last;
+      last = now;
+      carry += dt;
+
+      const add = Math.floor(carry / msPerChar);
+      if (add > 0) {
+        carry -= add * msPerChar;
+        i = Math.min(text.length, i + add);
+        box.textContent = text.slice(0, i);
+      }
+      if (i < text.length) doaRAF = requestAnimationFrame(step);
+    };
+
+    doaRAF = requestAnimationFrame(step);
+
+    let resizeT = 0;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(() => fitTextToBox(box, text, 8, 18), 120);
+    }, { passive: true });
+  }
+})();
+</script>
+
+</body>
+</html>
