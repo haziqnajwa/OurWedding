@@ -560,18 +560,6 @@ body.locked{
 
 /* Classic + elegant doa text */
 
-/* JS adds .isDoaActive to the slide */
-.slide.isDoaActive 
-@keyframes doaFadeInSoft{
-  0%   { opacity:0; transform:translateY(18px); filter:blur(3px); }
-  60%  { opacity:1; transform:translateY(2px);  filter:blur(0.6px); }
-  100% { opacity:1; transform:translateY(0);   filter:blur(0); }
-}
-
-@media (prefers-reduced-motion: reduce){
-    .slide.isDoaActive }
-
-/* ===== DOA: calmer “gold dust” mood (less sparkle, more sacred) ===== */
 #slide-doa .stage::after{
   /* override only the visual overlay for doa slide */
   background:
@@ -919,3 +907,5 @@ TAP TO FLIP (no fill, still royal/glowy) */
   transform: translateY(0);
 }
 
+
+@keyframes doaFadeInSoft{0%{opacity:0;transform:translateY(18px);filter:blur(3px);}60%{opacity:1;transform:translateY(2px);filter:blur(.6px);}100%{opacity:1;transform:translateY(0);filter:blur(0);}}
