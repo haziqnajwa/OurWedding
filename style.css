@@ -1,667 +1,480 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
-/* style.css — Royal Classic Upgrade (CSS-only)
-   Keeps your existing flow/JS/features intact.
-   Adds: kerawang watermark, richer royal glow, classic film grain, romantic bokeh,
-         gentle sheen on card flip, calmer gold dust mood for DOA, Ken Burns pan for gallery.
-*/
-
-/* ========== Base reset ========== */
-*{margin:0;padding:0;box-sizing:border-box}
-
-/* ========== Layout variables (keep yours) ========== */
+/* ---------- THEME ---------- */
 :root{
-  --pageW:1240;
-  --pageH:1748;
+  --stage-max: 520px;
+  --radius: 26px;
 
-  --vpad:18px;
-  --radius:22px;
+  --bokeh-alpha: .12;
+  --grain-alpha: .12;
+  --vignette-alpha: .25;
 
-  --slot-left:10.7%;
-  --slot-top:6.7%;
-  --slot-width:79.0%;
-  --slot-height:84.8%;
+  --shadow: 0 14px 40px rgba(0,0,0,.26);
+  --ring: 0 0 0 1px rgba(255,255,255,.07) inset;
 
-  --doa-left:22%;
-  --doa-top:14.5%;
-  --doa-width:56%;
-  --doa-height:27%;
-
-  --inv-left:22%;
-  --inv-top:19%;
-  --inv-width:56%;
-  --inv-height:66%;
-
-  --rsvp-left:18%;
-  --rsvp-width:64%;
-  --rsvp-top1:62%;
-  --rsvp-top2:71%;
-  --rsvp-height:8%;
-
-  --cd-left:8%;
-  --cd-top:20%;
-  --cd-width:84%;
-  --cd-height:18%;
-
-  --gal-left:13%;
-  --gal-top:22%;
-  --gal-width:74%;
-  --gal-height:52%;
-
-  /* ===== Royal classic tuning ===== */
-  --gold: 212, 175, 55;            /* antique gold (RGB) */
-  --champagne: 255, 236, 210;      /* warm cream highlight */
-
-  --vignette-strength:.40;
-  --warm-glow-alpha:.30;           /* chandelier glow */
-  --songket-alpha:.04;             /* weave visibility */
-  --grain-alpha:.03;               /* film grain */
-  --bokeh-alpha:.09;               /* bokeh layer */
-
-  --sparkle-brightness:1.09;
-  --sparkle-glow:1.1;
-
-  /* Kerawang watermark */
-  --kerawang-alpha:.10;            /* overall watermark visibility */
-  --kerawang-scale: 720px 720px;   /* watermark size */
-
-  /* Gallery cinematic */
-  --kenburns-duration: 14s;
+  --doa-left: 14%;
+  --doa-top: 13%;
+  --doa-width: 72%;
+  --doa-height: 38%;
 }
 
+/* ---------- BASE ---------- */
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:url("bg_red.webp") center/cover no-repeat;
-  background-attachment:scroll;
+  margin:0;
+  font-family: 'Playfair Display', serif;
+  background:#4b0d0d;
+  color:#fff;
   overflow-x:hidden;
 }
+body.locked{ overflow:hidden; }
 
-@media (min-width:900px){
-  body{background-attachment:fixed;}
-}
+a{ color:inherit; text-decoration:none; }
 
-body.locked{
-  height:100vh;
-  overflow:hidden;
-}
-
-.hidden{display:none!important}
-.lockedContent{
-  position:fixed;
-  inset:0;
+main.lockedContent{
   opacity:0;
   pointer-events:none;
-  visibility:hidden;
+  transform:translateY(10px);
+}
+main{ transition:opacity .55s ease, transform .55s ease; }
+main:not(.lockedContent){
+  opacity:1;
+  pointer-events:auto;
+  transform:none;
 }
 
-/* Slides */
-.slides{scroll-snap-type:y mandatory}
-.slide{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:var(--vpad);
-  scroll-snap-align:start;
-
-  content-visibility:auto;
-  contain-intrinsic-size:100vh;
-}
-
-/* Stage */
+/* ---------- STAGE LAYOUT ---------- */
 .stage{
-  width:min(96vw,calc((100vh - (2*var(--vpad)))*(var(--pageW)/var(--pageH))));
-  aspect-ratio:var(--pageW)/var(--pageH);
+  width:min(var(--stage-max), calc(100vw - 34px));
+  aspect-ratio: 3/4.35;
+  margin:18px auto;
+  border-radius: var(--radius);
   position:relative;
-  border-radius:var(--radius);
   overflow:hidden;
-  box-shadow:0 26px 70px rgba(0,0,0,.28);
-  isolation:isolate;
+  box-shadow: var(--shadow), var(--ring);
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+
+  /* performance */
+  content-visibility:auto;
+  contain-intrinsic-size: 640px 930px;
 }
 
-.stageMedia{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  position:relative;
-  z-index:1;
-}
-
-.overlay{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:4;
-}
-
-/* =====================================================
-   ROYAL + ROMANTIC + CLASSIC CINEMATIC LAYERS (CSS ONLY)
-   ===================================================== */
-
-/* Warm chandelier glow + songket weave + classic vignette */
+/* layered vignette + grain */
 .stage::before{
   content:"";
-  position:absolute;
-  inset:-1px;
-  pointer-events:none;
-  z-index:2;
-
+  position:absolute; inset:0;
   background:
-    /* warm chandelier glow */
-    radial-gradient(120% 90% at 50% 10%,
-      rgba(var(--champagne), var(--warm-glow-alpha)) 0%,
-      rgba(var(--champagne), 0.00) 55%),
-
-    /* songket / tenun weave (very subtle) */
-    repeating-linear-gradient(45deg,
-      rgba(var(--gold), var(--songket-alpha)) 0 2px,
-      rgba(var(--gold), 0) 2px 10px),
-    repeating-linear-gradient(-45deg,
-      rgba(var(--gold), calc(var(--songket-alpha) * .75)) 0 1px,
-      rgba(var(--gold), 0) 1px 12px),
-
-    /* classic vignette */
-    radial-gradient(ellipse at center,
-      rgba(255,255,255,0.06) 0%,
-      rgba(0,0,0,var(--vignette-strength)) 86%
-    );
-
+    radial-gradient(120% 120% at 50% 35%, rgba(255,255,255,.10), rgba(0,0,0,0) 60%),
+    radial-gradient(120% 120% at 50% 80%, rgba(0,0,0,.18), rgba(0,0,0,0) 70%),
+    linear-gradient(to bottom, rgba(0,0,0,.08), rgba(0,0,0,.15));
+  opacity: var(--vignette-alpha);
+  pointer-events:none;
   mix-blend-mode:multiply;
-  animation: songketDrift 28s linear infinite;
 }
 
-/* Soft bokeh depth + sparkles + film grain */
 .stage::after{
   content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:3;
-
+  position:absolute; inset:0;
   background:
-    /* soft romantic bokeh */
-    radial-gradient(circle at 18% 22%, rgba(var(--champagne), var(--bokeh-alpha)) 0 34px, transparent 120px),
-    radial-gradient(circle at 78% 28%, rgba(var(--champagne), calc(var(--bokeh-alpha) * .9)) 0 28px, transparent 110px),
-    radial-gradient(circle at 28% 78%, rgba(var(--champagne), calc(var(--bokeh-alpha) * .85)) 0 26px, transparent 105px),
-    radial-gradient(circle at 82% 74%, rgba(var(--champagne), calc(var(--bokeh-alpha) * .8)) 0 22px, transparent 95px),
-
-    /* sparkles (white) */
-    radial-gradient(circle at 10% 20%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
-    radial-gradient(circle at 25% 75%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.5px, transparent 5px),
-    radial-gradient(circle at 40% 30%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
-    radial-gradient(circle at 55% 65%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.6px, transparent 5.6px),
-    radial-gradient(circle at 70% 15%, rgba(255,255,255,var(--sparkle-brightness)) 0 3.2px, transparent 6.2px),
-    radial-gradient(circle at 85% 55%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.6px, transparent 5.6px),
-    radial-gradient(circle at 90% 82%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.8px, transparent 6px),
-    radial-gradient(circle at 16% 56%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
-
-    /* film grain */
-    repeating-linear-gradient(0deg,
-      rgba(255,255,255,var(--grain-alpha)) 0 1px,
-      rgba(0,0,0,calc(var(--grain-alpha) * .7)) 2px 3px
-    );
-
-  opacity:.62;
-  filter: drop-shadow(0 0 10px rgba(255,255,255,var(--sparkle-glow)));
-  mix-blend-mode:screen;
-  animation:
-    sparkleBlink 2.0s infinite ease-in-out,
-    sparkleFloat 12s infinite ease-in-out,
-    grainShift 2.6s steps(2) infinite;
-}
-
-/* Kerawang / filigree watermark (very faint, behind overlays) */
-.overlay::before{
-  content:"";
-  position:absolute;
-  inset:-2%;
-  z-index:0;
+    url("bg_red.webp");
+  opacity: var(--grain-alpha);
+  mix-blend-mode: overlay;
   pointer-events:none;
-  opacity:var(--kerawang-alpha);
-  background-repeat:repeat;
-  background-size:var(--kerawang-scale);
-  background-position:center;
-  /* Lightweight kerawang-style SVG tile (gold stroke, transparent fill) */
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg fill='none' stroke='rgba(212,175,55,0.45)' stroke-width='2'%3E%3Cpath d='M180 40c-28 34-42 56-42 78 0 24 18 42 42 42s42-18 42-42c0-22-14-44-42-78z'/%3E%3Cpath d='M180 320c28-34 42-56 42-78 0-24-18-42-42-42s-42 18-42 42c0 22 14 44 42 78z'/%3E%3Cpath d='M40 180c34-28 56-42 78-42 24 0 42 18 42 42s-18 42-42 42c-22 0-44-14-78-42z'/%3E%3Cpath d='M320 180c-34 28-56 42-78 42-24 0-42-18-42-42s18-42 42-42c22 0 44 14 78 42z'/%3E%3Cpath d='M95 95c22 8 41 19 56 34 17 17 17 45 0 62-17 17-45 17-62 0-15-15-26-34-34-56 10-18 22-30 40-40z'/%3E%3Cpath d='M265 265c-22-8-41-19-56-34-17-17-17-45 0-62 17-17 45-17 62 0 15 15 26 34 34 56-10 18-22 30-40 40z'/%3E%3Cpath d='M265 95c-18 10-30 22-40 40 8 22 19 41 34 56 17 17 45 17 62 0 17-17 17-45 0-62-15-15-34-26-56-34z'/%3E%3Cpath d='M95 265c18-10 30-22 40-40-8-22-19-41-34-56-17-17-45-17-62 0-17 17-17 45 0 62 15 15 34 26 56 34z'/%3E%3C/g%3E%3C/svg%3E");
-  mix-blend-mode:soft-light;
 }
 
-/* make sure overlay content stays above watermark */
-.overlay > *{ position:relative; z-index:1; }
-
-@keyframes sparkleBlink{ 0%,100%{opacity:.35} 50%{opacity:.75} }
-@keyframes sparkleFloat{ 0%{transform:translate3d(0,0,0)} 50%{transform:translate3d(-8px,-14px,0)} 100%{transform:translate3d(0,0,0)} }
-@keyframes songketDrift{ 0%{background-position:0 0,0 0,0 0,0 0} 100%{background-position:0 0,220px 160px,-180px 220px,0 0} }
-@keyframes grainShift{ 0%{transform:translate3d(0,0,0)} 50%{transform:translate3d(-1px,1px,0)} 100%{transform:translate3d(0,0,0)} }
-
-@media (prefers-reduced-motion: reduce){
-  .stage::before{animation:none}
-  .stage::after{animation:none}
+/* subtle animated bokeh */
+.stage .overlay{
+  position:absolute; inset:0;
+  pointer-events:none;
+}
+.stage .overlay::before{
+  content:"";
+  position:absolute; inset:-10%;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.14), transparent 35%),
+    radial-gradient(circle at 70% 40%, rgba(255,255,255,.10), transparent 38%),
+    radial-gradient(circle at 50% 70%, rgba(255,255,255,.08), transparent 40%);
+  opacity: var(--bokeh-alpha);
+  filter: blur(2px);
+  animation: floatBokeh 8s ease-in-out infinite alternate;
+}
+@keyframes floatBokeh{
+  from{ transform:translate3d(-2%, -1%, 0) scale(1.02); }
+  to  { transform:translate3d(2%, 1%, 0) scale(1.04); }
 }
 
-/* Opening */
-.openingSection{
-  min-height:100vh;
+/* ---------- OPENING ---------- */
+.openingStage{
+  width:min(var(--stage-max), calc(100vw - 34px));
+  aspect-ratio: 3/4.35;
+  margin:18px auto;
+  border-radius: var(--radius);
+  position:relative;
+  overflow:hidden;
+  box-shadow: var(--shadow), var(--ring);
+  background:#4b0d0d;
+}
+
+.openingCover{
+  position:absolute; inset:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:var(--vpad);
+}
+.coverImg{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.sealTap{
+  position:absolute;
+  width: 160px;
+  height: 160px;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  cursor:pointer;
 }
 
-.openHit{
+.openingVideo{
+  position:absolute; inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:none;
+}
+
+/* ---------- MUSIC ---------- */
+.musicBtn{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:999;
+  width:52px;
+  height:52px;
+  border-radius:999px;
+  border:none;
+  background:rgba(255,255,255,.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 26px rgba(0,0,0,.25);
+  color:#fff;
+  cursor:pointer;
+}
+.musicBtn:active{ transform:scale(.96); }
+.musicBtn span{
+  font-size:20px;
+}
+
+/* ---------- FLIP CARD ---------- */
+.cardStage{ background:none; }
+.flipCard{
+  position:absolute;
+  inset:0;
+  transform-style: preserve-3d;
+  transition: transform .9s cubic-bezier(.2,.7,.2,1);
+}
+.flipCard.isFlipped{ transform: rotateY(180deg); }
+
+.cardFace{
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  backface-visibility:hidden;
+}
+.cardBack{
+  transform: rotateY(180deg);
+}
+.cardBackInner{
+  position:absolute; inset:0;
+  background-size:cover;
+  background-position:center;
+}
+
+.tapToOpen{
   position:absolute;
   inset:0;
   border:none;
   background:transparent;
   cursor:pointer;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  padding:20px;
-  z-index:5;
-  pointer-events:auto;
-}
-
-.tapText{
-  background:rgba(0,0,0,.42);
-  color:#fff;
-  padding:10px 18px;
-  border-radius:999px;
-  font-weight:900;
-  letter-spacing:.08em;
+  font-family:'Playfair Display',serif;
+  letter-spacing:.25em;
   text-transform:uppercase;
-  box-shadow:
-    0 14px 30px rgba(0,0,0,.35),
-    0 0 0 1px rgba(var(--gold), .22) inset,
-    0 0 28px rgba(var(--gold), .18);
-  animation: tapPulse 2.2s ease-in-out infinite;
+  color:rgba(255,255,255,.75);
+  font-size:12px;
 }
 
-@keyframes tapPulse{
-  0%,100%{ transform: translateY(0); box-shadow:
-    0 14px 30px rgba(0,0,0,.35),
-    0 0 0 1px rgba(var(--gold), .22) inset,
-    0 0 18px rgba(var(--gold), .14); }
-  50%{ transform: translateY(-1px); box-shadow:
-    0 18px 40px rgba(0,0,0,.38),
-    0 0 0 1px rgba(var(--gold), .28) inset,
-    0 0 30px rgba(var(--gold), .20); }
-}
-
-/* Music */
-.musicBtn{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  width:56px;
-  height:56px;
-  border-radius:50%;
-  border:none;
-  background:#fff;
-  cursor:pointer;
-  z-index:50;
-}
-
-/* Card flip */
-.cardSlot{
-  position:absolute;
-  left:var(--slot-left);
-  top:var(--slot-top);
-  width:var(--slot-width);
-  height:var(--slot-height);
-  perspective:1200px;
-  overflow:hidden;
-  pointer-events:auto;
-}
-
-.flipWrap{
-  width:100%;
-  height:100%;
-  border:none;
-  background:none;
-  cursor:pointer;
-  padding:0;
-}
-
-.flipCard{
-  width:100%;
-  height:100%;
-  position:relative;
-  transform-style:preserve-3d;
-  transition:transform .9s cubic-bezier(.2,.85,.2,1);
-}
-
-.flipCard.isFlipped{transform:rotateY(180deg)}
-
-.flipFace{
-  position:absolute;
-  inset:0;
-  backface-visibility:hidden;
-  overflow:hidden; /* for sheen */
-}
-
-.flipBack{transform:rotateY(180deg)}
-
-.flipFace img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transform:scale(1.10);
-}
-
-/* Royal sheen sweep (visual only) */
-.flipFace::after{
-  content:"";
-  position:absolute;
-  inset:-25%;
-  pointer-events:none;
-  opacity:0;
-  background: linear-gradient(115deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,.14) 42%,
-    rgba(255,255,255,.32) 50%,
-    rgba(255,255,255,.12) 58%,
-    rgba(255,255,255,0) 100%);
-  transform: translateX(-120%) rotate(8deg);
-  mix-blend-mode: screen;
-}
-
-.flipCard.isFlipped .flipFace::after,
-.flipWrap:active .flipFace::after{
-  opacity:1;
-  animation: sheenSweep .75s ease-out 1;
-}
-@keyframes sheenSweep{
-  from { transform: translateX(-120%) rotate(8deg); }
-  to   { transform: translateX(120%) rotate(8deg); }
-}
-
-/* RSVP */
-.rsvpOverlay{
-  position:absolute;
-  left:var(--rsvp-left);
-  width:var(--rsvp-width);
-  top:0;
-  height:100%;
-  pointer-events:auto;
-}
-
-.rsvpBtn{
-  position:absolute;
-  left:0;
-  width:100%;
-  height:var(--rsvp-height);
+/* ---------- COUNTDOWN ---------- */
+.countdownStage{ display:flex; align-items:center; justify-content:center; }
+.countNumbers{
   display:flex;
   align-items:center;
   justify-content:center;
-  text-decoration:none;
-  font-weight:800;
-  color:#5b0b0b;
-  background:rgba(255,255,255,.92);
-  border-radius:999px;
-  box-shadow:0 15px 35px rgba(0,0,0,.25);
-  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:16px;
+  background:rgba(0,0,0,.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
 }
-.rsvpBtn:hover{
-  filter: brightness(1.03);
-  box-shadow:0 18px 42px rgba(0,0,0,.28), 0 0 0 1px rgba(var(--gold), .20) inset;
+.numBox{ text-align:center; min-width:54px; }
+.num{
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:.06em;
 }
-.rsvpBtn:active{ transform: scale(.99); }
-
-#mapLink{top:var(--rsvp-top1)}
-#rsvpLink{top:var(--rsvp-top2)}
-
-/* Countdown */
-.countdownOverlay{
-  position:absolute;
-  left:var(--cd-left);
-  top:var(--cd-top);
-  width:var(--cd-width);
-  height:var(--cd-height);
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  pointer-events:none;
+.lbl{
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  opacity:.85;
+}
+.sep{
+  font-size:24px;
+  opacity:.7;
 }
 
-.countdownRow{
-  width:100%;
-  display:flex;
-  gap:clamp(10px,2vw,22px);
-  justify-content:space-between;
-  align-items:flex-end;
-}
-
-.cdItem{flex:1;text-align:center}
-
-.cdNum{
-  font-weight:900;
-  font-size:clamp(26px,4.2vw,56px);
-  color:#fff;
-  text-shadow:0 10px 25px rgba(0,0,0,.45);
-}
-
-.cdLbl{
-  margin-top:6px;
-  font-weight:900;
-  letter-spacing:.08em;
-  font-size:clamp(10px,1.2vw,14px);
-  color:rgba(255,255,255,.95);
-}
-
-/* Gallery */
-.galleryOverlay{
-  position:absolute;
-  left:0; top:0; width:100%; height:100%;
-  pointer-events:auto;
-}
-
-.galleryViewport{
-  position:absolute;
-  left:var(--gal-left);
-  top:var(--gal-top);
-  width:var(--gal-width);
-  height:var(--gal-height);
-  overflow:hidden;
-  border-radius:18px;
-  box-shadow:0 18px 48px rgba(0,0,0,.28);
-  background:rgba(0,0,0,.10);
-
-  /* swipe friendliness */
-  touch-action: pan-y;
-  user-select:none;
-  -webkit-user-select:none;
-  -webkit-touch-callout:none;
-}
-
-/* classic photo vignette inside viewport */
-.galleryViewport::after{
-  content:"";
+/* ---------- GALLERY ---------- */
+.galleryBox{
   position:absolute;
   inset:0;
-  pointer-events:none;
-  background: radial-gradient(120% 120% at 50% 45%,
-    rgba(255,255,255,0.05) 0%,
-    rgba(0,0,0,0.00) 45%,
-    rgba(0,0,0,0.35) 100%);
-  mix-blend-mode: overlay;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-
-#galleryImg{
+.galleryViewport{
+  width:76%;
+  height:72%;
+  border-radius:18px;
+  overflow:hidden;
+  background:rgba(0,0,0,.18);
+  box-shadow: 0 10px 24px rgba(0,0,0,.22);
+}
+.galleryViewport img{
   width:100%;
   height:100%;
   object-fit:cover;
-  object-position:50% 50%;
   display:block;
-  transform: translateZ(0);
-  will-change: object-position;
+  opacity:0;
+  transform:scale(1.02);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.galleryViewport img.fadeIn{
+  opacity:1;
+  transform:scale(1);
 }
 
-/* Keep your existing fadeIn, but add Ken Burns “pan” as a second animation */
-.fadeIn{
-  animation:
-    fadeIn .22s ease-out,
-    kenBurnsPos var(--kenburns-duration) ease-in-out infinite alternate;
-}
-@keyframes fadeIn{from{opacity:.25;transform:scale(.99)}to{opacity:1;transform:scale(1)}}
-
-/* Ken Burns via object-position (no transform conflict) */
-@keyframes kenBurnsPos{
-  0%   { object-position: 48% 46%; }
-  100% { object-position: 52% 54%; }
-}
-
-.galleryArrow{
+.gArrow{
   position:absolute;
-  top:calc(var(--gal-top) + (var(--gal-height)/2));
+  top:50%;
   transform:translateY(-50%);
   width:44px;
   height:44px;
+  border-radius:999px;
   border:none;
-  border-radius:50%;
-  cursor:pointer;
-  background:rgba(255,255,255,.9);
-  color:#4b0b0b;
-  font-size:30px;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  font-size:28px;
   line-height:44px;
-  text-align:center;
-  box-shadow:0 15px 35px rgba(0,0,0,.25);
+  cursor:pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
+.gPrev{ left:12px; }
+.gNext{ right:12px; }
+.gArrow:active{ transform:translateY(-50%) scale(.96); }
 
-.galleryArrow.left{left:calc(var(--gal-left) - 18px)}
-.galleryArrow.right{left:calc(var(--gal-left) + var(--gal-width) - 26px)}
-
-.galleryDots{
+.gDots{
   position:absolute;
-  left:0;
-  right:0;
-  top:calc(var(--gal-top) + var(--gal-height) + 1.5%);
+  bottom:16px;
+  left:50%;
+  transform:translateX(-50%);
   display:flex;
-  justify-content:center;
-  gap:10px;
+  gap:8px;
 }
-
-.dot{
-  width:10px;height:10px;border-radius:50%;
+.gDot{
+  width:10px;
+  height:10px;
+  border-radius:999px;
   border:none;
-  background:rgba(255,255,255,.6);
+  background:rgba(255,255,255,.35);
   cursor:pointer;
 }
-.dot.active{background:#fff}
+.gDot.active{ background:rgba(255,255,255,.92); }
 
+/* ---------- RSVP ---------- */
+.rsvpBtns{
+  position:absolute;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:12px;
+}
+.rsvpBtn{
+  padding:10px 18px;
+  border-radius:999px;
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-size:12px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform .18s ease, background .18s ease;
+}
+.rsvpBtn:hover{ background:rgba(255,255,255,.20); transform:translateY(-1px); }
+.rsvpBtn:active{ transform:translateY(0) scale(.98); }
 
-/* INVITATION (new slide): staged text reveal (no change to other animations) */
+/* ---------- INVITATION (your active overlay) ---------- */
 .invOverlay{
   position:absolute;
-  left:var(--inv-left);
-  top:var(--inv-top);
-  width:var(--inv-width);
-  height:var(--inv-height);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding: 1.5%;
-}
-
-.invText{
-  width:100%;
-  height:100%;
-  text-align:center;
+  inset:0;
+  padding:26px 22px;
   display:flex;
   flex-direction:column;
-  justify-content:center;
-  gap: 7px;
-  pointer-events:none;
-
+  align-items:center;
+  justify-content:flex-start;
+  gap:6px;
+  opacity:0;
+  transform:translateY(18px);
+  filter:blur(4px);
+  transition: opacity .7s ease, transform .7s ease, filter .7s ease;
+}
+.invOverlay.isInviteActive{
+  opacity:1;
+  transform:none;
+  filter:none;
+}
+.invText{
   font-family:'Cormorant Garamond','Playfair Display',serif;
   color:#2b0b0b;
-}
-
-.invBlock{
+  text-align:center;
+  font-size:13px;
+  line-height:1.45;
   opacity:0;
-  transform:translate3d(0,10px,0);
-  will-change:transform,opacity;
+  transform:translateY(10px);
+  filter:blur(2px);
+  transition:
+    opacity .65s ease,
+    transform .65s ease,
+    filter .65s ease;
+  transition-delay: calc(var(--i) * 0.09s);
+}
+.invOverlay.isInviteActive .invText{
+  opacity:1;
+  transform:none;
+  filter:none;
 }
 
-.slide.isInviteActive .invBlock{
-  animation: invFadeUp .55s cubic-bezier(.22,.85,.25,1) forwards;
-  animation-delay: calc(var(--i) * 120ms);
-}
-
-@keyframes invFadeUp{
-  from{opacity:0; transform:translate3d(0,10px,0);}
-  to{opacity:1; transform:translate3d(0,0,0);}
-}
-
-.invArabic{
-  font-size:clamp(14px,1.8vw,18px);
-  letter-spacing:.02em;
-  margin-bottom:2px;
-  font-weight:500;
-}
-
-.invLead{ font-size:clamp(13px,1.6vw,16px); font-weight:500; }
-
-.invNames{
-  font-size:clamp(14px,1.85vw,18px);
-  line-height:1.15;
-}
-.invMid{ font-size:clamp(13px,1.65vw,16px); font-weight:600; margin-top:4px; }
-.invGuest{ font-size:clamp(13px,1.65vw,16px); font-weight:500; }
-
-.invStrong{
-  font-weight:700;
+.invText.names{
+  font-size:14px;
   letter-spacing:.03em;
 }
-
-.invKe{
-  font-size:clamp(12px,1.4vw,14px);
+.invBlock{
+  width:100%;
   display:flex;
-  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:8px 0;
+  opacity:0;
+  transform:translateY(10px);
+  filter:blur(2px);
+  transition:
+    opacity .65s ease,
+    transform .65s ease,
+    filter .65s ease;
+  transition-delay: calc(var(--i) * 0.09s);
+}
+.invOverlay.isInviteActive .invBlock{
+  opacity:1;
+  transform:none;
+  filter:none;
+}
+.invCol{
+  width:48%;
+  text-align:center;
+  color:#2b0b0b;
+  font-family:'Cormorant Garamond','Playfair Display',serif;
+}
+.invName{ font-size:12px; font-weight:700; }
+.invRole{ font-size:11px; opacity:.9; }
+.invAnd{ font-size:12px; margin:4px 0; }
+
+.invQrRow{
+  width:100%;
+  display:flex;
   justify-content:center;
+  gap:14px;
+  margin-top:10px;
+  opacity:0;
+  transform:translateY(10px);
+  filter:blur(2px);
+  transition:
+    opacity .65s ease,
+    transform .65s ease,
+    filter .65s ease;
+  transition-delay: calc(var(--i) * 0.09s);
 }
-.invKe span{
-  position:relative;
-  padding:0 14px;
-  font-style:italic;
+.invOverlay.isInviteActive .invQrRow{
+  opacity:1;
+  transform:none;
+  filter:none;
 }
-.invKe span::before,
-.invKe span::after{
-  content:"";
-  position:absolute;
-  top:50%;
-  width:38px;
-  height:1px;
-  background:rgba(43,11,11,.35);
+.qrBox{
+  width:42%;
+  text-align:center;
+  color:#2b0b0b;
 }
-.invKe span::before{ right:100%; margin-right:10px; }
-.invKe span::after{ left:100%; margin-left:10px; }
-
-.invCouple{
-  font-size:clamp(14px,1.85vw,18px);
-  line-height:1.2;
-  margin-top:2px;
+.qrBox img{
+  width:100%;
+  max-width:120px;
+  border-radius:10px;
+  background:#fff;
+  padding:8px;
+  box-shadow: 0 10px 22px rgba(0,0,0,.12);
 }
-
-.invLabel{
+.qrLbl{
   margin-top:6px;
-  font-size:clamp(12px,1.5vw,14px);
-  font-weight:700;
-  letter-spacing:.14em;
+  font-size:10px;
+  letter-spacing:.06em;
+  opacity:.85;
+  text-transform:uppercase;
 }
 
-.invInfo{ font-size:clamp(12px,1.5vw,14px); line-height:1.25;
-  font-weight:600;
+.invFooter{
+  width:100%;
+  text-align:center;
+  color:#2b0b0b;
+  font-size:11px;
+  opacity:0;
+  transform:translateY(10px);
+  filter:blur(2px);
+  transition:
+    opacity .65s ease,
+    transform .65s ease,
+    filter .65s ease;
+  transition-delay: calc(var(--i) * 0.09s);
+}
+.invOverlay.isInviteActive .invFooter{
+  opacity:1;
+  transform:none;
+  filter:none;
 }
 
-@media (prefers-reduced-motion: reduce){
-  .invBlock{opacity:1; transform:none}
-  .slide.isInviteActive .invBlock{animation:none}
-}
+/* ---------- DOA ---------- */
+.doaStage{ position:relative; }
 
-
-/* DOA */
 .doaOverlay{
   position:absolute;
   left:var(--doa-left);
@@ -669,8 +482,9 @@ body.locked{
   width:var(--doa-width);
   height:var(--doa-height);
   overflow:hidden;
+
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   justify-content:center;
 }
 
@@ -680,6 +494,9 @@ body.locked{
   height:100%;
   white-space:pre-wrap;
   text-align:center;
+
+  box-sizing:border-box;
+  padding:clamp(10px, 1.2vw, 16px);
 
   /* ✅ classic serif */
   font-family:'Cormorant Garamond','Playfair Display',serif;
@@ -705,571 +522,17 @@ body.locked{
   filter:blur(3px);
 }
 
-/* JS adds .isDoaActive to the slide */
-.slide.isDoaActive .doaType{
-  animation:doaFadeInSoft 1.6s cubic-bezier(.22,.85,.25,1) forwards;
+#doaOverlay.isDoaActive .doaType{
+  opacity:1;
+  transform:none;
+  filter:none;
+  transition: opacity .7s ease, transform .7s ease, filter .7s ease;
 }
 
-@keyframes doaFadeInSoft{
-  0%   { opacity:0; transform:translateY(18px); filter:blur(3px); }
-  60%  { opacity:1; transform:translateY(2px);  filter:blur(0.6px); }
-  100% { opacity:1; transform:translateY(0);   filter:blur(0); }
-}
-
-@media (prefers-reduced-motion: reduce){
-  .doaType{opacity:1;transform:none;filter:none}
-  .slide.isDoaActive .doaType{animation:none}
-}
-
-/* ===== DOA: calmer “gold dust” mood (less sparkle, more sacred) ===== */
-#slide-doa .stage::after{
-  /* override only the visual overlay for doa slide */
-  background:
-    /* gold dust motes */
-    radial-gradient(circle at 18% 28%, rgba(var(--gold), .22) 0 1.4px, transparent 4px),
-    radial-gradient(circle at 32% 52%, rgba(var(--gold), .18) 0 1.2px, transparent 3.6px),
-    radial-gradient(circle at 58% 40%, rgba(var(--gold), .20) 0 1.5px, transparent 4.2px),
-    radial-gradient(circle at 74% 62%, rgba(var(--gold), .16) 0 1.2px, transparent 3.8px),
-    radial-gradient(circle at 82% 30%, rgba(var(--gold), .18) 0 1.3px, transparent 4px),
-    radial-gradient(circle at 46% 76%, rgba(var(--gold), .16) 0 1.2px, transparent 3.6px),
-
-    /* soft warm hush */
-    radial-gradient(120% 90% at 50% 12%,
-      rgba(var(--champagne), .10) 0%,
-      rgba(var(--champagne), 0.00) 55%),
-
-    /* very subtle grain */
-    repeating-linear-gradient(0deg,
-      rgba(255,255,255,calc(var(--grain-alpha) * .7)) 0 1px,
-      rgba(0,0,0,calc(var(--grain-alpha) * .5)) 2px 3px
-    );
-
-  opacity:.55;
-  filter: drop-shadow(0 0 10px rgba(var(--gold), .20));
-  mix-blend-mode: screen;
-  animation: doaDustFloat 16s ease-in-out infinite, grainShift 2.6s steps(2) infinite;
-}
-@keyframes doaDustFloat{
-  0%{ transform: translate3d(0,0,0); }
-  50%{ transform: translate3d(-10px, -10px, 0); }
-  100%{ transform: translate3d(0,0,0); }
-}
-
-/* Small screens */
-@media (max-width:520px){
-  :root{
-    --vpad:12px;
-    --rsvp-height:9%;
-    --kerawang-scale: 560px 560px;
-  }
-  .galleryArrow{width:40px;height:40px;line-height:40px;font-size:28px}
-}
-
-/* ============================================
-   ROYAL CARD SIGNALS (Flip + Scroll Indicators)
-   CSS-only, no HTML changes
-   ============================================ */
-
-/* Make sure overlay layer can hold decorative signals */
-.cardSlot{
-  position:absolute;
-}
-
-/* ===============================
-TAP TO FLIP (no fill, still royal/glowy) */
-.cardSlot::before{
-  content:"✦  TAP TO FLIP  ✦";
-  position:absolute;
-  top:6%;
-  left:50%;
-  transform:translateX(-50%);
-  padding:8px 18px;
-
-  font-size:12px;
-  letter-spacing:.25em;
-  font-weight:700;
-  text-transform:uppercase;
-
-  color:rgba(255,255,255,.95);
-  text-align:center;
-  white-space:nowrap;
-
-  background:transparent;              /* ✅ removed gold fill */
-  border-radius:999px;
-
-  /* subtle “royal” outline + glow */
-  border:1px solid rgba(212,175,55,.55);
-  box-shadow:
-    0 10px 25px rgba(0,0,0,.28),
-    0 0 0 1px rgba(255,255,255,.10) inset,
-    0 0 22px rgba(212,175,55,.22);
-
-  text-shadow:
-    0 1px 0 rgba(0,0,0,.25),
-    0 0 14px rgba(212,175,55,.22);
-
-  z-index:10;
-  pointer-events:none;
-
-  animation: royalPulseOutline 2.6s ease-in-out infinite;
-}
-
-@keyframes royalPulseOutline{
-  0%,100%{
-    transform:translateX(-50%) scale(1);
-    opacity:.92;
-    box-shadow:
-      0 10px 25px rgba(0,0,0,.28),
-      0 0 0 1px rgba(255,255,255,.10) inset,
-      0 0 18px rgba(212,175,55,.18);
-  }
-  50%{
-    transform:translateX(-50%) scale(1.05);
-    opacity:1;
-    box-shadow:
-      0 14px 32px rgba(0,0,0,.34),
-      0 0 0 1px rgba(255,255,255,.12) inset,
-      0 0 30px rgba(212,175,55,.28);
-  }
-}
-
-/* Hide indicator after flip */
-.flipCard.isFlipped ~ * .cardSlot::before,
-.flipCard.isFlipped .cardSlot::before{
-  opacity:0;
-}
-
-/* SCROLL FOR MORE (moved lower) */
-.cardSlot::after{
-  content:"SCROLL FOR MORE";
-  position:absolute;
-  bottom:1.2%;              /* ✅ lower (was ~5%) */
-  left:50%;
-  transform:translateX(-50%);
-  font-size:11px;
-  letter-spacing:.3em;
-  font-weight:600;
-  color:rgba(255,255,255,.82);
-  text-align:center;
-
-  padding-top:22px;         /* space for the indicator line */
-  pointer-events:none;
-  z-index:10;
-
-  animation: scrollFloat 2.4s ease-in-out infinite;
-
-  /* little “line” above the text */
-  background:
-    linear-gradient(transparent,transparent),
-    linear-gradient(to bottom,
-      rgba(255,255,255,.85) 0%,
-      rgba(255,255,255,.35) 100%);
-  background-repeat:no-repeat;
-  background-size: 0 0, 2px 18px;
-  background-position:center top;
-
-  text-shadow: 0 1px 10px rgba(0,0,0,.35);
-}
-
-@keyframes scrollFloat{
-  0%,100%{ transform:translate(-50%,0); opacity:.85; }
-  50%{ transform:translate(-50%,6px); opacity:1; }
-}
-
-/* Decorative animated arrows */
-.cardSlot::after{
-  background:
-    linear-gradient(transparent,transparent),
-    linear-gradient(
-      to bottom,
-      rgba(255,255,255,.9) 0%,
-      rgba(255,255,255,.4) 100%
-    );
-  background-repeat:no-repeat;
-  background-size: 0 0, 2px 18px;
-  background-position:center top;
-}
-
-/* ===============================
-   Animations
-   =============================== */
-
-@keyframes royalPulse{
-  0%,100%{
-    transform:translateX(-50%) scale(1);
-    box-shadow:
-      0 10px 25px rgba(0,0,0,.35),
-      0 0 0 1px rgba(212,175,55,.6) inset,
-      0 0 18px rgba(212,175,55,.35);
-  }
-  50%{
-    transform:translateX(-50%) scale(1.05);
-    box-shadow:
-      0 14px 32px rgba(0,0,0,.45),
-      0 0 0 1px rgba(212,175,55,.7) inset,
-      0 0 32px rgba(212,175,55,.55);
-  }
-}
-
-@keyframes scrollFloat{
-  0%,100%{
-    transform:translate(-50%,0);
-    opacity:.85;
-  }
-  50%{
-    transform:translate(-50%,6px);
-    opacity:1;
-  }
-}
-
-/* =========================================
-   ROYAL COUNTDOWN UPGRADE
-   ========================================= */
-
-.countdownBox{
-  backdrop-filter: blur(2px);
-}
-
-/* Elegant number styling */
-.cdNum{
-  font-size:clamp(26px, 4vw, 52px);
-  font-weight:800;
-  letter-spacing:.08em;
-
-  background:linear-gradient(
-    to bottom,
-    #fff8e8,
-    #f2d6a8 40%,
-    #d4af37 60%,
-    #b9922f
-  );
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-
-  text-shadow:
-    0 2px 0 rgba(0,0,0,.15),
-    0 8px 25px rgba(212,175,55,.35);
-
-  animation: royalGlowPulse 3s ease-in-out infinite;
-}
-
-/* Elegant label */
-.cdLbl{
-  margin-top:6px;
-  font-size:clamp(10px, 1.2vw, 14px);
-  letter-spacing:.25em;
-  text-transform:uppercase;
-  color:rgba(255,240,220,.85);
-  text-shadow:0 0 8px rgba(212,175,55,.25);
-}
-
-/* Soft breathing glow */
-@keyframes royalGlowPulse{
-  0%,100%{
-    filter:drop-shadow(0 0 6px rgba(212,175,55,.25));
-  }
-  50%{
-    filter:drop-shadow(0 0 14px rgba(212,175,55,.45));
-  }
-}
-
-/* =========================================
-   ROYAL CINEMATIC GALLERY
-   ========================================= */
-
-.galleryViewer{
-  position:relative;
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:
-    0 25px 60px rgba(0,0,0,.55),
-    0 0 30px rgba(212,175,55,.18);
-}
-
-/* Romantic vignette inside gallery */
-.galleryViewer::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(
-      120% 120% at 50% 50%,
-      rgba(0,0,0,0) 55%,
-      rgba(0,0,0,.35) 100%
-    );
-  mix-blend-mode:multiply;
-}
-
-/* Slow cinematic zoom */
-.galleryImg{
-  animation: kenBurns 12s ease-in-out infinite alternate;
-}
-
-/* Elegant zoom */
-@keyframes kenBurns{
-  0%{ transform:scale(1); }
-  100%{ transform:scale(1.06); }
-}
-
-/* Romantic warm overlay */
-.galleryViewer::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(
-      circle at 50% 20%,
-      rgba(255,220,180,.18),
-      transparent 60%
-    );
-  mix-blend-mode:soft-light;
-}
-.galleryViewer::after{
-  animation: royalDust 8s ease-in-out infinite alternate;
-}
-
-@keyframes royalDust{
-  0%{ opacity:.8; }
-  100%{ opacity:1; }
-}
-
-
-/* =========================
-   INVITATION SECTION
-========================= */
-
-#slide-invitation {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.invitationContent {
-  position: absolute;
-  width: 68%;
-  max-width: 520px;
-  text-align: center;
-  color: #5b2b2b;
-  top: 13%;
-  left: 50%;
-  transform: translateX(-50%);
-  line-height: 1.55;
-  font-family: 'Cormorant Garamond', serif;
-}
-
-/* Arabic line */
-.invitationArabic {
-  font-size: 20px;
-  margin-bottom: 14px;
-  font-weight: 600;
-}
-
-/* Regular text */
-.invitationText {
-  font-size: 16px;
-  margin: 6px 0;
-}
-
-/* Parent names */
-.invitationNamesTop {
-  font-size: 18px;
-  font-weight: 700;
-  margin: 12px 0;
-}
-
-/* Divider */
-.invitationDivider {
-  margin: 8px 0;
-  font-size: 14px;
-}
-
-/* Bride & Groom names */
-.invitationNamesMain {
-  font-size: 19px;
-  font-weight: 700;
-  margin: 12px 0;
-}
-
-/* Section labels */
-.invitationLabel {
-  margin-top: 14px;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
-/* Date + venue */
-.invitationDetails {
-  font-size: 15px;
-  margin: 4px 0;
-}
-
-/* Appearing animation (lightweight & smooth) */
-.invitationContent p,
-.invitationContent div {
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity .6s ease, transform .6s ease;
-}
-
-#slide-invitation.active .invitationContent p,
-#slide-invitation.active .invitationContent div {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media (max-width: 480px) {
-  .invitationContent {
-    width: 78%;
-    top: 11%;
-  }
-
-  .invitationArabic {
-    font-size: 18px;
-  }
-
-  .invitationText {
-    font-size: 14px;
-  }
-
-  .invitationNamesTop,
-  .invitationNamesMain {
-    font-size: 16px;
-  }
-
-  .invitationLabel,
-  .invitationDetails {
-    font-size: 13px;
-  }
-}
-
-
-
-/* =========================
-   INVITATION SECTION OVERRIDE (fit inside inner parchment box)
-   Goal: keep all invitation overlay text within a tighter "yellow-box" safe area.
-   (No JS / feature changes)
-========================= */
-
-#slide-invitation .invitationContent{
-  /* tighter safe area (yellow box) */
-  width: 56%;
-  max-width: 420px;
-  top: 21%;
-  /* keep it centered */
-  left: 50%;
-  transform: translateX(-50%);
-  /* prevent text touching edges */
-  padding: 0 6px;
-  line-height: 1.42;
-}
-
-/* Scale typography down to stay within the safe area */
-#slide-invitation .invitationArabic{ font-size: 16px; margin-bottom: 10px; font-weight: 600; }
-#slide-invitation .invitationText{ font-size: 13px; margin: 4px 0; }
-#slide-invitation .invitationNamesTop{ font-size: 14px; margin: 8px 0; font-weight: 700; }
-#slide-invitation .invitationDivider{ font-size: 12px; margin: 6px 0; }
-#slide-invitation .invitationNamesMain{ font-size: 15px; margin: 8px 0; font-weight: 700; }
-#slide-invitation .invitationLabel{ font-size: 12px; margin-top: 10px; letter-spacing: 0.8px; font-weight: 600; }
-#slide-invitation .invitationDetails{ font-size: 12px; margin: 3px 0; }
-
-/* Mobile: even tighter */
-@media (max-width: 480px){
-  #slide-invitation .invitationContent{
-    width: 64%;
-    top: 20%;
-    max-width: 360px;
-    line-height: 1.38;
-  }
-  #slide-invitation .invitationArabic{ font-size: 15px; }
-  #slide-invitation .invitationText{ font-size: 12px; }
-  #slide-invitation .invitationNamesTop{ font-size: 13px; }
-  #slide-invitation .invitationNamesMain{ font-size: 14px; }
-  #slide-invitation .invitationLabel,
-  #slide-invitation .invitationDetails{ font-size: 11.5px; }
-}
-
-/* Very small devices */
-@media (max-width: 360px){
-  #slide-invitation .invitationContent{ width: 68%; top: 19%; }
-  #slide-invitation .invitationText{ font-size: 11.5px; }
-  #slide-invitation .invitationNamesMain{ font-size: 13.5px; }
-}
-
-
-/* ==========================================================
-   INVITATION SECTION OVERRIDE v4
-   Fixes:
-   1) Ensure ALL text (including spans like "-ke-") stays hidden
-      until the invitation "appearing text" begins.
-   2) Resize + re-position to fit the tighter yellow-box safe area.
-   Notes:
-   - CSS-only changes. No feature/animation changes elsewhere.
-   - Avoids expensive filters; uses opacity+transform transitions.
-========================================================== */
-
-#slide-invitation .invitationContent{
-  /* tighter yellow-box safe area */
-  width: 54%;
-  max-width: 400px;
-  top: 24%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0 6px;
-  line-height: 1.35;
-}
-
-/* Typography scale down */
-#slide-invitation .invitationArabic{ font-size: 15px; margin: 0 0 8px; font-weight: 600; }
-#slide-invitation .invitationText{ font-size: 12px; margin: 3px 0; }
-#slide-invitation .invitationNamesTop{ font-size: 13px; margin: 6px 0; font-weight: 700; }
-#slide-invitation .invitationDivider{ font-size: 11.5px; margin: 5px 0; }
-#slide-invitation .invitationNamesMain{ font-size: 14px; margin: 6px 0; font-weight: 700; }
-#slide-invitation .invitationLabel{ font-size: 11.5px; margin-top: 8px; letter-spacing: 0.7px; font-weight: 600; }
-#slide-invitation .invitationDetails{ font-size: 11.5px; margin: 2.5px 0; }
-
-/* IMPORTANT: hide EVERYTHING inside invitationContent by default
-   (fixes "-ke-" appearing early) */
-#slide-invitation .invitationContent *{
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity .6s ease, transform .6s ease;
-  will-change: opacity, transform;
-}
-
-/* Reveal when slide becomes active */
-#slide-invitation.active .invitationContent *{
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Keep your stagger (if you set delays via inline style or classes).
-   If none exist, this still works as a single unified reveal. */
-
-/* Mobile adjustments */
-@media (max-width: 480px){
-  #slide-invitation .invitationContent{
-    width: 62%;
-    top: 23%;
-    max-width: 340px;
-    line-height: 1.32;
-  }
-  #slide-invitation .invitationArabic{ font-size: 14px; }
-  #slide-invitation .invitationText{ font-size: 11.5px; }
-  #slide-invitation .invitationNamesTop{ font-size: 12.5px; }
-  #slide-invitation .invitationNamesMain{ font-size: 13.5px; }
-  #slide-invitation .invitationLabel,
-  #slide-invitation .invitationDetails{ font-size: 11px; }
-}
-
-@media (max-width: 360px){
-  #slide-invitation .invitationContent{
-    width: 66%;
-    top: 22%;
-  }
-  #slide-invitation .invitationText{ font-size: 11px; }
-  #slide-invitation .invitationNamesMain{ font-size: 13px; }
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:420px){
+  .countNumbers{ gap:8px; }
+  .num{ font-size:24px; }
+  .numBox{ min-width:48px; }
+  .galleryViewport{ width:80%; height:70%; }
 }
