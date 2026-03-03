@@ -450,7 +450,7 @@
     if (!box) return;
 
     const text = box.dataset.text || "";
-    fitTextToBox(box, text, 14, 32);
+    fitTextToBox(box, text, 12, 28);
 
     box.textContent = "";
     let i = 0;
@@ -480,7 +480,7 @@
     let resizeT = 0;
     window.addEventListener("resize", () => {
       clearTimeout(resizeT);
-      resizeT = setTimeout(() => fitTextToBox(box, text, 12, 28), 120);
+      resizeT = setTimeout(() => fitTextToBox(box, text, 10, 22), 120);
     }, { passive: true });
   }
 })();
