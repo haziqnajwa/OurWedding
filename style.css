@@ -1516,3 +1516,43 @@ TAP TO FLIP (no fill, still royal/glowy) */
   }
 }
 
+/* ==========================================================
+   PERFORMANCE + SMOOTH SCROLL OPTIMIZATION
+   Keeps the same flow/features while making mobile rendering lighter
+========================================================== */
+html{
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{
+    scroll-behavior: auto;
+  }
+}
+
+@media (max-width: 600px){
+  /* Reduce expensive layered effects on phones */
+  .stage::before{
+    animation: none !important;
+    opacity: .75;
+  }
+
+  .stage::after{
+    animation: none !important;
+    filter: none !important;
+    opacity: .32 !important;
+  }
+
+  .overlay::before{
+    opacity: .05 !important;
+  }
+
+  /* Lighter gallery transition on mobile */
+  .fadeIn{
+    animation: fadeIn .18s ease-out !important;
+  }
+
+  #galleryImg{
+    will-change: auto !important;
+  }
+}
