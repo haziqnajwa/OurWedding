@@ -761,7 +761,7 @@ body.locked{
 
 #slide-doa .doaOverlay{
   left:18%;
-  top:16%;
+  top:20%;
   width:64%;
   height:52%;
   padding:clamp(10px, 1.4vmin, 18px);
