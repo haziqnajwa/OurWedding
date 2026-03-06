@@ -1358,3 +1358,56 @@ TAP TO FLIP (no fill, still royal/glowy) */
     0 1px 0 rgba(255,255,255,.22),
     0 2px 10px rgba(0,0,0,.22);
 }
+
+
+/* ==========================================================
+   MOBILE-ONLY TUNING
+   Focus only on Android/iPhone small screens:
+   - smaller invitation text so nothing gets cut off
+   - smaller doa text area and better fit
+   - visible gap between Google Map and RSVP buttons
+========================================================== */
+@media (max-width: 600px){
+  /* Invitation: reduce just for mobile */
+  .invOverlay{
+    padding: 8px;
+  }
+  .invText{
+    gap: 3px;
+    line-height: 1.16;
+  }
+  .invArabic{ font-size: 15px !important; }
+  .invLead{   font-size: 13px !important; }
+  .invNames{  font-size: 14px !important; line-height: 1.14; }
+  .invMid{    font-size: 13px !important; }
+  .invGuest{  font-size: 12px !important; }
+  .invKe{     font-size: 12px !important; }
+  .invCouple{ font-size: 14px !important; line-height: 1.15; }
+  .invLabel{  font-size: 12px !important; margin-top: 4px; }
+  .invInfo{   font-size: 11px !important; line-height: 1.18; }
+
+  /* DOA: keep inside frame on phones */
+  #slide-doa .doaOverlay{
+    left: 22% !important;
+    top: 19% !important;
+    width: 56% !important;
+    height: 42% !important;
+    padding: 8px !important;
+  }
+  .doaType{
+    line-height: 1.42 !important;
+    letter-spacing: 0 !important;
+  }
+
+  /* RSVP: create clear vertical gap on mobile */
+  .rsvpBtn{
+    height: 7.2% !important;
+  }
+  #mapLink{
+    top: 60.5% !important;
+  }
+  #rsvpLink{
+    top: 70.8% !important;
+  }
+}
+
