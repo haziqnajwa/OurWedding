@@ -380,41 +380,100 @@ body.locked{
 /* RSVP */
 .rsvpOverlay{
   position:absolute;
-  left:var(--rsvp-left);
-  top:calc(var(--rsvp-top) + 6%);
-  width:var(--rsvp-width);
-  height:var(--rsvp-height);
+  left:18%;
+  top:66%;
+  width:64%;
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
-   gap:clamp(14px,1.6vmin,22px);
+  justify-content:flex-start;
+  gap:clamp(14px,1.6vmin,22px);
+  pointer-events:auto;
 }
 
 .rsvpBtn{
-  position:absolute;
-  left:0;
-  width:100%;
-  height:var(--rsvp-height);
   display:flex;
   align-items:center;
   justify-content:center;
-  text-decoration:none;
-  font-weight:800;
-  color:#5b0b0b;
-  background:rgba(255,255,255,.92);
+  width:min(78%, 360px);
+  min-height:clamp(46px, 5.4vmin, 58px);
+  padding:clamp(12px, 1.4vmin, 16px) clamp(20px, 2.5vmin, 28px);
   border-radius:999px;
-  box-shadow:0 15px 35px rgba(0,0,0,.25);
-  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  text-decoration:none;
+  font-family:'Cormorant Garamond','Playfair Display',serif;
+  font-size:clamp(22px, 2.2vmin, 30px);
+  font-weight:700;
+  letter-spacing:.02em;
+  color:#6f0f12;
+  background:linear-gradient(180deg, #fffdf7 0%, #f7f0e4 100%);
+  border:1.5px solid rgba(140, 95, 55, .22);
+  box-shadow:
+    0 10px 24px rgba(70, 20, 20, .16),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 0 0 1px rgba(255, 240, 214, .45);
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    background .22s ease,
+    color .22s ease;
+  position:relative;
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
 }
-.rsvpBtn:hover{
-  filter: brightness(1.03);
-  box-shadow:0 18px 42px rgba(0,0,0,.28), 0 0 0 1px rgba(var(--gold), .20) inset;
-}
-.rsvpBtn:active{ transform: scale(.99); }
 
-#mapLink{top:var(--rsvp-top1)}
-#rsvpLink{top:var(--rsvp-top2)}
+.rsvpBtn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,.18) 35%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,.18) 65%,
+    transparent 100%
+  );
+  transform:translateX(-140%);
+  transition:transform .7s ease;
+  pointer-events:none;
+}
+
+.rsvpBtn:hover{
+  transform:translateY(-2px);
+  color:#7e1418;
+  box-shadow:
+    0 14px 30px rgba(70, 20, 20, .2),
+    0 0 0 3px rgba(212, 181, 132, .10),
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 0 0 1px rgba(212, 181, 132, .20);
+}
+
+.rsvpBtn:hover::before{
+  transform:translateX(140%);
+}
+
+.rsvpBtn:active{
+  transform:translateY(0) scale(.985);
+  box-shadow:
+    0 6px 14px rgba(70, 20, 20, .14),
+    inset 0 2px 6px rgba(0,0,0,.06);
+}
+
+.rsvpBtn:focus-visible{
+  outline:none;
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,.75),
+    0 0 0 6px rgba(111, 15, 18, .22),
+    0 10px 24px rgba(70, 20, 20, .16);
+}
+
+#mapLink,
+#rsvpLink{
+  top:auto !important;
+  left:auto !important;
+  height:auto !important;
+}
+
 
 /* Countdown */
 .countdownOverlay{
@@ -1430,17 +1489,6 @@ TAP TO FLIP (no fill, still royal/glowy) */
     line-height: 1.42 !important;
     letter-spacing: 0 !important;
   }
-
-  /* RSVP: create clear vertical gap on mobile */
-  .rsvpBtn{
-    height: 7.2% !important;
-  }
-  #mapLink{
-    top: 60.5% !important;
-  }
-  #rsvpLink{
-    top: 70.8% !important;
-  }
 }
 
 
@@ -1476,14 +1524,6 @@ TAP TO FLIP (no fill, still royal/glowy) */
     height: 39% !important;
     padding: 7px !important;
   }
-
-  /* RSVP buttons: keep visible gap */
-  #mapLink{
-    top: 60% !important;
-  }
-  #rsvpLink{
-    top: 71.5% !important;
-  }
 }
 
 
@@ -1516,17 +1556,6 @@ TAP TO FLIP (no fill, still royal/glowy) */
   .invCouple{ font-size: 13px !important; line-height: 1.10 !important; }
   .invLabel{  font-size: 11px !important; margin-top: 3px !important; }
   .invInfo{   font-size: 10px !important; line-height: 1.12 !important; }
-
-  /* RSVP: add clear visible gap between buttons */
-  .rsvpBtn{
-    height: 6.8% !important;
-  }
-  #mapLink{
-    top: 60.2% !important;
-  }
-  #rsvpLink{
-    top: 72.4% !important;
-  }
 
   /* DOA: constrain text to the yellow-box region only */
   #slide-doa .doaOverlay{
@@ -1591,3 +1620,26 @@ html{
     will-change: auto !important;
   }
 }
+
+
+
+@media (max-width: 600px){
+  .rsvpOverlay{
+    top:68%;
+    width:64%;
+    gap:16px;
+  }
+
+  .rsvpBtn{
+    width:78%;
+    min-height:50px;
+    font-size:17px;
+    letter-spacing:.01em;
+    padding:12px 18px;
+    box-shadow:
+      0 8px 18px rgba(70, 20, 20, .15),
+      inset 0 1px 0 rgba(255,255,255,.96),
+      inset 0 0 0 1px rgba(255, 240, 214, .4);
+  }
+}
+
