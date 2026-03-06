@@ -1454,3 +1454,65 @@ TAP TO FLIP (no fill, still royal/glowy) */
   }
 }
 
+
+/* ==========================================================
+   FINAL MOBILE FIX
+   Exact small-screen tuning for Xiaomi / Android browsers
+========================================================== */
+@media (max-width: 600px){
+  /* Invitation: shrink and wrap more aggressively so bottom lines stay visible */
+  .invOverlay{
+    top: 18.5% !important;
+    height: 62% !important;
+    padding: 6px !important;
+  }
+  .invText{
+    gap: 2px !important;
+    line-height: 1.12 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    justify-content: flex-start !important;
+    padding-top: 2px !important;
+  }
+  .invArabic{ font-size: 14px !important; }
+  .invLead{   font-size: 12px !important; }
+  .invNames{  font-size: 13px !important; line-height: 1.10 !important; }
+  .invMid{    font-size: 12px !important; }
+  .invGuest{  font-size: 11px !important; }
+  .invKe{     font-size: 11px !important; }
+  .invCouple{ font-size: 13px !important; line-height: 1.10 !important; }
+  .invLabel{  font-size: 11px !important; margin-top: 3px !important; }
+  .invInfo{   font-size: 10px !important; line-height: 1.12 !important; }
+
+  /* RSVP: add clear visible gap between buttons */
+  .rsvpBtn{
+    height: 6.8% !important;
+  }
+  #mapLink{
+    top: 60.2% !important;
+  }
+  #rsvpLink{
+    top: 72.4% !important;
+  }
+
+  /* DOA: constrain text to the yellow-box region only */
+  #slide-doa .doaOverlay{
+    left: 23.5% !important;
+    top: 19.2% !important;
+    width: 49% !important;
+    height: 26% !important;
+    padding: 6px !important;
+    align-items: flex-start !important;
+  }
+  .doaType{
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    text-wrap: pretty;
+    hyphens: auto;
+    line-height: 1.22 !important;
+    letter-spacing: 0 !important;
+  }
+}
+
