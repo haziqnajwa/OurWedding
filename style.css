@@ -696,16 +696,19 @@ body.locked{
   justify-content:center;
 }
 
-/* Desktop-only DOA layout improvement (mobile stays unchanged) */
-@media (min-width: 900px){
-  #slide-doa .doaOverlay{
-    left:18%;
-    top:16%;
-    width:64%;
-    height:52%;
-    padding: clamp(10px, 1.4vmin, 18px);
-    align-items:center;
-  }
+/* ✅ DOA layout tuning (doa_bg.webp) — keep features the same, only improve fit/readability */
+#slide-doa .doaOverlay{
+  /* Expand to fill the “yellow box” region better on both mobile + desktop */
+  left:18%;
+  top:16%;
+  width:64%;
+  height:52%;
+
+  /* Comfortable inner margin so text doesn't touch the frame */
+  padding: clamp(10px, 1.4vmin, 18px);
+
+  /* Center the text vertically within the box */
+  align-items:center;
 }
 
 /* Classic + elegant doa text */
@@ -1554,93 +1557,110 @@ html{
   }
 }
 
+
 /* ==========================================================
-   DESKTOP TEXT FIT FIX
-   Keep current mobile behavior unchanged.
-   Only tune invitation.webp and doa_bg.webp for desktop/tablet browsers
-   so text stays inside the frame without being oversized.
+   FINAL DOA TEXT FIT OVERRIDE
+   Purpose:
+   - fix verse/reference cut-off on BOTH desktop and mobile
+   - keep existing flow/features/animation logic
+   - override older conflicting DOA rules safely
 ========================================================== */
-@media (min-width: 601px){
-  /* Invitation: slightly smaller type + more controlled text box on desktop */
-  .invOverlay{
-    top: 18.4% !important;
-    height: 61% !important;
-    padding: clamp(12px, 1.15vw, 20px) !important;
-  }
+#slide-doa .doaOverlay{
+  left:18.5% !important;
+  top:14.8% !important;
+  width:63% !important;
+  height:38% !important;
+  padding:12px 14px !important;
+  align-items:flex-start !important;
+  justify-content:center !important;
+  overflow:hidden !important;
+}
 
-  .invText{
-    gap: clamp(2px, 0.42vw, 6px) !important;
-    line-height: 1.12 !important;
-    justify-content: flex-start !important;
-    padding-top: clamp(6px, 0.8vw, 14px) !important;
-    white-space: normal !important;
-    overflow-wrap: anywhere !important;
-    word-break: normal !important;
-  }
+#slide-doa .doaTextWrap{
+  width:100% !important;
+  height:100% !important;
+  display:flex !important;
+  align-items:flex-start !important;
+  justify-content:flex-start !important;
+}
 
-  .invArabic{ font-size: clamp(14px, 1.15vw, 18px) !important; }
-  .invLead{   font-size: clamp(12px, 1.00vw, 15px) !important; }
-  .invNames{  font-size: clamp(13px, 1.08vw, 16px) !important; line-height: 1.10 !important; }
-  .invMid{    font-size: clamp(12px, 1.00vw, 15px) !important; }
-  .invGuest{  font-size: clamp(12px, 0.98vw, 15px) !important; }
-  .invKe{     font-size: clamp(11px, 0.90vw, 13px) !important; }
-  .invCouple{ font-size: clamp(13px, 1.08vw, 16px) !important; line-height: 1.12 !important; }
-  .invLabel{  font-size: clamp(11px, 0.90vw, 13px) !important; margin-top: 4px !important; }
-  .invInfo{   font-size: clamp(11px, 0.88vw, 13px) !important; line-height: 1.14 !important; }
+#slide-doa .doaPara{
+  width:100% !important;
+  max-width:100% !important;
+  margin:0 !important;
+  white-space:normal !important;
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+  hyphens:none !important;
+  -webkit-hyphens:none !important;
+  text-wrap:pretty;
+  line-height:1.36 !important;
+  letter-spacing:0 !important;
+}
 
-  /* Doa: reduce box size + typography so verse stays inside inner frame on desktop */
+#slide-doa .doaType{
+  display:inline !important;
+}
+
+#slide-doa .doaWord{
+  display:inline-block;
+  margin-right:.12em;
+}
+
+#slide-doa .doaRefBreak{
+  display:block !important;
+  line-height:1.05 !important;
+}
+
+#slide-doa .doaRef{
+  display:inline-block !important;
+  margin-top:.18em !important;
+}
+
+@media (min-width: 900px){
   #slide-doa .doaOverlay{
-    left: 22.5% !important;
-    top: 18.2% !important;
-    width: 50% !important;
-    height: 28% !important;
-    padding: clamp(8px, 0.9vw, 14px) !important;
-    align-items: flex-start !important;
+    left:18% !important;
+    top:14.2% !important;
+    width:64% !important;
+    height:40% !important;
+    padding:14px 16px !important;
   }
 
-  .doaTextWrap{
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-  }
-
-  .doaPara{
-    white-space: normal !important;
-    overflow-wrap: anywhere !important;
-    word-break: break-word !important;
-    text-wrap: pretty;
-    hyphens: auto;
-    font-size: clamp(12px, 0.92vw, 16px) !important;
-    line-height: 1.26 !important;
-    letter-spacing: 0 !important;
-  }
-
-  .doaRef{
-    margin-top: .10em !important;
-    font-size: .90em !important;
+  #slide-doa .doaPara{
+    line-height:1.4 !important;
   }
 }
 
-@media (min-width: 1200px){
-  /* Extra safety for large desktop monitors where browser viewport is tall/wide */
-  .invOverlay{
-    top: 18.6% !important;
-    height: 60% !important;
-  }
-
-  .invText{
-    gap: 2px !important;
-    line-height: 1.10 !important;
-  }
-
+@media (max-width: 600px){
   #slide-doa .doaOverlay{
-    left: 23% !important;
-    top: 18.4% !important;
-    width: 49% !important;
-    height: 26.5% !important;
+    left:20.5% !important;
+    top:15.8% !important;
+    width:59% !important;
+    height:34% !important;
+    padding:8px 8px !important;
+    align-items:flex-start !important;
   }
 
-  .doaPara{
-    font-size: clamp(12px, 0.82vw, 15px) !important;
-    line-height: 1.22 !important;
+  #slide-doa .doaPara{
+    line-height:1.28 !important;
+    letter-spacing:0 !important;
+  }
+
+  #slide-doa .doaRef{
+    margin-top:.12em !important;
+  }
+}
+
+@media (max-width: 390px){
+  #slide-doa .doaOverlay{
+    left:20.5% !important;
+    top:15.9% !important;
+    width:59% !important;
+    height:35% !important;
+    padding:7px 7px !important;
+  }
+
+  #slide-doa .doaPara{
+    line-height:1.24 !important;
   }
 }
