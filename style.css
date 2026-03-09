@@ -696,19 +696,16 @@ body.locked{
   justify-content:center;
 }
 
-/* ✅ DOA layout tuning (doa_bg.webp) — keep features the same, only improve fit/readability */
-#slide-doa .doaOverlay{
-  /* Expand to fill the “yellow box” region better on both mobile + desktop */
-  left:18%;
-  top:16%;
-  width:64%;
-  height:52%;
-
-  /* Comfortable inner margin so text doesn't touch the frame */
-  padding: clamp(10px, 1.4vmin, 18px);
-
-  /* Center the text vertically within the box */
-  align-items:center;
+/* Desktop-only DOA layout improvement (mobile stays unchanged) */
+@media (min-width: 900px){
+  #slide-doa .doaOverlay{
+    left:18%;
+    top:16%;
+    width:64%;
+    height:52%;
+    padding: clamp(10px, 1.4vmin, 18px);
+    align-items:center;
+  }
 }
 
 /* Classic + elegant doa text */
