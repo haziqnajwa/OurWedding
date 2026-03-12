@@ -1671,21 +1671,21 @@ html{
 
 
 /* ==========================================================
-   RSVP PIXEL-PERFECT ALIGNMENT — MOBILE ONLY
-   Scoped only to the RSVP slide on small screens.
-   This lowers the buttons further for better spacing from
-   the word "Reception" without affecting any other section.
+   RSVP POSITION TUNED TO ORIGINAL rsvp.webp ARTWORK
+   Mobile only. No other section is affected.
+   Based on the original parchment composition so the buttons
+   sit lower in the open blank area under "Reception".
 ========================================================== */
 @media (max-width:600px){
   #slide-rsvp{
-    --rsvp-top1: 75.8%;
-    --rsvp-top2: 86.8%;
+    --rsvp-top1: 70.6%;
+    --rsvp-top2: 81.8%;
   }
 }
 
 @media (max-width:390px){
   #slide-rsvp{
-    --rsvp-top1: 75.2%;
-    --rsvp-top2: 86.4%;
+    --rsvp-top1: 70.2%;
+    --rsvp-top2: 81.2%;
   }
 }
