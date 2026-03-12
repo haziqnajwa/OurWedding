@@ -1920,8 +1920,7 @@ html{
   .stage::before,
   .stage::after,
   .galleryViewport,
-  #galleryImg,
-  .flipCard{
+  #galleryImg{
     transform:translateZ(0);
     backface-visibility:hidden;
   }
