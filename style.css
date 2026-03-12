@@ -380,37 +380,100 @@ body.locked{
 /* RSVP */
 .rsvpOverlay{
   position:absolute;
-  left:var(--rsvp-left);
-  width:var(--rsvp-width);
-  top:0;
-  height:100%;
+  left:18%;
+  top:66%;
+  width:64%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:clamp(14px,1.6vmin,22px);
   pointer-events:auto;
 }
 
 .rsvpBtn{
-  position:absolute;
-  left:0;
-  width:100%;
-  height:var(--rsvp-height);
   display:flex;
   align-items:center;
   justify-content:center;
-  text-decoration:none;
-  font-weight:800;
-  color:#5b0b0b;
-  background:rgba(255,255,255,.92);
+  width:min(78%, 360px);
+  min-height:clamp(46px, 5.4vmin, 58px);
+  padding:clamp(12px, 1.4vmin, 16px) clamp(20px, 2.5vmin, 28px);
   border-radius:999px;
-  box-shadow:0 15px 35px rgba(0,0,0,.25);
-  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  text-decoration:none;
+  font-family:'Cormorant Garamond','Playfair Display',serif;
+  font-size:clamp(22px, 2.2vmin, 30px);
+  font-weight:700;
+  letter-spacing:.02em;
+  color:#6f0f12;
+  background:linear-gradient(180deg, #fffdf7 0%, #f7f0e4 100%);
+  border:1.5px solid rgba(140, 95, 55, .22);
+  box-shadow:
+    0 10px 24px rgba(70, 20, 20, .16),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 0 0 1px rgba(255, 240, 214, .45);
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    background .22s ease,
+    color .22s ease;
+  position:relative;
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
 }
-.rsvpBtn:hover{
-  filter: brightness(1.03);
-  box-shadow:0 18px 42px rgba(0,0,0,.28), 0 0 0 1px rgba(var(--gold), .20) inset;
-}
-.rsvpBtn:active{ transform: scale(.99); }
 
-#mapLink{top:var(--rsvp-top1)}
-#rsvpLink{top:var(--rsvp-top2)}
+.rsvpBtn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,.18) 35%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,.18) 65%,
+    transparent 100%
+  );
+  transform:translateX(-140%);
+  transition:transform .7s ease;
+  pointer-events:none;
+}
+
+.rsvpBtn:hover{
+  transform:translateY(-2px);
+  color:#7e1418;
+  box-shadow:
+    0 14px 30px rgba(70, 20, 20, .2),
+    0 0 0 3px rgba(212, 181, 132, .10),
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 0 0 1px rgba(212, 181, 132, .20);
+}
+
+.rsvpBtn:hover::before{
+  transform:translateX(140%);
+}
+
+.rsvpBtn:active{
+  transform:translateY(0) scale(.985);
+  box-shadow:
+    0 6px 14px rgba(70, 20, 20, .14),
+    inset 0 2px 6px rgba(0,0,0,.06);
+}
+
+.rsvpBtn:focus-visible{
+  outline:none;
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,.75),
+    0 0 0 6px rgba(111, 15, 18, .22),
+    0 10px 24px rgba(70, 20, 20, .16);
+}
+
+#mapLink,
+#rsvpLink{
+  top:auto !important;
+  left:auto !important;
+  height:auto !important;
+}
+
 
 /* Countdown */
 .countdownOverlay{
@@ -696,67 +759,95 @@ body.locked{
   justify-content:center;
 }
 
-/* ✅ DOA layout tuning (doa_bg.webp) — keep features the same, only improve fit/readability */
 #slide-doa .doaOverlay{
-  /* Expand to fill the “yellow box” region better on both mobile + desktop */
   left:18%;
   top:16%;
   width:64%;
   height:52%;
-
-  /* Comfortable inner margin so text doesn't touch the frame */
-  padding: clamp(10px, 1.4vmin, 18px);
-
-  /* Center the text vertically within the box */
+  padding:clamp(10px, 1.4vmin, 18px);
   align-items:center;
 }
 
-/* Classic + elegant doa text */
-.doaType{
+.doaTextWrap{
   width:100%;
   height:100%;
-  white-space:pre-wrap;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.doaPara{
+  width:100%;
+  margin:0;
   text-align:center;
-
-  /* ✅ classic serif */
   font-family:'Cormorant Garamond','Playfair Display',serif;
-
-  /* ✅ stronger contrast for readability */
   font-weight:700;
+  font-size:clamp(14px,1.35vmin,20px);
   line-height:1.55;
   letter-spacing:.01em;
-
-  /* JS will still fit the final size; this is just the base */
-  font-size:clamp(14px,1.35vmin,20px);
-
-  /* ✅ solid darker ink (no gradient text fill) */
   color:#241010;
-
-  /* ✅ gentle shadow to pop on textured paper */
   text-shadow:
     0 1px 0 rgba(255,255,255,.18),
     0 2px 10px rgba(0,0,0,.18);
+}
 
+.doaType{
+  display:inline;
+}
+
+.doaWord{
+  display:inline-block;
   opacity:0;
-  transform:translateY(18px);
+  transform:translateY(.55em) scale(.985);
   filter:blur(3px);
+  will-change:transform,opacity,filter;
+  transition:
+    opacity .7s cubic-bezier(.22,.85,.25,1),
+    transform .7s cubic-bezier(.22,.85,.25,1),
+    filter .7s cubic-bezier(.22,.85,.25,1);
 }
 
-/* JS adds .isDoaActive to the slide */
-.slide.isDoaActive .doaType{
-  animation:doaFadeInSoft 1.6s cubic-bezier(.22,.85,.25,1) forwards;
+.doaWord.isVisible{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  filter:blur(0);
 }
 
-@keyframes doaFadeInSoft{
-  0%   { opacity:0; transform:translateY(18px); filter:blur(3px); }
-  60%  { opacity:1; transform:translateY(2px);  filter:blur(0.6px); }
-  100% { opacity:1; transform:translateY(0);   filter:blur(0); }
+.doaRefBreak{
+  display:block;
+  line-height:.75;
+}
+
+.doaRef{
+  display:inline-block;
+  margin-top:.14em;
+  opacity:0;
+  transform:translateY(.45em);
+  filter:blur(2px);
+  font-size:.92em;
+  font-weight:600;
+  transition:
+    opacity .85s cubic-bezier(.22,.85,.25,1),
+    transform .85s cubic-bezier(.22,.85,.25,1),
+    filter .85s cubic-bezier(.22,.85,.25,1);
+}
+
+.doaRef.isVisible{
+  opacity:1;
+  transform:translateY(0);
+  filter:blur(0);
 }
 
 @media (prefers-reduced-motion: reduce){
-  .doaType{opacity:1;transform:none;filter:none}
-  .slide.isDoaActive .doaType{animation:none}
+  .doaWord,
+  .doaRef{
+    opacity:1 !important;
+    transform:none !important;
+    filter:none !important;
+    transition:none !important;
+  }
 }
+
 
 /* ===== DOA: calmer “gold dust” mood (less sparkle, more sacred) ===== */
 #slide-doa .stage::after{
@@ -1394,20 +1485,9 @@ TAP TO FLIP (no fill, still royal/glowy) */
     height: 42% !important;
     padding: 8px !important;
   }
-  .doaType{
+  .doaPara{
     line-height: 1.42 !important;
     letter-spacing: 0 !important;
-  }
-
-  /* RSVP: create clear vertical gap on mobile */
-  .rsvpBtn{
-    height: 7.2% !important;
-  }
-  #mapLink{
-    top: 60.5% !important;
-  }
-  #rsvpLink{
-    top: 70.8% !important;
   }
 }
 
@@ -1428,7 +1508,7 @@ TAP TO FLIP (no fill, still royal/glowy) */
   }
 
   /* DOA: wrap naturally and keep size controlled for phones */
-  .doaType{
+  .doaPara{
     white-space: normal !important;
     overflow-wrap: break-word;
     word-break: normal;
@@ -1443,14 +1523,6 @@ TAP TO FLIP (no fill, still royal/glowy) */
     width: 56% !important;
     height: 39% !important;
     padding: 7px !important;
-  }
-
-  /* RSVP buttons: keep visible gap */
-  #mapLink{
-    top: 60% !important;
-  }
-  #rsvpLink{
-    top: 71.5% !important;
   }
 }
 
@@ -1485,17 +1557,6 @@ TAP TO FLIP (no fill, still royal/glowy) */
   .invLabel{  font-size: 11px !important; margin-top: 3px !important; }
   .invInfo{   font-size: 10px !important; line-height: 1.12 !important; }
 
-  /* RSVP: add clear visible gap between buttons */
-  .rsvpBtn{
-    height: 6.8% !important;
-  }
-  #mapLink{
-    top: 60.2% !important;
-  }
-  #rsvpLink{
-    top: 72.4% !important;
-  }
-
   /* DOA: constrain text to the yellow-box region only */
   #slide-doa .doaOverlay{
     left: 23.5% !important;
@@ -1505,7 +1566,7 @@ TAP TO FLIP (no fill, still royal/glowy) */
     padding: 6px !important;
     align-items: flex-start !important;
   }
-  .doaType{
+  .doaPara{
     white-space: normal !important;
     overflow-wrap: anywhere !important;
     word-break: break-word !important;
@@ -1513,6 +1574,9 @@ TAP TO FLIP (no fill, still royal/glowy) */
     hyphens: auto;
     line-height: 1.22 !important;
     letter-spacing: 0 !important;
+  }
+  .doaRef{
+    margin-top: .08em !important;
   }
 }
 
@@ -1558,140 +1622,72 @@ html{
 }
 
 
-/* ==========================================================
-   FINAL PERMANENT DOA FIT FIX
-   Scoped only to the DOA section
-========================================================== */
-#slide-doa .doaOverlay{
-  overflow:hidden !important;
-}
-
-#slide-doa .doaTextWrap{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-}
-
-#slide-doa .doaPara{
-  --doa-scale:1;
-  width:100%;
-  margin:0;
-  text-align:center;
-  font-family:'Cormorant Garamond','Playfair Display',serif;
-  font-weight:700;
-  font-size:clamp(14px,1.35vmin,20px);
-  line-height:1.36;
-  letter-spacing:0;
-  color:#241010;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.18),
-    0 2px 10px rgba(0,0,0,.18);
-  transform:scale(var(--doa-scale));
-  transform-origin:top center;
-  white-space:normal;
-  overflow-wrap:break-word;
-  word-break:normal;
-  hyphens:none;
-  -webkit-hyphens:none;
-}
-
-#slide-doa .doaType{
-  display:inline !important;
-  width:auto !important;
-  height:auto !important;
-  white-space:normal !important;
-  overflow-wrap:break-word !important;
-  word-break:normal !important;
-  line-height:inherit !important;
-  letter-spacing:inherit !important;
-  font-size:inherit !important;
-  opacity:1 !important;
-  transform:none !important;
-  filter:none !important;
-  animation:none !important;
-}
-
-#slide-doa .doaRefBreak{
-  display:block;
-  line-height:.9;
-}
-
-#slide-doa .doaRef{
-  display:inline-block;
-  margin-top:.14em;
-  opacity:0;
-  transform:translateY(.28em);
-  transition:opacity .45s ease, transform .45s ease;
-  font-size:.92em;
-}
-
-#slide-doa .doaRef.isVisible{
-  opacity:1;
-  transform:translateY(0);
-}
 
 @media (max-width: 600px){
-  #slide-doa .doaOverlay{
-    left:23.5% !important;
-    top:19.2% !important;
-    width:49% !important;
-    height:30.5% !important;
-    padding:6px !important;
-    align-items:flex-start !important;
+  .rsvpOverlay{
+    top:68%;
+    width:64%;
+    gap:16px;
   }
 
-  #slide-doa .doaPara{
-    line-height:1.23 !important;
-  }
-}
-
-@media (max-width: 390px){
-  #slide-doa .doaOverlay{
-    height:31.8% !important;
-  }
-
-  #slide-doa .doaPara{
-    line-height:1.2 !important;
+  .rsvpBtn{
+    width:78%;
+    min-height:50px;
+    font-size:17px;
+    letter-spacing:.01em;
+    padding:12px 18px;
+    box-shadow:
+      0 8px 18px rgba(70, 20, 20, .15),
+      inset 0 1px 0 rgba(255,255,255,.96),
+      inset 0 0 0 1px rgba(255, 240, 214, .4);
   }
 }
 
-/* ===============================
-   Mobile RSVP button spacing fix
-   =============================== */
-@media (max-width: 600px){
-
-  #slide-rsvp{
-    --rsvp-top1: 56% !important;
-    --rsvp-top2: 68% !important;
-  }
-
-}
 
 
 /* ==========================================================
-   RSVP MOBILE DIRECT POSITION FIX
-   This bypasses CSS variable inheritance and directly positions
-   the two buttons lower on mobile only.
-   It affects only the RSVP slide.
+   RSVP MOBILE BOX ALIGNMENT FIX
+   Directly positions and sizes the two RSVP buttons inside
+   the lower blank parchment area, below "Reception" and
+   above the border. Mobile only. Other sections untouched.
 ========================================================== */
 @media (max-width:600px){
+  #slide-rsvp .rsvpOverlay{
+    left:0 !important;
+    top:0 !important;
+    width:100% !important;
+    height:100% !important;
+  }
+
+  #slide-rsvp #mapLink,
+  #slide-rsvp #rsvpLink{
+    left:15.5% !important;
+    width:69% !important;
+    height:7.8% !important;
+  }
+
   #slide-rsvp #mapLink{
-    top: 73.2% !important;
+    top:68.8% !important;
   }
 
   #slide-rsvp #rsvpLink{
-    top: 84.2% !important;
+    top:81.2% !important;
   }
 }
 
 @media (max-width:390px){
+  #slide-rsvp #mapLink,
+  #slide-rsvp #rsvpLink{
+    left:15.8% !important;
+    width:68.4% !important;
+    height:7.6% !important;
+  }
+
   #slide-rsvp #mapLink{
-    top: 72.8% !important;
+    top:68.6% !important;
   }
 
   #slide-rsvp #rsvpLink{
-    top: 83.8% !important;
+    top:81.0% !important;
   }
 }
