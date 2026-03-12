@@ -1671,14 +1671,21 @@ html{
 
 
 /* ==========================================================
-   PERFECT VISUAL ALIGNMENT — RSVP MOBILE ONLY
-   Scoped only to the RSVP slide on small screens
-   This moves the two buttons slightly lower for better visual balance
-   without affecting desktop or any other section.
+   RSVP PIXEL-PERFECT ALIGNMENT — MOBILE ONLY
+   Scoped only to the RSVP slide on small screens.
+   This lowers the buttons further for better spacing from
+   the word "Reception" without affecting any other section.
 ========================================================== */
 @media (max-width:600px){
   #slide-rsvp{
-    --rsvp-top1: 67.6%;
-    --rsvp-top2: 78.4%;
+    --rsvp-top1: 75.8%;
+    --rsvp-top2: 86.8%;
+  }
+}
+
+@media (max-width:390px){
+  #slide-rsvp{
+    --rsvp-top1: 75.2%;
+    --rsvp-top2: 86.4%;
   }
 }
