@@ -1792,3 +1792,94 @@ html{
     top:74.8% !important;
   }
 }
+
+
+/* ==========================================================
+   MOBILE FAIRY-LIGHT SPARKLE + PERFORMANCE TUNE
+   Safe CSS-only enhancement:
+   - makes sparkles feel more like warm wedding fairy lights on mobile
+   - improves mobile rendering performance by slimming heavy effects
+   - does not change structure, section flow, or desktop layout
+========================================================== */
+
+@media (max-width:600px){
+
+  .stage::before{
+    opacity:.92 !important;
+    animation: songketDriftMobile 40s linear infinite !important;
+  }
+
+  .overlay::before{
+    opacity: calc(var(--kerawang-alpha) * .72) !important;
+  }
+
+  .stage::after{
+    background:
+      radial-gradient(circle at 12% 22%, rgba(255,245,228,.92) 0 4px, rgba(255,236,205,.32) 4px, transparent 9px),
+      radial-gradient(circle at 24% 76%, rgba(255,245,228,.86) 0 3.5px, rgba(255,236,205,.28) 3.5px, transparent 8px),
+      radial-gradient(circle at 39% 31%, rgba(255,245,228,.94) 0 4px, rgba(255,236,205,.34) 4px, transparent 9px),
+      radial-gradient(circle at 55% 66%, rgba(255,245,228,.88) 0 3.4px, rgba(255,236,205,.28) 3.4px, transparent 8px),
+      radial-gradient(circle at 71% 18%, rgba(255,245,228,.95) 0 4.2px, rgba(255,236,205,.36) 4.2px, transparent 9px),
+      radial-gradient(circle at 86% 56%, rgba(255,245,228,.88) 0 3.5px, rgba(255,236,205,.28) 3.5px, transparent 8px),
+      radial-gradient(circle at 90% 84%, rgba(255,245,228,.90) 0 3.8px, rgba(255,236,205,.30) 3.8px, transparent 8.5px),
+      radial-gradient(circle at 16% 58%, rgba(255,245,228,.92) 0 4px, rgba(255,236,205,.32) 4px, transparent 9px),
+
+      radial-gradient(circle at 18% 22%, rgba(255,236,210,.10) 0 42px, transparent 128px),
+      radial-gradient(circle at 78% 28%, rgba(255,236,210,.09) 0 36px, transparent 118px),
+      radial-gradient(circle at 28% 78%, rgba(255,236,210,.08) 0 32px, transparent 110px),
+      radial-gradient(circle at 82% 74%, rgba(255,236,210,.07) 0 28px, transparent 100px),
+
+      repeating-linear-gradient(0deg,
+        rgba(255,255,255,.018) 0 1px,
+        rgba(0,0,0,.012) 2px 3px
+      ) !important;
+
+    opacity:.78 !important;
+    filter: drop-shadow(0 0 10px rgba(255,236,210,.28)) drop-shadow(0 0 20px rgba(255,236,210,.14)) !important;
+    animation:
+      fairyBlinkMobile 1.8s infinite ease-in-out,
+      fairyFloatMobile 12s infinite ease-in-out,
+      grainShift 3.2s steps(2) infinite !important;
+  }
+
+  #slide-doa .stage::after{
+    opacity:.52 !important;
+    filter: drop-shadow(0 0 8px rgba(var(--gold), .18)) !important;
+    animation: doaDustFloat 18s ease-in-out infinite, grainShift 3.4s steps(2) infinite !important;
+  }
+
+  #slide-rsvp .stage::after,
+  #slide-countdown .stage::after,
+  #slide-invitation .stage::after{
+    opacity:.84 !important;
+  }
+
+  .stage{
+    box-shadow:0 20px 48px rgba(0,0,0,.24) !important;
+  }
+
+  .galleryViewport,
+  .rsvpBtn,
+  .galleryArrow{
+    box-shadow:0 12px 26px rgba(0,0,0,.20) !important;
+  }
+}
+
+@keyframes fairyBlinkMobile{
+  0%,100%{ opacity:.58; }
+  40%{ opacity:.90; }
+  50%{ opacity:.98; }
+  60%{ opacity:.84; }
+}
+
+@keyframes fairyFloatMobile{
+  0%{ transform:translate3d(0,0,0); }
+  30%{ transform:translate3d(-4px,-6px,0); }
+  60%{ transform:translate3d(3px,-10px,0); }
+  100%{ transform:translate3d(0,0,0); }
+}
+
+@keyframes songketDriftMobile{
+  0%{ background-position:0 0,0 0,0 0,0 0; }
+  100%{ background-position:0 0,140px 100px,-120px 150px,0 0; }
+}
