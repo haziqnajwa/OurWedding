@@ -1671,21 +1671,27 @@ html{
 
 
 /* ==========================================================
-   RSVP POSITION TUNED TO ORIGINAL rsvp.webp ARTWORK
-   Mobile only. No other section is affected.
-   Based on the original parchment composition so the buttons
-   sit lower in the open blank area under "Reception".
+   RSVP MOBILE DIRECT POSITION FIX
+   This bypasses CSS variable inheritance and directly positions
+   the two buttons lower on mobile only.
+   It affects only the RSVP slide.
 ========================================================== */
 @media (max-width:600px){
-  #slide-rsvp{
-    --rsvp-top1: 70.6%;
-    --rsvp-top2: 81.8%;
+  #slide-rsvp #mapLink{
+    top: 73.2% !important;
+  }
+
+  #slide-rsvp #rsvpLink{
+    top: 84.2% !important;
   }
 }
 
 @media (max-width:390px){
-  #slide-rsvp{
-    --rsvp-top1: 70.2%;
-    --rsvp-top2: 81.2%;
+  #slide-rsvp #mapLink{
+    top: 72.8% !important;
+  }
+
+  #slide-rsvp #rsvpLink{
+    top: 83.8% !important;
   }
 }
