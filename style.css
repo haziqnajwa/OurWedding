@@ -1656,3 +1656,15 @@ html{
     line-height:1.2 !important;
   }
 }
+
+/* ===============================
+   Mobile RSVP button spacing fix
+   =============================== */
+@media (max-width: 600px){
+
+  #slide-rsvp{
+    --rsvp-top1: 56% !important;
+    --rsvp-top2: 68% !important;
+  }
+
+}
