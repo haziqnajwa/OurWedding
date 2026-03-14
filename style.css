@@ -1,0 +1,2108 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Playfair+Display:wght@400;500&display=swap');
+
+/* style.css — Royal Classic Upgrade (CSS-only)
+   Keeps your existing flow/JS/features intact.
+   Adds: kerawang watermark, richer royal glow, classic film grain, romantic bokeh,
+         gentle sheen on card flip, calmer gold dust mood for DOA, Ken Burns pan for gallery.
+*/
+
+/* ========== Base reset ========== */
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* ========== Layout variables (keep yours) ========== */
+:root{
+  --pageW:1240;
+  --pageH:1748;
+
+  --vpad:18px;
+  --radius:22px;
+
+  --slot-left:10.7%;
+  --slot-top:6.7%;
+  --slot-width:79.0%;
+  --slot-height:84.8%;
+
+  --doa-left:22%;
+  --doa-top:14.5%;
+  --doa-width:56%;
+  --doa-height:27%;
+
+  --inv-left:22%;
+  --inv-top:19%;
+  --inv-width:56%;
+  --inv-height:66%;
+
+  --rsvp-left:18%;
+  --rsvp-width:64%;
+  --rsvp-top1:62%;
+  --rsvp-top2:71%;
+  --rsvp-height:8%;
+
+  --cd-left:8%;
+  --cd-top:20%;
+  --cd-width:84%;
+  --cd-height:18%;
+
+  --gal-left:13%;
+  --gal-top:22%;
+  --gal-width:74%;
+  --gal-height:52%;
+
+  /* ===== Royal classic tuning ===== */
+  --gold: 212, 175, 55;            /* antique gold (RGB) */
+  --champagne: 255, 236, 210;      /* warm cream highlight */
+
+  --vignette-strength:.40;
+  --warm-glow-alpha:.30;           /* chandelier glow */
+  --songket-alpha:.04;             /* weave visibility */
+  --grain-alpha:.03;               /* film grain */
+  --bokeh-alpha:.09;               /* bokeh layer */
+
+  --sparkle-brightness:1.09;
+  --sparkle-glow:1.1;
+
+  /* Kerawang watermark */
+  --kerawang-alpha:.10;            /* overall watermark visibility */
+  --kerawang-scale: 720px 720px;   /* watermark size */
+
+  /* Gallery cinematic */
+  --kenburns-duration: 14s;
+}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:url("bg_red.webp") center/cover no-repeat;
+  background-attachment:scroll;
+  overflow-x:hidden;
+}
+
+@media (min-width:900px){
+  body{background-attachment:fixed;}
+}
+
+body.locked{
+  height:100vh;
+  overflow:hidden;
+}
+
+.hidden{display:none!important}
+.lockedContent{
+  position:fixed;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+  visibility:hidden;
+}
+
+/* Slides */
+.slides{scroll-snap-type:y mandatory}
+.slide{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:var(--vpad);
+  scroll-snap-align:start;
+
+  content-visibility:auto;
+  contain-intrinsic-size:100vh;
+}
+
+/* Stage */
+.stage{
+  width:min(96vw,calc((100vh - (2*var(--vpad)))*(var(--pageW)/var(--pageH))));
+  aspect-ratio:var(--pageW)/var(--pageH);
+  position:relative;
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:0 26px 70px rgba(0,0,0,.28);
+  isolation:isolate;
+}
+
+.stageMedia{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  position:relative;
+  z-index:1;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:4;
+}
+
+/* =====================================================
+   ROYAL + ROMANTIC + CLASSIC CINEMATIC LAYERS (CSS ONLY)
+   ===================================================== */
+
+/* Warm chandelier glow + songket weave + classic vignette */
+.stage::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  pointer-events:none;
+  z-index:2;
+
+  background:
+    /* warm chandelier glow */
+    radial-gradient(120% 90% at 50% 10%,
+      rgba(var(--champagne), var(--warm-glow-alpha)) 0%,
+      rgba(var(--champagne), 0.00) 55%),
+
+    /* songket / tenun weave (very subtle) */
+    repeating-linear-gradient(45deg,
+      rgba(var(--gold), var(--songket-alpha)) 0 2px,
+      rgba(var(--gold), 0) 2px 10px),
+    repeating-linear-gradient(-45deg,
+      rgba(var(--gold), calc(var(--songket-alpha) * .75)) 0 1px,
+      rgba(var(--gold), 0) 1px 12px),
+
+    /* classic vignette */
+    radial-gradient(ellipse at center,
+      rgba(255,255,255,0.06) 0%,
+      rgba(0,0,0,var(--vignette-strength)) 86%
+    );
+
+  mix-blend-mode:multiply;
+  animation: songketDrift 28s linear infinite;
+}
+
+/* Soft bokeh depth + sparkles + film grain */
+.stage::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:3;
+
+  background:
+    /* soft romantic bokeh */
+    radial-gradient(circle at 18% 22%, rgba(var(--champagne), var(--bokeh-alpha)) 0 34px, transparent 120px),
+    radial-gradient(circle at 78% 28%, rgba(var(--champagne), calc(var(--bokeh-alpha) * .9)) 0 28px, transparent 110px),
+    radial-gradient(circle at 28% 78%, rgba(var(--champagne), calc(var(--bokeh-alpha) * .85)) 0 26px, transparent 105px),
+    radial-gradient(circle at 82% 74%, rgba(var(--champagne), calc(var(--bokeh-alpha) * .8)) 0 22px, transparent 95px),
+
+    /* sparkles (white) */
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
+    radial-gradient(circle at 25% 75%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.5px, transparent 5px),
+    radial-gradient(circle at 40% 30%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
+    radial-gradient(circle at 55% 65%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.6px, transparent 5.6px),
+    radial-gradient(circle at 70% 15%, rgba(255,255,255,var(--sparkle-brightness)) 0 3.2px, transparent 6.2px),
+    radial-gradient(circle at 85% 55%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.6px, transparent 5.6px),
+    radial-gradient(circle at 90% 82%, rgba(255,255,255,var(--sparkle-brightness)) 0 2.8px, transparent 6px),
+    radial-gradient(circle at 16% 56%, rgba(255,255,255,var(--sparkle-brightness)) 0 3px, transparent 6px),
+
+    /* film grain */
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,var(--grain-alpha)) 0 1px,
+      rgba(0,0,0,calc(var(--grain-alpha) * .7)) 2px 3px
+    );
+
+  opacity:.62;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,var(--sparkle-glow)));
+  mix-blend-mode:screen;
+  animation:
+    sparkleBlink 2.0s infinite ease-in-out,
+    sparkleFloat 12s infinite ease-in-out,
+    grainShift 2.6s steps(2) infinite;
+}
+
+/* Kerawang / filigree watermark (very faint, behind overlays) */
+.overlay::before{
+  content:"";
+  position:absolute;
+  inset:-2%;
+  z-index:0;
+  pointer-events:none;
+  opacity:var(--kerawang-alpha);
+  background-repeat:repeat;
+  background-size:var(--kerawang-scale);
+  background-position:center;
+  /* Lightweight kerawang-style SVG tile (gold stroke, transparent fill) */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg fill='none' stroke='rgba(212,175,55,0.45)' stroke-width='2'%3E%3Cpath d='M180 40c-28 34-42 56-42 78 0 24 18 42 42 42s42-18 42-42c0-22-14-44-42-78z'/%3E%3Cpath d='M180 320c28-34 42-56 42-78 0-24-18-42-42-42s-42 18-42 42c0 22 14 44 42 78z'/%3E%3Cpath d='M40 180c34-28 56-42 78-42 24 0 42 18 42 42s-18 42-42 42c-22 0-44-14-78-42z'/%3E%3Cpath d='M320 180c-34 28-56 42-78 42-24 0-42-18-42-42s18-42 42-42c22 0 44 14 78 42z'/%3E%3Cpath d='M95 95c22 8 41 19 56 34 17 17 17 45 0 62-17 17-45 17-62 0-15-15-26-34-34-56 10-18 22-30 40-40z'/%3E%3Cpath d='M265 265c-22-8-41-19-56-34-17-17-17-45 0-62 17-17 45-17 62 0 15 15 26 34 34 56-10 18-22 30-40 40z'/%3E%3Cpath d='M265 95c-18 10-30 22-40 40 8 22 19 41 34 56 17 17 45 17 62 0 17-17 17-45 0-62-15-15-34-26-56-34z'/%3E%3Cpath d='M95 265c18-10 30-22 40-40-8-22-19-41-34-56-17-17-45-17-62 0-17 17-17 45 0 62 15 15 34 26 56 34z'/%3E%3C/g%3E%3C/svg%3E");
+  mix-blend-mode:soft-light;
+}
+
+/* make sure overlay content stays above watermark */
+.overlay > *{ position:relative; z-index:1; }
+
+@keyframes sparkleBlink{ 0%,100%{opacity:.35} 50%{opacity:.75} }
+@keyframes sparkleFloat{ 0%{transform:translate3d(0,0,0)} 50%{transform:translate3d(-8px,-14px,0)} 100%{transform:translate3d(0,0,0)} }
+@keyframes songketDrift{ 0%{background-position:0 0,0 0,0 0,0 0} 100%{background-position:0 0,220px 160px,-180px 220px,0 0} }
+@keyframes grainShift{ 0%{transform:translate3d(0,0,0)} 50%{transform:translate3d(-1px,1px,0)} 100%{transform:translate3d(0,0,0)} }
+
+@media (prefers-reduced-motion: reduce){
+  .stage::before{animation:none}
+  .stage::after{animation:none}
+}
+
+/* Opening */
+.openingSection{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:var(--vpad);
+}
+
+.openHit{
+  position:absolute;
+  inset:0;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:20px;
+  z-index:5;
+  pointer-events:auto;
+}
+
+.tapText{
+  background:rgba(0,0,0,.42);
+  color:#fff;
+  padding:10px 18px;
+  border-radius:999px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.35),
+    0 0 0 1px rgba(var(--gold), .22) inset,
+    0 0 28px rgba(var(--gold), .18);
+  animation: tapPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes tapPulse{
+  0%,100%{ transform: translateY(0); box-shadow:
+    0 14px 30px rgba(0,0,0,.35),
+    0 0 0 1px rgba(var(--gold), .22) inset,
+    0 0 18px rgba(var(--gold), .14); }
+  50%{ transform: translateY(-1px); box-shadow:
+    0 18px 40px rgba(0,0,0,.38),
+    0 0 0 1px rgba(var(--gold), .28) inset,
+    0 0 30px rgba(var(--gold), .20); }
+}
+
+/* Music */
+.musicBtn{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  border:none;
+  background:#fff;
+  cursor:pointer;
+  z-index:50;
+}
+
+/* Card flip */
+.cardSlot{
+  position:absolute;
+  left:var(--slot-left);
+  top:var(--slot-top);
+  width:var(--slot-width);
+  height:var(--slot-height);
+  perspective:1200px;
+  overflow:hidden;
+  pointer-events:auto;
+}
+
+.flipWrap{
+  width:100%;
+  height:100%;
+  border:none;
+  background:none;
+  cursor:pointer;
+  padding:0;
+}
+
+.flipCard{
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .9s cubic-bezier(.2,.85,.2,1);
+}
+
+.flipCard.isFlipped{transform:rotateY(180deg)}
+
+.flipFace{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  overflow:hidden; /* for sheen */
+}
+
+.flipBack{transform:rotateY(180deg)}
+
+.flipFace img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform:scale(1.10);
+}
+
+/* Royal sheen sweep (visual only) */
+.flipFace::after{
+  content:"";
+  position:absolute;
+  inset:-25%;
+  pointer-events:none;
+  opacity:0;
+  background: linear-gradient(115deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.14) 42%,
+    rgba(255,255,255,.32) 50%,
+    rgba(255,255,255,.12) 58%,
+    rgba(255,255,255,0) 100%);
+  transform: translateX(-120%) rotate(8deg);
+  mix-blend-mode: screen;
+}
+
+.flipCard.isFlipped .flipFace::after,
+.flipWrap:active .flipFace::after{
+  opacity:1;
+  animation: sheenSweep .75s ease-out 1;
+}
+@keyframes sheenSweep{
+  from { transform: translateX(-120%) rotate(8deg); }
+  to   { transform: translateX(120%) rotate(8deg); }
+}
+
+/* RSVP */
+.rsvpOverlay{
+  position:absolute;
+  left:18%;
+  top:66%;
+  width:64%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:clamp(14px,1.6vmin,22px);
+  pointer-events:auto;
+}
+
+.rsvpBtn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:min(78%, 360px);
+  min-height:clamp(46px, 5.4vmin, 58px);
+  padding:clamp(12px, 1.4vmin, 16px) clamp(20px, 2.5vmin, 28px);
+  border-radius:999px;
+  text-decoration:none;
+  font-family:'Cormorant Garamond','Playfair Display',serif;
+  font-size:clamp(22px, 2.2vmin, 30px);
+  font-weight:700;
+  letter-spacing:.02em;
+  color:#6f0f12;
+  background:linear-gradient(180deg, #fffdf7 0%, #f7f0e4 100%);
+  border:1.5px solid rgba(140, 95, 55, .22);
+  box-shadow:
+    0 10px 24px rgba(70, 20, 20, .16),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 0 0 1px rgba(255, 240, 214, .45);
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    background .22s ease,
+    color .22s ease;
+  position:relative;
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.rsvpBtn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,.18) 35%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,.18) 65%,
+    transparent 100%
+  );
+  transform:translateX(-140%);
+  transition:transform .7s ease;
+  pointer-events:none;
+}
+
+.rsvpBtn:hover{
+  transform:translateY(-2px);
+  color:#7e1418;
+  box-shadow:
+    0 14px 30px rgba(70, 20, 20, .2),
+    0 0 0 3px rgba(212, 181, 132, .10),
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 0 0 1px rgba(212, 181, 132, .20);
+}
+
+.rsvpBtn:hover::before{
+  transform:translateX(140%);
+}
+
+.rsvpBtn:active{
+  transform:translateY(0) scale(.985);
+  box-shadow:
+    0 6px 14px rgba(70, 20, 20, .14),
+    inset 0 2px 6px rgba(0,0,0,.06);
+}
+
+.rsvpBtn:focus-visible{
+  outline:none;
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,.75),
+    0 0 0 6px rgba(111, 15, 18, .22),
+    0 10px 24px rgba(70, 20, 20, .16);
+}
+
+#mapLink,
+#rsvpLink{
+  top:auto !important;
+  left:auto !important;
+  height:auto !important;
+}
+
+
+/* Countdown */
+.countdownOverlay{
+  position:absolute;
+  left:var(--cd-left);
+  top:var(--cd-top);
+  width:var(--cd-width);
+  height:var(--cd-height);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  pointer-events:none;
+}
+
+.countdownRow{
+  width:100%;
+  display:flex;
+  gap:clamp(10px,2vw,22px);
+  justify-content:space-between;
+  align-items:flex-end;
+}
+
+.cdItem{flex:1;text-align:center}
+
+.cdNum{
+  font-weight:900;
+  font-size:clamp(26px,4.2vw,56px);
+  color:#fff;
+  text-shadow:0 10px 25px rgba(0,0,0,.45);
+}
+
+.cdLbl{
+  margin-top:6px;
+  font-weight:900;
+  letter-spacing:.08em;
+  font-size:clamp(10px,1.2vw,14px);
+  color:rgba(255,255,255,.95);
+}
+
+/* Gallery */
+.galleryOverlay{
+  position:absolute;
+  left:0; top:0; width:100%; height:100%;
+  pointer-events:auto;
+}
+
+.galleryViewport{
+  position:absolute;
+  left:var(--gal-left);
+  top:var(--gal-top);
+  width:var(--gal-width);
+  height:var(--gal-height);
+  overflow:hidden;
+  border-radius:18px;
+  box-shadow:0 18px 48px rgba(0,0,0,.28);
+  background:rgba(0,0,0,.10);
+
+  /* swipe friendliness */
+  touch-action: pan-y;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+}
+
+/* classic photo vignette inside viewport */
+.galleryViewport::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: radial-gradient(120% 120% at 50% 45%,
+    rgba(255,255,255,0.05) 0%,
+    rgba(0,0,0,0.00) 45%,
+    rgba(0,0,0,0.35) 100%);
+  mix-blend-mode: overlay;
+}
+
+#galleryImg{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:50% 50%;
+  display:block;
+  transform: translateZ(0);
+  will-change: object-position;
+}
+
+/* Keep your existing fadeIn, but add Ken Burns “pan” as a second animation */
+.fadeIn{
+  animation:
+    fadeIn .22s ease-out,
+    kenBurnsPos var(--kenburns-duration) ease-in-out infinite alternate;
+}
+@keyframes fadeIn{from{opacity:.25;transform:scale(.99)}to{opacity:1;transform:scale(1)}}
+
+/* Ken Burns via object-position (no transform conflict) */
+@keyframes kenBurnsPos{
+  0%   { object-position: 48% 46%; }
+  100% { object-position: 52% 54%; }
+}
+
+.galleryArrow{
+  position:absolute;
+  top:calc(var(--gal-top) + (var(--gal-height)/2));
+  transform:translateY(-50%);
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:50%;
+  cursor:pointer;
+  background:rgba(255,255,255,.9);
+  color:#4b0b0b;
+  font-size:30px;
+  line-height:44px;
+  text-align:center;
+  box-shadow:0 15px 35px rgba(0,0,0,.25);
+}
+
+.galleryArrow.left{left:calc(var(--gal-left) - 18px)}
+.galleryArrow.right{left:calc(var(--gal-left) + var(--gal-width) - 26px)}
+
+.galleryDots{
+  position:absolute;
+  left:0;
+  right:0;
+  top:calc(var(--gal-top) + var(--gal-height) + 1.5%);
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+.dot{
+  width:10px;height:10px;border-radius:50%;
+  border:none;
+  background:rgba(255,255,255,.6);
+  cursor:pointer;
+}
+.dot.active{background:#fff}
+
+
+/* INVITATION (new slide): staged text reveal (no change to other animations) */
+.invOverlay{
+  position:absolute;
+  left:var(--inv-left);
+  top:var(--inv-top);
+  width:var(--inv-width);
+  height:var(--inv-height);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  /* Responsive inner padding so text stays comfortably inside the frame
+     on both phones and desktop browsers */
+  padding: clamp(10px, 1.3vmin, 18px);
+}
+
+.invText{
+  width:100%;
+  height:100%;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  /* Responsive vertical rhythm to prevent overflow on shorter viewports */
+  gap: clamp(4px, 0.95vmin, 8px);
+
+  pointer-events:none;
+  font-family:'Cormorant Garamond','Playfair Display',serif;
+  color:#2b0b0b;
+}
+
+.invBlock{
+  opacity:0;
+  transform:translate3d(0,10px,0);
+  will-change:transform,opacity;
+}
+
+.slide.isInviteActive .invBlock{
+  animation: invFadeUp .55s cubic-bezier(.22,.85,.25,1) forwards;
+  animation-delay: calc(var(--i) * 120ms);
+}
+
+@keyframes invFadeUp{
+  from{opacity:0; transform:translate3d(0,10px,0);}
+  to{opacity:1; transform:translate3d(0,0,0);}
+}
+
+/* Use vmin-based clamps so sizing tracks the card “window”
+   more consistently across portrait mobile + landscape desktop. */
+.invArabic{
+  font-size: clamp(15px, 2.30vmin, 19px);
+  letter-spacing: .02em;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.invLead{
+  font-size: clamp(14px, 2.05vmin, 16px);
+  font-weight: 500;
+}
+
+.invNames{
+  font-size: clamp(15px, 2.20vmin, 18px);
+  line-height: 1.15;
+}
+
+.invMid{
+  font-size: clamp(14px, 2.05vmin, 16px);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.invGuest{
+  font-size: clamp(14px, 2.05vmin, 16px);
+  font-weight: 500;
+}
+
+.invStrong{
+  font-weight:700;
+  letter-spacing:.03em;
+}
+
+.invKe{
+  font-size: clamp(13px, 1.90vmin, 14px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.invKe span{
+  position:relative;
+  padding:0 14px;
+  font-style:italic;
+}
+.invKe span::before,
+.invKe span::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  width:38px;
+  height:1px;
+  background:rgba(43,11,11,.35);
+}
+.invKe span::before{ right:100%; margin-right:10px; }
+.invKe span::after{ left:100%; margin-left:10px; }
+
+.invCouple{
+  font-size: clamp(15px, 2.25vmin, 18px);
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.invLabel{
+  margin-top: 6px;
+  font-size: clamp(13px, 1.90vmin, 14px);
+  font-weight: 700;
+  letter-spacing: clamp(.10em, .30vmin, .14em);
+}
+
+.invInfo{
+  font-size: clamp(13px, 1.90vmin, 14px);
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .invBlock{opacity:1; transform:none}
+  .slide.isInviteActive .invBlock{animation:none}
+}
+
+
+
+/* DOA */
+.doaOverlay{
+  position:absolute;
+  left:var(--doa-left);
+  top:var(--doa-top);
+  width:var(--doa-width);
+  height:var(--doa-height);
+  overflow:hidden;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+
+#slide-doa .doaOverlay{
+  left:18%;
+  top:10%;
+  width:64%;
+  height:52%;
+  padding:clamp(10px, 1.4vmin, 18px);
+  align-items:center;
+}
+
+.doaTextWrap{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.doaPara{
+  width:100%;
+  margin:0;
+  text-align:center;
+  font-family:'Cormorant Garamond','Playfair Display',serif;
+  font-weight:700;
+  font-size:clamp(14px,1.35vmin,20px);
+  line-height:1.55;
+  letter-spacing:.01em;
+  color:#241010;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.18),
+    0 2px 10px rgba(0,0,0,.18);
+}
+
+.doaType{
+  display:inline;
+}
+
+.doaWord{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(.55em) scale(.985);
+  filter:blur(3px);
+  will-change:transform,opacity,filter;
+  transition:
+    opacity .7s cubic-bezier(.22,.85,.25,1),
+    transform .7s cubic-bezier(.22,.85,.25,1),
+    filter .7s cubic-bezier(.22,.85,.25,1);
+}
+
+.doaWord.isVisible{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  filter:blur(0);
+}
+
+.doaRefBreak{
+  display:block;
+  line-height:.75;
+}
+
+.doaRef{
+  display:inline-block;
+  margin-top:.14em;
+  opacity:0;
+  transform:translateY(.45em);
+  filter:blur(2px);
+  font-size:.92em;
+  font-weight:600;
+  transition:
+    opacity .85s cubic-bezier(.22,.85,.25,1),
+    transform .85s cubic-bezier(.22,.85,.25,1),
+    filter .85s cubic-bezier(.22,.85,.25,1);
+}
+
+.doaRef.isVisible{
+  opacity:1;
+  transform:translateY(0);
+  filter:blur(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .doaWord,
+  .doaRef{
+    opacity:1 !important;
+    transform:none !important;
+    filter:none !important;
+    transition:none !important;
+  }
+}
+
+
+/* ===== DOA: calmer “gold dust” mood (less sparkle, more sacred) ===== */
+#slide-doa .stage::after{
+  /* override only the visual overlay for doa slide */
+  background:
+    /* gold dust motes */
+    radial-gradient(circle at 18% 28%, rgba(var(--gold), .22) 0 1.4px, transparent 4px),
+    radial-gradient(circle at 32% 52%, rgba(var(--gold), .18) 0 1.2px, transparent 3.6px),
+    radial-gradient(circle at 58% 40%, rgba(var(--gold), .20) 0 1.5px, transparent 4.2px),
+    radial-gradient(circle at 74% 62%, rgba(var(--gold), .16) 0 1.2px, transparent 3.8px),
+    radial-gradient(circle at 82% 30%, rgba(var(--gold), .18) 0 1.3px, transparent 4px),
+    radial-gradient(circle at 46% 76%, rgba(var(--gold), .16) 0 1.2px, transparent 3.6px),
+
+    /* soft warm hush */
+    radial-gradient(120% 90% at 50% 12%,
+      rgba(var(--champagne), .10) 0%,
+      rgba(var(--champagne), 0.00) 55%),
+
+    /* very subtle grain */
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,calc(var(--grain-alpha) * .7)) 0 1px,
+      rgba(0,0,0,calc(var(--grain-alpha) * .5)) 2px 3px
+    );
+
+  opacity:.55;
+  filter: drop-shadow(0 0 10px rgba(var(--gold), .20));
+  mix-blend-mode: screen;
+  animation: doaDustFloat 16s ease-in-out infinite, grainShift 2.6s steps(2) infinite;
+}
+@keyframes doaDustFloat{
+  0%{ transform: translate3d(0,0,0); }
+  50%{ transform: translate3d(-10px, -10px, 0); }
+  100%{ transform: translate3d(0,0,0); }
+}
+
+/* Small screens */
+@media (max-width:520px){
+  :root{
+    --vpad:12px;
+    --rsvp-height:9%;
+    --kerawang-scale: 560px 560px;
+  }
+  .galleryArrow{width:40px;height:40px;line-height:40px;font-size:28px}
+}
+
+/* ============================================
+   ROYAL CARD SIGNALS (Flip + Scroll Indicators)
+   CSS-only, no HTML changes
+   ============================================ */
+
+/* Make sure overlay layer can hold decorative signals */
+.cardSlot{
+  position:absolute;
+}
+
+/* ===============================
+TAP TO FLIP (no fill, still royal/glowy) */
+.cardSlot::before{
+  content:"✦  TAP TO FLIP  ✦";
+  position:absolute;
+  top:6%;
+  left:50%;
+  transform:translateX(-50%);
+  padding:8px 18px;
+
+  font-size:12px;
+  letter-spacing:.25em;
+  font-weight:700;
+  text-transform:uppercase;
+
+  color:rgba(255,255,255,.95);
+  text-align:center;
+  white-space:nowrap;
+
+  background:transparent;              /* ✅ removed gold fill */
+  border-radius:999px;
+
+  /* subtle “royal” outline + glow */
+  border:1px solid rgba(212,175,55,.55);
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.28),
+    0 0 0 1px rgba(255,255,255,.10) inset,
+    0 0 22px rgba(212,175,55,.22);
+
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.25),
+    0 0 14px rgba(212,175,55,.22);
+
+  z-index:10;
+  pointer-events:none;
+
+  animation: royalPulseOutline 2.6s ease-in-out infinite;
+}
+
+@keyframes royalPulseOutline{
+  0%,100%{
+    transform:translateX(-50%) scale(1);
+    opacity:.92;
+    box-shadow:
+      0 10px 25px rgba(0,0,0,.28),
+      0 0 0 1px rgba(255,255,255,.10) inset,
+      0 0 18px rgba(212,175,55,.18);
+  }
+  50%{
+    transform:translateX(-50%) scale(1.05);
+    opacity:1;
+    box-shadow:
+      0 14px 32px rgba(0,0,0,.34),
+      0 0 0 1px rgba(255,255,255,.12) inset,
+      0 0 30px rgba(212,175,55,.28);
+  }
+}
+
+/* Hide indicator after flip */
+.flipCard.isFlipped ~ * .cardSlot::before,
+.flipCard.isFlipped .cardSlot::before{
+  opacity:0;
+}
+
+/* SCROLL FOR MORE (moved lower) */
+.cardSlot::after{
+  content:"SCROLL FOR MORE";
+  position:absolute;
+  bottom:1.2%;              /* ✅ lower (was ~5%) */
+  left:50%;
+  transform:translateX(-50%);
+  font-size:11px;
+  letter-spacing:.3em;
+  font-weight:600;
+  color:rgba(255,255,255,.82);
+  text-align:center;
+
+  padding-top:22px;         /* space for the indicator line */
+  pointer-events:none;
+  z-index:10;
+
+  animation: scrollFloat 2.4s ease-in-out infinite;
+
+  /* little “line” above the text */
+  background:
+    linear-gradient(transparent,transparent),
+    linear-gradient(to bottom,
+      rgba(255,255,255,.85) 0%,
+      rgba(255,255,255,.35) 100%);
+  background-repeat:no-repeat;
+  background-size: 0 0, 2px 18px;
+  background-position:center top;
+
+  text-shadow: 0 1px 10px rgba(0,0,0,.35);
+}
+
+@keyframes scrollFloat{
+  0%,100%{ transform:translate(-50%,0); opacity:.85; }
+  50%{ transform:translate(-50%,6px); opacity:1; }
+}
+
+/* Decorative animated arrows */
+.cardSlot::after{
+  background:
+    linear-gradient(transparent,transparent),
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,.9) 0%,
+      rgba(255,255,255,.4) 100%
+    );
+  background-repeat:no-repeat;
+  background-size: 0 0, 2px 18px;
+  background-position:center top;
+}
+
+/* ===============================
+   Animations
+   =============================== */
+
+@keyframes royalPulse{
+  0%,100%{
+    transform:translateX(-50%) scale(1);
+    box-shadow:
+      0 10px 25px rgba(0,0,0,.35),
+      0 0 0 1px rgba(212,175,55,.6) inset,
+      0 0 18px rgba(212,175,55,.35);
+  }
+  50%{
+    transform:translateX(-50%) scale(1.05);
+    box-shadow:
+      0 14px 32px rgba(0,0,0,.45),
+      0 0 0 1px rgba(212,175,55,.7) inset,
+      0 0 32px rgba(212,175,55,.55);
+  }
+}
+
+@keyframes scrollFloat{
+  0%,100%{
+    transform:translate(-50%,0);
+    opacity:.85;
+  }
+  50%{
+    transform:translate(-50%,6px);
+    opacity:1;
+  }
+}
+
+/* =========================================
+   ROYAL COUNTDOWN UPGRADE
+   ========================================= */
+
+.countdownBox{
+  backdrop-filter: blur(2px);
+}
+
+/* Elegant number styling */
+.cdNum{
+  font-size:clamp(26px, 4vw, 52px);
+  font-weight:800;
+  letter-spacing:.08em;
+
+  background:linear-gradient(
+    to bottom,
+    #fff8e8,
+    #f2d6a8 40%,
+    #d4af37 60%,
+    #b9922f
+  );
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.15),
+    0 8px 25px rgba(212,175,55,.35);
+
+  animation: royalGlowPulse 3s ease-in-out infinite;
+}
+
+/* Elegant label */
+.cdLbl{
+  margin-top:6px;
+  font-size:clamp(10px, 1.2vw, 14px);
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  color:rgba(255,240,220,.85);
+  text-shadow:0 0 8px rgba(212,175,55,.25);
+}
+
+/* Soft breathing glow */
+@keyframes royalGlowPulse{
+  0%,100%{
+    filter:drop-shadow(0 0 6px rgba(212,175,55,.25));
+  }
+  50%{
+    filter:drop-shadow(0 0 14px rgba(212,175,55,.45));
+  }
+}
+
+/* =========================================
+   ROYAL CINEMATIC GALLERY
+   ========================================= */
+
+.galleryViewer{
+  position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:
+    0 25px 60px rgba(0,0,0,.55),
+    0 0 30px rgba(212,175,55,.18);
+}
+
+/* Romantic vignette inside gallery */
+.galleryViewer::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      120% 120% at 50% 50%,
+      rgba(0,0,0,0) 55%,
+      rgba(0,0,0,.35) 100%
+    );
+  mix-blend-mode:multiply;
+}
+
+/* Slow cinematic zoom */
+.galleryImg{
+  animation: kenBurns 12s ease-in-out infinite alternate;
+}
+
+/* Elegant zoom */
+@keyframes kenBurns{
+  0%{ transform:scale(1); }
+  100%{ transform:scale(1.06); }
+}
+
+/* Romantic warm overlay */
+.galleryViewer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(255,220,180,.18),
+      transparent 60%
+    );
+  mix-blend-mode:soft-light;
+}
+.galleryViewer::after{
+  animation: royalDust 8s ease-in-out infinite alternate;
+}
+
+@keyframes royalDust{
+  0%{ opacity:.8; }
+  100%{ opacity:1; }
+}
+
+
+/* =========================
+   INVITATION SECTION
+========================= */
+
+#slide-invitation {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.invitationContent {
+  position: absolute;
+  width: 68%;
+  max-width: 520px;
+  text-align: center;
+  color: #5b2b2b;
+  top: 13%;
+  left: 50%;
+  transform: translateX(-50%);
+  line-height: 1.55;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* Arabic line */
+.invitationArabic {
+  font-size: 20px;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+/* Regular text */
+.invitationText {
+  font-size: 16px;
+  margin: 6px 0;
+}
+
+/* Parent names */
+.invitationNamesTop {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+/* Divider */
+.invitationDivider {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+/* Bride & Groom names */
+.invitationNamesMain {
+  font-size: 19px;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+/* Section labels */
+.invitationLabel {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Date + venue */
+.invitationDetails {
+  font-size: 15px;
+  margin: 4px 0;
+}
+
+/* Appearing animation (lightweight & smooth) */
+.invitationContent p,
+.invitationContent div {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+
+#slide-invitation.active .invitationContent p,
+#slide-invitation.active .invitationContent div {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 480px) {
+  .invitationContent {
+    width: 78%;
+    top: 11%;
+  }
+
+  .invitationArabic {
+    font-size: 18px;
+  }
+
+  .invitationText {
+    font-size: 14px;
+  }
+
+  .invitationNamesTop,
+  .invitationNamesMain {
+    font-size: 16px;
+  }
+
+  .invitationLabel,
+  .invitationDetails {
+    font-size: 13px;
+  }
+}
+
+
+
+/* =========================
+   INVITATION SECTION OVERRIDE (fit inside inner parchment box)
+   Goal: keep all invitation overlay text within a tighter "yellow-box" safe area.
+   (No JS / feature changes)
+========================= */
+
+#slide-invitation .invitationContent{
+  /* tighter safe area (yellow box) */
+  width: 56%;
+  max-width: 420px;
+  top: 21%;
+  /* keep it centered */
+  left: 50%;
+  transform: translateX(-50%);
+  /* prevent text touching edges */
+  padding: 0 6px;
+  line-height: 1.42;
+}
+
+/* Scale typography down to stay within the safe area */
+#slide-invitation .invitationArabic{ font-size: 16px; margin-bottom: 10px; font-weight: 600; }
+#slide-invitation .invitationText{ font-size: 13px; margin: 4px 0; }
+#slide-invitation .invitationNamesTop{ font-size: 14px; margin: 8px 0; font-weight: 700; }
+#slide-invitation .invitationDivider{ font-size: 12px; margin: 6px 0; }
+#slide-invitation .invitationNamesMain{ font-size: 15px; margin: 8px 0; font-weight: 700; }
+#slide-invitation .invitationLabel{ font-size: 12px; margin-top: 10px; letter-spacing: 0.8px; font-weight: 600; }
+#slide-invitation .invitationDetails{ font-size: 12px; margin: 3px 0; }
+
+/* Mobile: even tighter */
+@media (max-width: 480px){
+  #slide-invitation .invitationContent{
+    width: 64%;
+    top: 20%;
+    max-width: 360px;
+    line-height: 1.38;
+  }
+  #slide-invitation .invitationArabic{ font-size: 15px; }
+  #slide-invitation .invitationText{ font-size: 12px; }
+  #slide-invitation .invitationNamesTop{ font-size: 13px; }
+  #slide-invitation .invitationNamesMain{ font-size: 14px; }
+  #slide-invitation .invitationLabel,
+  #slide-invitation .invitationDetails{ font-size: 11.5px; }
+}
+
+/* Very small devices */
+@media (max-width: 360px){
+  #slide-invitation .invitationContent{ width: 68%; top: 19%; }
+  #slide-invitation .invitationText{ font-size: 11.5px; }
+  #slide-invitation .invitationNamesMain{ font-size: 13.5px; }
+}
+
+
+/* ==========================================================
+   INVITATION SECTION OVERRIDE v4
+   Fixes:
+   1) Ensure ALL text (including spans like "-ke-") stays hidden
+      until the invitation "appearing text" begins.
+   2) Resize + re-position to fit the tighter yellow-box safe area.
+   Notes:
+   - CSS-only changes. No feature/animation changes elsewhere.
+   - Avoids expensive filters; uses opacity+transform transitions.
+========================================================== */
+
+#slide-invitation .invitationContent{
+  /* tighter yellow-box safe area */
+  width: 54%;
+  max-width: 400px;
+  top: 24%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 6px;
+  line-height: 1.35;
+}
+
+/* Typography scale down */
+#slide-invitation .invitationArabic{ font-size: 15px; margin: 0 0 8px; font-weight: 600; }
+#slide-invitation .invitationText{ font-size: 12px; margin: 3px 0; }
+#slide-invitation .invitationNamesTop{ font-size: 13px; margin: 6px 0; font-weight: 700; }
+#slide-invitation .invitationDivider{ font-size: 11.5px; margin: 5px 0; }
+#slide-invitation .invitationNamesMain{ font-size: 14px; margin: 6px 0; font-weight: 700; }
+#slide-invitation .invitationLabel{ font-size: 11.5px; margin-top: 8px; letter-spacing: 0.7px; font-weight: 600; }
+#slide-invitation .invitationDetails{ font-size: 11.5px; margin: 2.5px 0; }
+
+/* IMPORTANT: hide EVERYTHING inside invitationContent by default
+   (fixes "-ke-" appearing early) */
+#slide-invitation .invitationContent *{
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .6s ease, transform .6s ease;
+  will-change: opacity, transform;
+}
+
+/* Reveal when slide becomes active */
+#slide-invitation.active .invitationContent *{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Keep your stagger (if you set delays via inline style or classes).
+   If none exist, this still works as a single unified reveal. */
+
+/* Mobile adjustments */
+@media (max-width: 480px){
+  #slide-invitation .invitationContent{
+    width: 62%;
+    top: 23%;
+    max-width: 340px;
+    line-height: 1.32;
+  }
+  #slide-invitation .invitationArabic{ font-size: 14px; }
+  #slide-invitation .invitationText{ font-size: 11.5px; }
+  #slide-invitation .invitationNamesTop{ font-size: 12.5px; }
+  #slide-invitation .invitationNamesMain{ font-size: 13.5px; }
+  #slide-invitation .invitationLabel,
+  #slide-invitation .invitationDetails{ font-size: 11px; }
+}
+
+@media (max-width: 360px){
+  #slide-invitation .invitationContent{
+    width: 66%;
+    top: 22%;
+  }
+  #slide-invitation .invitationText{ font-size: 11px; }
+  #slide-invitation .invitationNamesMain{ font-size: 13px; }
+}
+
+/* ==========================================================
+   MOBILE-ROBUST TEXT FIT (INVITATION + DOA)
+   Goal: maximize readability while guaranteeing text stays inside
+   the inner frame on ANY device (Android/iPhone/Desktop).
+   No flow/feature changes — only sizing/legibility.
+========================================================== */
+
+/* Allow JS to scale invitation text down only if needed */
+.invOverlay { overflow: hidden; }
+.invText{
+  --inv-scale: 1;
+  transform: scale(var(--inv-scale));
+  transform-origin: top center;
+}
+
+/* Make invitation typography a bit larger on small screens,
+   JS will auto-scale down if it ever overflows. */
+@media (max-width: 600px){
+  .invArabic{ font-size: clamp(18px, 3.2vmin, 22px); }
+  .invLead{   font-size: clamp(15px, 2.6vmin, 18px); }
+  .invNames{  font-size: clamp(17px, 2.9vmin, 20px); }
+  .invMid{    font-size: clamp(15px, 2.6vmin, 18px); }
+  .invGuest{  font-size: clamp(15px, 2.6vmin, 18px); }
+  .invKe{     font-size: clamp(14px, 2.4vmin, 16px); }
+  .invCouple{ font-size: clamp(17px, 2.9vmin, 20px); }
+  .invLabel{  font-size: clamp(14px, 2.4vmin, 16px); }
+  .invInfo{   font-size: clamp(14px, 2.4vmin, 16px); }
+  .invText{ line-height: 1.22; }
+}
+
+/* DOA box: keep it aligned to the inner red frame area */
+#slide-doa .doaOverlay{
+  left: 20%;
+  top: 18%;
+  width: 60%;
+  height: 48%;
+  padding: clamp(10px, 1.8vmin, 18px);
+}
+
+/* Increase DOA contrast + readability */
+.doaType{
+  color:#1f0e0e;
+  font-weight: 750;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.22),
+    0 2px 10px rgba(0,0,0,.22);
+}
+
+
+/* ==========================================================
+   MOBILE-ONLY TUNING
+   Focus only on Android/iPhone small screens:
+   - smaller invitation text so nothing gets cut off
+   - smaller doa text area and better fit
+   - visible gap between Google Map and RSVP buttons
+========================================================== */
+@media (max-width: 600px){
+  /* Invitation: reduce just for mobile */
+  .invOverlay{
+    padding: 8px;
+  }
+  .invText{
+    gap: 3px;
+    line-height: 1.16;
+  }
+  .invArabic{ font-size: 15px !important; }
+  .invLead{   font-size: 13px !important; }
+  .invNames{  font-size: 14px !important; line-height: 1.14; }
+  .invMid{    font-size: 13px !important; }
+  .invGuest{  font-size: 12px !important; }
+  .invKe{     font-size: 12px !important; }
+  .invCouple{ font-size: 14px !important; line-height: 1.15; }
+  .invLabel{  font-size: 12px !important; margin-top: 4px; }
+  .invInfo{   font-size: 11px !important; line-height: 1.18; }
+
+  /* DOA: keep inside frame on phones */
+  #slide-doa .doaOverlay{
+    left: 22% !important;
+    top: 19% !important;
+    width: 56% !important;
+    height: 42% !important;
+    padding: 8px !important;
+  }
+  .doaPara{
+    line-height: 1.42 !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE WRAP FIX
+   Ensures text wraps cleanly and stays inside frame on phones.
+========================================================== */
+@media (max-width: 600px){
+  /* Invitation: allow tighter wrapping and stronger down-scaling */
+  .invText{
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    text-wrap: pretty;
+    justify-content: flex-start;
+    padding-top: 6px;
+  }
+
+  /* DOA: wrap naturally and keep size controlled for phones */
+  .doaPara{
+    white-space: normal !important;
+    overflow-wrap: break-word;
+    word-break: normal;
+    text-wrap: pretty;
+    hyphens: auto;
+    line-height: 1.34 !important;
+  }
+
+  #slide-doa .doaOverlay{
+    left: 22% !important;
+    top: 19.5% !important;
+    width: 56% !important;
+    height: 39% !important;
+    padding: 7px !important;
+  }
+}
+
+
+/* ==========================================================
+   FINAL MOBILE FIX
+   Exact small-screen tuning for Xiaomi / Android browsers
+========================================================== */
+@media (max-width: 600px){
+  /* Invitation: shrink and wrap more aggressively so bottom lines stay visible */
+  .invOverlay{
+    top: 18.5% !important;
+    height: 62% !important;
+    padding: 6px !important;
+  }
+  .invText{
+    gap: 2px !important;
+    line-height: 1.12 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    justify-content: flex-start !important;
+    padding-top: 2px !important;
+  }
+  .invArabic{ font-size: 14px !important; }
+  .invLead{   font-size: 12px !important; }
+  .invNames{  font-size: 13px !important; line-height: 1.10 !important; }
+  .invMid{    font-size: 12px !important; }
+  .invGuest{  font-size: 11px !important; }
+  .invKe{     font-size: 11px !important; }
+  .invCouple{ font-size: 13px !important; line-height: 1.10 !important; }
+  .invLabel{  font-size: 11px !important; margin-top: 3px !important; }
+  .invInfo{   font-size: 10px !important; line-height: 1.12 !important; }
+
+  /* DOA: constrain text to the yellow-box region only */
+  #slide-doa .doaOverlay{
+    left: 23.5% !important;
+    top: 19.2% !important;
+    width: 49% !important;
+    height: 26% !important;
+    padding: 6px !important;
+    align-items: flex-start !important;
+  }
+  .doaPara{
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    text-wrap: pretty;
+    hyphens: auto;
+    line-height: 1.22 !important;
+    letter-spacing: 0 !important;
+  }
+  .doaRef{
+    margin-top: .08em !important;
+  }
+}
+
+/* ==========================================================
+   PERFORMANCE + SMOOTH SCROLL OPTIMIZATION
+   Keeps the same flow/features while making mobile rendering lighter
+========================================================== */
+html{
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{
+    scroll-behavior: auto;
+  }
+}
+
+@media (max-width: 600px){
+  /* Reduce expensive layered effects on phones */
+  .stage::before{
+    animation: none !important;
+    opacity: .75;
+  }
+
+  .stage::after{
+    animation: none !important;
+    filter: none !important;
+    opacity: .32 !important;
+  }
+
+  .overlay::before{
+    opacity: .05 !important;
+  }
+
+  /* Lighter gallery transition on mobile */
+  .fadeIn{
+    animation: fadeIn .18s ease-out !important;
+  }
+
+  #galleryImg{
+    will-change: auto !important;
+  }
+}
+
+
+
+@media (max-width: 600px){
+  .rsvpOverlay{
+    top:68%;
+    width:64%;
+    gap:16px;
+  }
+
+  .rsvpBtn{
+    width:78%;
+    min-height:50px;
+    font-size:17px;
+    letter-spacing:.01em;
+    padding:12px 18px;
+    box-shadow:
+      0 8px 18px rgba(70, 20, 20, .15),
+      inset 0 1px 0 rgba(255,255,255,.96),
+      inset 0 0 0 1px rgba(255, 240, 214, .4);
+  }
+}
+
+
+
+/* ==========================================================
+   DOA + RSVP MERGED SAFE FIX
+   - restores the stable DOA mobile text fit
+   - keeps the fixed RSVP mobile button position
+   - does not affect other sections or desktop layout
+========================================================== */
+
+/* ---------- DOA permanent safe fix ---------- */
+#slide-doa .doaOverlay{
+  overflow:hidden !important;
+}
+
+#slide-doa .doaTextWrap{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+
+#slide-doa .doaPara{
+  --doa-scale:1;
+  width:100%;
+  margin:0;
+  text-align:center;
+  font-family:'Cormorant Garamond','Playfair Display',serif;
+  font-weight:700;
+  font-size:clamp(14px,1.35vmin,20px);
+  line-height:1.36;
+  letter-spacing:0;
+  color:#241010;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.18),
+    0 2px 10px rgba(0,0,0,.18);
+  transform:scale(var(--doa-scale));
+  transform-origin:top center;
+  white-space:normal;
+  overflow-wrap:break-word;
+  word-break:normal;
+  hyphens:none;
+  -webkit-hyphens:none;
+}
+
+#slide-doa .doaType{
+  display:inline !important;
+  width:auto !important;
+  height:auto !important;
+  white-space:normal !important;
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+  line-height:inherit !important;
+  letter-spacing:inherit !important;
+  font-size:inherit !important;
+  opacity:1 !important;
+  transform:none !important;
+  filter:none !important;
+  animation:none !important;
+}
+
+#slide-doa .doaRefBreak{
+  display:block;
+  line-height:.9;
+}
+
+#slide-doa .doaRef{
+  display:inline-block;
+  margin-top:.14em;
+  opacity:0;
+  transform:translateY(.28em);
+  transition:opacity .45s ease, transform .45s ease;
+  font-size:.92em;
+}
+
+#slide-doa .doaRef.isVisible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+@media (max-width: 600px){
+  #slide-doa .doaOverlay{
+    left:23.5% !important;
+    top:19.2% !important;
+    width:49% !important;
+    height:30.5% !important;
+    padding:6px !important;
+    align-items:flex-start !important;
+  }
+
+  #slide-doa .doaPara{
+    line-height:1.23 !important;
+  }
+}
+
+@media (max-width: 390px){
+  #slide-doa .doaOverlay{
+    height:31.8% !important;
+  }
+
+  #slide-doa .doaPara{
+    line-height:1.2 !important;
+  }
+}
+
+/* ---------- RSVP mobile final position fix ---------- */
+@media (max-width:600px){
+  #slide-rsvp .rsvpOverlay{
+    left:0 !important;
+    top:0 !important;
+    width:100% !important;
+    height:100% !important;
+    pointer-events:auto !important;
+  }
+
+  #slide-rsvp #mapLink,
+  #slide-rsvp #rsvpLink{
+    position:absolute !important;
+    left:14% !important;
+    width:72% !important;
+    height:6.9% !important;
+    border-radius:999px !important;
+  }
+
+  #slide-rsvp #mapLink{
+    top:62.8% !important;
+  }
+
+  #slide-rsvp #rsvpLink{
+    top:74.6% !important;
+  }
+}
+
+@media (max-width:390px){
+  #slide-rsvp #mapLink,
+  #slide-rsvp #rsvpLink{
+    left:14.5% !important;
+    width:71% !important;
+    height:6.8% !important;
+  }
+
+  #slide-rsvp #mapLink{
+    top:63.0% !important;
+  }
+
+  #slide-rsvp #rsvpLink{
+    top:74.8% !important;
+  }
+}
+
+
+/* ==========================================================
+   CINEMATIC POLISH + PERFORMANCE ENHANCEMENTS
+   Keeps structure / flow / features intact
+========================================================== */
+
+/* Gentle section entrance without changing section order or logic */
+.slides .slide .stage{
+  opacity:.86;
+  transform:translate3d(0,14px,0) scale(.994);
+  transition:
+    opacity .78s cubic-bezier(.22,.85,.25,1),
+    transform .96s cubic-bezier(.22,.85,.25,1),
+    box-shadow .38s ease;
+  will-change: opacity, transform;
+}
+
+.slides .slide.isStageVisible .stage{
+  opacity:1;
+  transform:translate3d(0,0,0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .slides .slide .stage,
+  .slides .slide.isStageVisible .stage{
+    opacity:1;
+    transform:none;
+    transition:none;
+  }
+}
+
+/* Occasional sparkle burst for magical moments */
+.slide.isSparkleBurst .stage::after{
+  opacity:.98 !important;
+  filter:
+    drop-shadow(0 0 12px rgba(255,236,210,.32))
+    drop-shadow(0 0 24px rgba(255,236,210,.18)) !important;
+}
+
+.slide.isSparkleBurst#slide-doa .stage::after{
+  opacity:.60 !important;
+  filter: drop-shadow(0 0 10px rgba(var(--gold), .22)) !important;
+}
+
+/* Mobile-first fairy-light sparkle tuning + lighter rendering */
+@media (max-width:600px){
+
+  /* Slightly lighter expensive background layer while keeping depth */
+  .stage::before{
+    opacity:.88 !important;
+    animation: songketDriftMobile 42s linear infinite !important;
+  }
+
+  .overlay::before{
+    opacity: calc(var(--kerawang-alpha) * .72) !important;
+  }
+
+  /* Warm fairy-light sparkles on mobile */
+  .stage::after{
+    background:
+      radial-gradient(circle at 10% 22%, rgba(255,247,233,.96) 0 4px, rgba(255,236,210,.38) 4px, transparent 9px),
+      radial-gradient(circle at 24% 75%, rgba(255,247,233,.90) 0 3.5px, rgba(255,236,210,.32) 3.5px, transparent 8px),
+      radial-gradient(circle at 41% 30%, rgba(255,247,233,.98) 0 4px, rgba(255,236,210,.40) 4px, transparent 9px),
+      radial-gradient(circle at 56% 65%, rgba(255,247,233,.90) 0 3.4px, rgba(255,236,210,.32) 3.4px, transparent 8px),
+      radial-gradient(circle at 70% 16%, rgba(255,247,233,.98) 0 4.2px, rgba(255,236,210,.42) 4.2px, transparent 9px),
+      radial-gradient(circle at 86% 56%, rgba(255,247,233,.90) 0 3.6px, rgba(255,236,210,.32) 3.6px, transparent 8px),
+      radial-gradient(circle at 90% 84%, rgba(255,247,233,.92) 0 3.8px, rgba(255,236,210,.34) 3.8px, transparent 8.5px),
+      radial-gradient(circle at 16% 57%, rgba(255,247,233,.94) 0 4px, rgba(255,236,210,.36) 4px, transparent 9px),
+
+      radial-gradient(circle at 18% 22%, rgba(255,236,210,.10) 0 40px, transparent 124px),
+      radial-gradient(circle at 78% 28%, rgba(255,236,210,.09) 0 34px, transparent 114px),
+      radial-gradient(circle at 28% 78%, rgba(255,236,210,.08) 0 30px, transparent 108px),
+      radial-gradient(circle at 82% 74%, rgba(255,236,210,.07) 0 26px, transparent 98px),
+
+      repeating-linear-gradient(0deg,
+        rgba(255,255,255,.016) 0 1px,
+        rgba(0,0,0,.010) 2px 3px
+      ) !important;
+
+    opacity:.78 !important;
+    filter:
+      drop-shadow(0 0 10px rgba(255,236,210,.28))
+      drop-shadow(0 0 20px rgba(255,236,210,.14)) !important;
+    animation:
+      fairyBlinkMobile 1.8s infinite ease-in-out,
+      fairyFloatMobile 12s infinite ease-in-out,
+      grainShift 3.2s steps(2) infinite !important;
+  }
+
+  /* Dynamic sparkle density by section */
+  #slide-rsvp .stage::after,
+  #slide-gallery .stage::after{
+    opacity:.88 !important;
+    filter:
+      drop-shadow(0 0 12px rgba(255,236,210,.32))
+      drop-shadow(0 0 24px rgba(255,236,210,.16)) !important;
+  }
+
+  #slide-countdown .stage::after,
+  #slide-invitation .stage::after{
+    opacity:.82 !important;
+  }
+
+  /* Keep DOA softer and calmer */
+  #slide-doa .stage::after{
+    opacity:.50 !important;
+    filter: drop-shadow(0 0 8px rgba(var(--gold), .18)) !important;
+    animation: doaDustFloat 18s ease-in-out infinite, grainShift 3.4s steps(2) infinite !important;
+  }
+
+  /* Lighter shadows for smoother scrolling */
+  .stage{
+    box-shadow:0 20px 48px rgba(0,0,0,.24) !important;
+  }
+
+  .galleryViewport,
+  .rsvpBtn,
+  .galleryArrow,
+  .musicBtn{
+    box-shadow:0 12px 26px rgba(0,0,0,.20) !important;
+  }
+
+  /* GPU-friendly hints */
+  .stage,
+  .stage::before,
+  .stage::after,
+  .galleryViewport,
+  #galleryImg{
+    transform:translateZ(0);
+    backface-visibility:hidden;
+  }
+}
+
+@keyframes fairyBlinkMobile{
+  0%,100%{ opacity:.58; }
+  40%{ opacity:.90; }
+  50%{ opacity:.98; }
+  60%{ opacity:.84; }
+}
+
+@keyframes fairyFloatMobile{
+  0%{ transform:translate3d(0,0,0); }
+  30%{ transform:translate3d(-4px,-6px,0); }
+  60%{ transform:translate3d(3px,-10px,0); }
+  100%{ transform:translate3d(0,0,0); }
+}
+
+@keyframes songketDriftMobile{
+  0%{ background-position:0 0,0 0,0 0,0 0; }
+  100%{ background-position:0 0,140px 100px,-120px 150px,0 0; }
+}
+
+
+/* ==========================================================
+   FINAL PERFORMANCE POLISH + SAFE UPGRADES
+   Keeps structure / flow / functions unchanged
+========================================================== */
+
+/* RSVP buttons: subtle gold glow pulse without changing layout */
+#slide-rsvp .rsvpBtn{
+  position:relative;
+  will-change: box-shadow, transform;
+}
+
+#slide-rsvp .rsvpBtn::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:inherit;
+  pointer-events:none;
+  opacity:0;
+  box-shadow:
+    0 0 0 1px rgba(var(--gold), .18) inset,
+    0 0 16px rgba(var(--gold), .14);
+  transition: opacity .35s ease;
+}
+
+#slide-rsvp .rsvpBtn.isPulseActive::after{
+  opacity:1;
+}
+
+@media (hover:hover){
+  #slide-rsvp .rsvpBtn{
+    animation: rsvpGoldPulse 4.2s ease-in-out infinite;
+  }
+}
+
+@keyframes rsvpGoldPulse{
+  0%,100%{
+    box-shadow:
+      0 12px 26px rgba(0,0,0,.20),
+      0 0 0 1px rgba(var(--gold), .08) inset;
+  }
+  50%{
+    box-shadow:
+      0 12px 26px rgba(0,0,0,.20),
+      0 0 0 1px rgba(var(--gold), .16) inset,
+      0 0 14px rgba(var(--gold), .10);
+  }
+}
+
+/* Ultra-smooth gallery pan: GPU-friendly transform motion only when visible */
+#galleryImg{
+  will-change: transform, opacity;
+  transform: translate3d(0,0,0) scale(1.02);
+  backface-visibility:hidden;
+}
+
+#galleryImg.isGalleryActive{
+  animation: galleryFloatZoom 14s ease-in-out infinite alternate;
+}
+
+.fadeIn{
+  animation: galleryFadeIn .24s ease-out;
+}
+
+@keyframes galleryFadeIn{
+  from{ opacity:.22; }
+  to{ opacity:1; }
+}
+
+@keyframes galleryFloatZoom{
+  0%{ transform:translate3d(-1.5%, -1.2%, 0) scale(1.03); }
+  100%{ transform:translate3d(1.5%, 1.2%, 0) scale(1.08); }
+}
+
+/* Adaptive sparkle density */
+@media (min-width: 900px){
+  #slide-rsvp .stage::after,
+  #slide-gallery .stage::after{
+    opacity:.92 !important;
+    filter:
+      drop-shadow(0 0 14px rgba(255,236,210,.34))
+      drop-shadow(0 0 26px rgba(255,236,210,.18)) !important;
+  }
+
+  #slide-doa .stage::after{
+    opacity:.46 !important;
+  }
+}
+
+/* Softer effect budget on constrained or reduced-motion environments */
+@media (prefers-reduced-motion: reduce){
+  .stage::before,
+  .stage::after{
+    animation:none !important;
+  }
+
+  #galleryImg.isGalleryActive{
+    animation:none !important;
+    transform:translate3d(0,0,0) scale(1.03);
+  }
+}
+
+/* Dark-mode aware sparkle tone */
+@media (prefers-color-scheme: dark){
+  .stage::after{
+    filter:
+      drop-shadow(0 0 10px rgba(255,228,190,.22))
+      drop-shadow(0 0 18px rgba(255,228,190,.12)) !important;
+  }
+
+  #slide-rsvp .stage::after,
+  #slide-gallery .stage::after{
+    opacity:.86 !important;
+  }
+}
+
+/* Extra mobile polish */
+@media (max-width:600px){
+  /* lighten paint cost a bit more while keeping the mood */
+  .stage::before{
+    opacity:.84 !important;
+  }
+
+  .stage::after{
+    opacity:.74 !important;
+  }
+
+  #slide-rsvp .stage::after,
+  #slide-gallery .stage::after{
+    opacity:.84 !important;
+  }
+
+  #slide-doa .stage::after{
+    opacity:.48 !important;
+  }
+
+  /* smoother scroll / lower paint cost */
+  .slide{
+    contain: layout paint style;
+  }
+
+  .stage,
+  .stage::before,
+  .stage::after,
+  #galleryImg,
+  .galleryViewport,
+  .flipCard,
+  .rsvpBtn,
+  .musicBtn{
+    will-change:auto;
+  }
+
+  #galleryImg.isGalleryActive{
+    animation: galleryFloatZoomMobile 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes galleryFloatZoomMobile{
+    0%{ transform:translate3d(-1%, -0.8%, 0) scale(1.025); }
+    100%{ transform:translate3d(1%, 0.8%, 0) scale(1.055); }
+  }
+}
